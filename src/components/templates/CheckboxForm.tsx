@@ -43,8 +43,20 @@ const CheckBoxForm: React.FC<Props> = ({
 
 export default CheckBoxForm;
 
-const Top03 = styled.Text``;
-const Top05 = styled.Text``;
+const Top03 = styled.Text`
+  font-size: 24px;
+  line-height: 34px;
+  font-weight: 600;
+  color: #1d1d1d;
+`;
+const Top05 = styled.Text`
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: #afafaf;
+  margin-top: 8px;
+  letter-spacing: -0.6px;
+`;
 const Wrapper = styled.View`
   flex: 1;
 `;

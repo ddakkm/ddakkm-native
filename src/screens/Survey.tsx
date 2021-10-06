@@ -3,7 +3,7 @@ import styled from '@emotion/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import SurveyForm from '../components/templates/SurveyForm';
 
-const Home = () => {
+const Survey = () => {
   return (
     <Container>
       <SafeAreaView style={{backgroundColor: '#fff'}} />
@@ -14,7 +14,7 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Survey;
 
 const Container = styled.View`
   flex: 1;
@@ -24,18 +24,4 @@ const Container = styled.View`
 
 const Wrapper = styled.View`
   flex: 1;
-`;
-
-const Text = styled.Text``;
-
-const CustomInput = styled.TextInput`
-  width: 100%;
-  line-height: 22px;
-  border: 1px solid #e8e8e8;
-  border-radius: 8px;
-  height: 56px;
-  font-weight: 400;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
 `;

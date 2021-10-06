@@ -6,7 +6,7 @@ import {
 
 export const setGlobalProps = () => {
   const defaultFontStyle = {
-    fontWeight: '800',
+    fontWeight: '700',
   } as const;
 
   setCustomText({style: defaultFontStyle});

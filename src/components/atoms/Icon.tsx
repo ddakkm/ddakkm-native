@@ -1,4 +1,4 @@
-import React, {createElement} from 'react';
+import React, {createElement, FC} from 'react';
 import {TouchableOpacity} from 'react-native';
 import {SvgProps} from 'react-native-svg';
 import GesturingNo from '../../assets/icons/gesturingNo.svg';
@@ -7,6 +7,7 @@ import Muscle from '../../assets/icons/muscle.svg';
 import Pouting from '../../assets/icons/pouting.svg';
 import RaisingHand from '../../assets/icons/raisingHand.svg';
 import Standing from '../../assets/icons/standing.svg';
+import LeftArrow from '../../assets/icons/iconArrowleft.svg';
 
 const icons = {
   gesturingNo: GesturingNo,
@@ -15,6 +16,7 @@ const icons = {
   pouting: Pouting,
   raisingHand: RaisingHand,
   standing: Standing,
+  leftArrow: LeftArrow,
 } as const;
 
 export type AssetIconType = keyof typeof icons;
@@ -24,7 +26,7 @@ interface Props extends SvgProps {
   onPress?: () => void;
 }
 
-const Icon: React.FC<Props> = ({type, onPress, ...props}) =>
+const Icon: FC<Props> = ({type, onPress, ...props}) =>
   onPress ? (
     <TouchableOpacity onPress={onPress}>
       {createElement(icons[type], {...props})}
