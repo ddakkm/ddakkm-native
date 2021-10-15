@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ddakkm</string>
+    <string name="kakao_app_key">c5fe00ad63d9c062d073f61bfd173079</string>
 </resources>
