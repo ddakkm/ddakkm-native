@@ -3,19 +3,19 @@ import styled from '@emotion/native';
 
 interface Props {
   title: string;
-  value: 'y' | 'n' | null;
-  handlePress: (value: string) => void;
+  value: boolean | null;
+  handlePress: (value: boolean) => void;
 }
 
 const Buttonbox = ({ title, value, handlePress }: Props) => (
   <Container>
     <ButtonboxTitle>{title}</ButtonboxTitle>
     <ButtonGroup>
-      <Button onPress={() => handlePress('n')} active={value === 'n'}>
-        <ButtonText active={value === 'n'}>아니오</ButtonText>
+      <Button onPress={() => handlePress(false)} active={value === false}>
+        <ButtonText active={value === false}>아니오</ButtonText>
       </Button>
-      <Button onPress={() => handlePress('y')} active={value === 'y'}>
-        <ButtonText active={value === 'y'}>예</ButtonText>
+      <Button onPress={() => handlePress(true)} active={value === true}>
+        <ButtonText active={value === true}>예</ButtonText>
       </Button>
     </ButtonGroup>
   </Container>

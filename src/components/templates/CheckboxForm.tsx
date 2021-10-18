@@ -40,15 +40,15 @@ const CheckBoxForm: React.FC<Props> = ({
       <Wrapper>
         <ListWrapper>
           {options.map(({ label, value }, index) => (
-            <>
-              <Margin key={`margin-${index}`} />
+            <ListItemWrapper key={`list-item-${index}`}>
+              <Margin />
               <Checkbox
                 key={`box-${index}`}
                 title={label}
                 checked={values.includes(value)}
                 onPress={() => handleOnPress(value)}
               />
-            </>
+            </ListItemWrapper>
           ))}
           <Margin />
           {handleOnChange && (
@@ -120,3 +120,5 @@ const Header = styled.View`
   height: 60px;
   justify-content: center;
 `;
+
+const ListItemWrapper = styled.View``;

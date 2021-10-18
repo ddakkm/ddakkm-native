@@ -5,23 +5,36 @@ import CheckBoxForm from './CheckboxForm';
 import { Keyboard, Platform, TouchableWithoutFeedback } from 'react-native';
 import BasicInfoForm from './BasicInfoForm';
 
+export type VaccineType =
+  | 'ETC'
+  | 'PFIZER'
+  | 'AZ'
+  | 'MODERNA'
+  | 'JANSSEN'
+  | null;
+
+export type VaccineRound = 'FIRST' | 'SECOND' | 'THIRD' | null;
+export type DateFrom =
+  | 'ZERO_DAY'
+  | 'TWO_DAY'
+  | 'THREE_DAY'
+  | 'OVER_FIVE'
+  | 'OVER_WEEK'
+  | 'OVER_MONTH'
+  | null;
+
+export interface BasicInfoProps {
+  vaccineType: VaccineType;
+  vaccineRound: VaccineRound;
+  dateFrom: DateFrom;
+  isCrossed: boolean | null;
+  isPregnant: boolean | null;
+  isUnderlyingDisease: boolean | null;
+}
+
 const SurveyForm = () => {
   const [step, setStep] = useState(0);
-  const [basicInfo, setBasicInfo] = useState<{
-    vaccineType: 'ETC' | 'PFIZER' | 'AZ' | 'MODERNA' | 'JANSSEN' | null;
-    vaccineRound: 'FIRST' | 'SECOND' | 'THIRD' | null;
-    dateFrom:
-      | 'ZERO_DAY'
-      | 'TWO_DAY'
-      | 'THREE_DAY'
-      | 'OVER_FIVE'
-      | 'OVER_WEEK'
-      | 'OVER_MONTH'
-      | null;
-    isCrossed: 'y' | 'n' | null;
-    isPregnant: 'y' | 'n' | null;
-    isUnderlyingDisease: 'y' | 'n' | null;
-  }>({
+  const [basicInfo, setBasicInfo] = useState<BasicInfoProps>({
     vaccineType: null,
     vaccineRound: null,
     dateFrom: null,
@@ -54,6 +67,12 @@ const SurveyForm = () => {
     }
   };
   const surveyAComponents = [
+    <BasicInfoForm
+      onBack={() => {}}
+      basicInfo={basicInfo}
+      setBasicInfo={setBasicInfo}
+      onNext={() => setStep(prevStep => prevStep + 1)}
+    />,
     <CheckBoxForm
       title={'근육통이 있으신가요?'}
       description={'있던 증상 모두를 선택해주세요.'}
@@ -207,14 +226,13 @@ const SurveyForm = () => {
     <Container behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <Wrapper>
-          <BasicInfoForm onBack={() => {}} />
-          {/* {surveyAComponents.map((component, index) => {
+          {surveyAComponents.map((component, index) => {
             if (index === step) {
               return <Fragment key={index}>{component}</Fragment>;
             }
 
             return null;
-          })} */}
+          })}
         </Wrapper>
       </TouchableWithoutFeedback>
     </Container>

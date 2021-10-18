@@ -9,6 +9,7 @@ import RaisingHand from '../../assets/icons/raisingHand.svg';
 import Standing from '../../assets/icons/standing.svg';
 import LeftArrow from '../../assets/icons/iconArrowleft.svg';
 import Caretdown from '../../assets/icons/caretdown.svg';
+import Close from '../../assets/icons/close.svg';
 
 const icons = {
   gesturingNo: GesturingNo,
@@ -19,6 +20,7 @@ const icons = {
   standing: Standing,
   leftArrow: LeftArrow,
   caretDown: Caretdown,
+  close: Close,
 } as const;
 
 export type AssetIconType = keyof typeof icons;
