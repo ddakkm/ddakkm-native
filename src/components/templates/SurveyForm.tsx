@@ -1,9 +1,9 @@
 import React, { Fragment, useState } from 'react';
 import styled from '@emotion/native';
-import Icon from '../atoms/Icon';
 import CheckBoxForm from './CheckboxForm';
 import { Keyboard, Platform, TouchableWithoutFeedback } from 'react-native';
 import BasicInfoForm from './BasicInfoForm';
+import ReviewForm from './ReviewForm';
 
 export type VaccineType =
   | 'ETC'
@@ -33,7 +33,7 @@ export interface BasicInfoProps {
 }
 
 const SurveyForm = () => {
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(6);
   const [basicInfo, setBasicInfo] = useState<BasicInfoProps>({
     vaccineType: null,
     vaccineRound: null,
@@ -220,6 +220,7 @@ const SurveyForm = () => {
       }}
       onBack={handleBack}
     />,
+    <ReviewForm onBack={handleBack} />,
   ];
 
   return (
@@ -243,12 +244,6 @@ export default SurveyForm;
 
 const Container = styled.KeyboardAvoidingView`
   flex: 1;
-`;
-
-const Header = styled.View`
-  width: 100%;
-  height: 60px;
-  justify-content: center;
 `;
 
 const Wrapper = styled.View`

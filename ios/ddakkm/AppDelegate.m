@@ -13,6 +13,8 @@
 #import <FlipperKitNetworkPlugin/FlipperKitNetworkPlugin.h>
 #import <SKIOSNetworkPlugin/SKIOSNetworkAdapter.h>
 #import <FlipperKitReactPlugin/FlipperKitReactPlugin.h>
+#import <NaverThirdPartyLogin/NaverThirdPartyLoginConnection.h>
+
 
 static void InitializeFlipper(UIApplication *application) {
   FlipperClient *client = [FlipperClient sharedClient];
@@ -49,7 +51,9 @@ static void InitializeFlipper(UIApplication *application) {
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
-  
+  [[NaverThirdPartyLoginConnection getSharedInstance] setIsNaverAppOauthEnable:YES];
+  [[NaverThirdPartyLoginConnection getSharedInstance] setIsInAppOauthEnable:YES];
+
   [RNSplashScreen show];
   return YES;
 }
@@ -60,6 +64,11 @@ static void InitializeFlipper(UIApplication *application) {
  if([RNKakaoLogins isKakaoTalkLoginUrl:url]) {
     return [RNKakaoLogins handleOpenUrl: url];
  }
+  
+  if ([url.scheme isEqualToString:@"ddakkmnaverlogin"]) {
+    return [[NaverThirdPartyLoginConnection getSharedInstance] application:app openURL:url options:options];
+  }
+
 
  return NO;
 }

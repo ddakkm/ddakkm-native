@@ -57,6 +57,8 @@ const CheckBoxForm: React.FC<Props> = ({
               autoCorrect={false}
               placeholder={'직접입력(100자이내)'}
               onChangeText={handleOnChange}
+              textAlign={'center'}
+              textAlignVertical={'center'}
             />
           )}
         </ListWrapper>

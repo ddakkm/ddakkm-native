@@ -5,17 +5,29 @@ interface Props {
   title: string;
   value: boolean | null;
   handlePress: (value: boolean) => void;
+  leftBtnText?: string;
+  rightBtnText?: string;
 }
 
-const Buttonbox = ({ title, value, handlePress }: Props) => (
+const Buttonbox = ({
+  title,
+  value,
+  handlePress,
+  leftBtnText,
+  rightBtnText,
+}: Props) => (
   <Container>
     <ButtonboxTitle>{title}</ButtonboxTitle>
     <ButtonGroup>
       <Button onPress={() => handlePress(false)} active={value === false}>
-        <ButtonText active={value === false}>아니오</ButtonText>
+        <ButtonText active={value === false}>
+          {leftBtnText ? leftBtnText : '아니오'}
+        </ButtonText>
       </Button>
       <Button onPress={() => handlePress(true)} active={value === true}>
-        <ButtonText active={value === true}>예</ButtonText>
+        <ButtonText active={value === true}>
+          {rightBtnText ? rightBtnText : '예'}
+        </ButtonText>
       </Button>
     </ButtonGroup>
   </Container>

@@ -1,23 +1,25 @@
 import React from 'react';
 import styled from '@emotion/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import MainForm from '../components/templates/MainForm';
+import SignupForm from '../components/templates/SignupForm';
 
-const Home = () => {
+const SignUp = () => {
   return (
     <Container>
-      <SafeAreaView style={{ backgroundColor: '#fff' }} />
-      <Wrapper>
-        <MainForm />
-      </Wrapper>
+      <SafeAreaView style={{ flex: 1 }}>
+        <Wrapper>
+          <SignupForm />
+        </Wrapper>
+      </SafeAreaView>
     </Container>
   );
 };
 
-export default Home;
+export default SignUp;
 
 const Container = styled.View`
   flex: 1;
+  padding: 0px 24px;
   background-color: #fff;
 `;
 

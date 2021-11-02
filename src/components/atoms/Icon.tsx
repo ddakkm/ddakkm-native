@@ -10,6 +10,31 @@ import Standing from '../../assets/icons/standing.svg';
 import LeftArrow from '../../assets/icons/iconArrowleft.svg';
 import Caretdown from '../../assets/icons/caretdown.svg';
 import Close from '../../assets/icons/close.svg';
+import Setting from '../../assets/icons/setting.svg';
+import Noti from '../../assets/icons/noti.svg';
+import Reset from '../../assets/icons/reset.svg';
+import UnderArrow from '../../assets/icons/underArrow.svg';
+import ImojiArm from '../../assets/icons/imoji_arm.svg';
+import ImojiFeelgood from '../../assets/icons/imoji_feelgood.svg';
+import ImojiFeeljust from '../../assets/icons/imoji_feeljust.svg';
+import ImojiFeelsad from '../../assets/icons/imoji_feelsad.svg';
+import ImojiFeelverysad from '../../assets/icons/imoji_feelverysad.svg';
+import ImojiFever from '../../assets/icons/imoji_fever.svg';
+import ImojiLeg from '../../assets/icons/imoji_leg.svg';
+import ImojiLowfever from '../../assets/icons/imoji_lowfever.svg';
+import ImojiMiddle from '../../assets/icons/imoji_middle.svg';
+import ImojiNo from '../../assets/icons/imoji_no.svg';
+import ImojiSad from '../../assets/icons/imoji_sad.svg';
+import ImojiWholebody from '../../assets/icons/imoji_wholebody.svg';
+import ImojiYes from '../../assets/icons/imoji_yes.svg';
+import Heart from '../../assets/icons/heart.svg';
+import Message from '../../assets/icons/message.svg';
+import Brain from '../../assets/icons/brain.svg';
+import Kakao from '../../assets/icons/kakao.svg';
+import Naver from '../../assets/icons/naver.svg';
+import Check from '../../assets/icons/check.svg';
+import UnCheck from '../../assets/icons/unCheck.svg';
+import RightArrow from '../../assets/icons/rightArrow.svg';
 
 const icons = {
   gesturingNo: GesturingNo,
@@ -21,6 +46,31 @@ const icons = {
   leftArrow: LeftArrow,
   caretDown: Caretdown,
   close: Close,
+  setting: Setting,
+  notification: Noti,
+  reset: Reset,
+  underArrow: UnderArrow,
+  imojiArm: ImojiArm,
+  imojiFeelgood: ImojiFeelgood,
+  imojiFeeljust: ImojiFeeljust,
+  imojiFeelsad: ImojiFeelsad,
+  imojiFeelverysad: ImojiFeelverysad,
+  imojiFever: ImojiFever,
+  imojiLeg: ImojiLeg,
+  imojiLowfever: ImojiLowfever,
+  imojiMiddle: ImojiMiddle,
+  imojiNo: ImojiNo,
+  imojiSad: ImojiSad,
+  imojiWholebody: ImojiWholebody,
+  imojiYes: ImojiYes,
+  heart: Heart,
+  message: Message,
+  brain: Brain,
+  kakao: Kakao,
+  naver: Naver,
+  check: Check,
+  unCheck: UnCheck,
+  rightArrow: RightArrow,
 } as const;
 
 export type AssetIconType = keyof typeof icons;

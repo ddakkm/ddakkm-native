@@ -1,20 +1,17 @@
 import React from 'react';
 import styled from '@emotion/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import MainForm from '../components/templates/MainForm';
 
-const Home = () => {
+const Keyword = () => {
   return (
     <Container>
       <SafeAreaView style={{ backgroundColor: '#fff' }} />
-      <Wrapper>
-        <MainForm />
-      </Wrapper>
+      <Wrapper></Wrapper>
     </Container>
   );
 };
 
-export default Home;
+export default Keyword;
 
 const Container = styled.View`
   flex: 1;

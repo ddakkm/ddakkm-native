@@ -5,9 +5,7 @@ import { TextInputProps } from 'react-native';
 
 interface Props extends TextInputProps {}
 
-const Textarea = ({ ...rest }: Props) => (
-  <Input textAlign={'center'} textAlignVertical={'center'} {...rest} />
-);
+const Textarea = ({ ...rest }: Props) => <Input {...rest} />;
 
 export default Textarea;
 

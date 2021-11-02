@@ -48,135 +48,6 @@ function SelectModal<T>({
   );
 }
 
-const sexOptions = [
-  {
-    label: '전체',
-    value: '',
-  },
-  {
-    label: '남자',
-    value: '',
-  },
-  {
-    label: '여자',
-    value: '',
-  },
-];
-
-const vaccineTypeOptions = [
-  {
-    label: '전체',
-    value: '',
-  },
-  {
-    label: '모더나',
-    value: '',
-  },
-  {
-    label: '화이자',
-    value: '',
-  },
-  {
-    label: '아스트라제네카',
-    value: '',
-  },
-  {
-    label: '얀센',
-    value: '',
-  },
-];
-
-const crossOptions = [
-  {
-    label: '전체',
-    value: '',
-  },
-  {
-    label: '교차접종 O',
-    value: '',
-  },
-  {
-    label: '교차접종 X',
-    value: '',
-  },
-];
-
-const RoundOptions = [
-  {
-    label: '전체',
-    value: '',
-  },
-  {
-    label: '1차',
-    value: '',
-  },
-  {
-    label: '2차',
-    value: '',
-  },
-  {
-    label: '부스터샷',
-    value: '',
-  },
-];
-
-const PregnantOptions = [
-  {
-    label: '전체',
-    value: '',
-  },
-  {
-    label: '임신 O',
-    value: '',
-  },
-  {
-    label: '임신 X',
-    value: '',
-  },
-];
-
-const UnderlyingDiseaseOptions = [
-  {
-    label: '전체',
-    value: '',
-  },
-  {
-    label: '기저질환 O',
-    value: '',
-  },
-  {
-    label: '기저질환 X',
-    value: '',
-  },
-];
-
-const ageOptions = [
-  {
-    label: '전체',
-    value: '',
-  },
-  {
-    label: '20대(20~29)',
-    value: '',
-  },
-  {
-    label: '30대(30~39)',
-    value: '',
-  },
-  {
-    label: '40대(40~49)',
-    value: '',
-  },
-  {
-    label: '50대(50~59)',
-    value: '',
-  },
-  {
-    label: '60대(60~69)',
-    value: '',
-  },
-];
-
 export default SelectModal;
 
 const ModalWrapper = styled.View`
@@ -213,7 +84,9 @@ const HeaderTitle = styled.Text`
   color: #555;
 `;
 
-const ModalBody = styled.View``;
+const ModalBody = styled.View`
+  padding-bottom: 32px;
+`;
 
 const ModalItemWrapper = styled.TouchableOpacity`
   width: 100%;
