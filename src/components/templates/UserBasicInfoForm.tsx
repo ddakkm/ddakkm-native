@@ -1,10 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from '@emotion/native';
 import SelectBox from '../atoms/SelectBox';
 import Buttonbox from '../atoms/Buttonbox';
 import Button from '../atoms/Button';
+import SelectModalTemplate from '../atoms/SelectModalTemplate';
+
+const options = Array(62)
+  .fill(0)
+  .map((_, index) => ({
+    label: 1960 + index + '',
+    value: 1960 + index + '',
+  }));
 
 const UserBasicInfoForm = () => {
+  const [selected_year, setSelectedYear] = useState<any>();
+  const [is_show_modal, setIsShowModal] = useState(false);
+  const [selected_sex, setSelectedSex] = useState<boolean | null>(null);
+
+  const handleSignUp = () => {
+    console.log('hihi');
+  };
+
   return (
     <Container>
       <Header>
@@ -12,18 +28,38 @@ const UserBasicInfoForm = () => {
       </Header>
       <SelectBox
         title={'출생연도'}
-        selectedValue={''}
-        onPress={() => {}}
+        selectedValue={selected_year}
+        onPress={() => {
+          setIsShowModal(true);
+        }}
         placeholder={'출생년도를 선택해주세요'}
       />
       <Buttonbox
         title={'성별'}
-        value={null}
-        handlePress={() => {}}
+        value={selected_sex}
+        handlePress={value => {
+          setSelectedSex(value);
+        }}
         leftBtnText={'남자'}
         rightBtnText={'여자'}
       />
-      <StyledFixedButton title={'입력 완료했어요'} theme={'disabled'} />
+      <StyeldFixedFooter>
+        <Button
+          title={'입력 완료했어요'}
+          theme={
+            selected_sex !== null && selected_year ? 'primary' : 'disabled'
+          }
+          disabled={!(selected_sex !== null && selected_year)}
+          onPress={handleSignUp}
+        />
+      </StyeldFixedFooter>
+      <SelectModalTemplate
+        title={'년도 선택'}
+        isVisible={is_show_modal}
+        handleVisible={setIsShowModal}
+        options={options}
+        selectOption={setSelectedYear}
+      />
     </Container>
   );
 };
@@ -50,7 +86,8 @@ const HeaderTitle = styled.Text`
   color: #1d1d1d;
 `;
 
-const StyledFixedButton = styled(Button)`
+const StyeldFixedFooter = styled.View`
+  width: 100%;
   position: absolute;
-  bottom: 0;
+  bottom: 24px;
 `;
