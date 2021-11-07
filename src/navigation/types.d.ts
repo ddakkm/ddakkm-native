@@ -1,15 +1,19 @@
-import {NavigationContainerRef} from '@react-navigation/core';
+import { NavigationContainerRef } from '@react-navigation/core';
 
 type RootStackParamList = {
   '/review': undefined;
-  '/survey': undefined;
-  '/sign': undefined;
+  '/survey': { surveyType?: 'JOIN' };
+  '/signUp': { access_token: string; sns_provider: 'KAKAO' | 'NAVER' };
+  '/': undefined;
+  '/keyword': undefined;
+  '/detail': { reviewId: number };
+  '/login': undefined;
 };
 
 type NavRef = NavigationContainerRef<RootStackParamList>;
 
 type NavigateFunctionType = <RouteName extends keyof RootStackParamList>(
-  ...agrs: undefined extends RootStackParamList[RouteName]
+  ...args: undefined extends RootStackParamList[RouteName]
     ?
         | [screen: RouteName]
         | [screen: RouteName, params: RootStackParamList[RouteName]]

@@ -13,9 +13,12 @@ import {
   pregnantOptions,
   underlyingDiseaseOptions,
 } from '../../utils/filterUtil';
-import { useQuery } from 'react-query';
+import { useInfiniteQuery } from 'react-query';
 import { reviewApi, ReviewResponse } from '../../api/review';
 import { FlatList, StyleSheet } from 'react-native';
+import { useIsLoggedIn } from '../../contexts/auth';
+import { useAppNav } from '../../hooks/useNav';
+import useReviews from '../../hooks/useReviews';
 
 const FilterbuttunArr: Array<{
   title: string;
@@ -68,6 +71,8 @@ const FilterbuttunArr: Array<{
 ];
 
 const MainForm = () => {
+  const { is_loggedIn, is_survey } = useIsLoggedIn();
+  const { navigate } = useAppNav();
   const [selectedModal, setSelectModal] = useState('');
   const [filterValue, setFilterValue] = useState<{ [key: string]: string }>({
     age: '',
@@ -78,13 +83,20 @@ const MainForm = () => {
     pregnant: '',
     underlying: '',
   });
-  const { isLoading, data } = useQuery<ReviewResponse>(
-    'review',
-    reviewApi.getReview,
-  );
-
+  const { isLoading, data, hasNextPage, fetchNextPage } =
+    useReviews(filterValue);
   const loadMore = () => {
-    console.log('load more');
+    if (hasNextPage) {
+      fetchNextPage();
+    }
+  };
+
+  const navigateSurvey = () => {
+    if (!is_loggedIn) {
+      navigate('/survey', { surveyType: 'JOIN' });
+    } else {
+      navigate('/survey', {});
+    }
   };
 
   return (
@@ -137,13 +149,12 @@ const MainForm = () => {
         </FilterWrapper>
       </FilterContainer>
       <CardWrapper>
-        {isLoading ? null : data ? (
+        {isLoading ? null : data?.pages ? (
           <FlatList
             contentContainerStyle={styles.flatList}
-            data={data.contents}
+            data={data.pages.map(({ contents }) => contents).flat()}
             keyExtractor={item => item.id + ''}
             onEndReached={loadMore}
-            onEndReachedThreshold={0.4}
             renderItem={({
               item: {
                 id,
@@ -172,7 +183,7 @@ const MainForm = () => {
       </CardWrapper>
       <FixedWrapper>
         <FixedButton>
-          <ButtonText>후기 작성하기</ButtonText>
+          <ButtonText onPress={navigateSurvey}>후기 작성하기</ButtonText>
         </FixedButton>
       </FixedWrapper>
       <SelectModal

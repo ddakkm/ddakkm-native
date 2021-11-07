@@ -4,6 +4,13 @@ import CheckBoxForm from './CheckboxForm';
 import { Keyboard, Platform, TouchableWithoutFeedback } from 'react-native';
 import BasicInfoForm from './BasicInfoForm';
 import ReviewForm from './ReviewForm';
+import {
+  SURVEY_A_LIST,
+  SURVEY_B_LIST,
+  SURVEY_C_LIST,
+  SURVEY_JOIN_LIST,
+} from '../../utils/servayUtil';
+import { useAppNav } from '../../hooks/useNav';
 
 export type VaccineType =
   | 'ETC'
@@ -32,8 +39,14 @@ export interface BasicInfoProps {
   isUnderlyingDisease: boolean | null;
 }
 
-const SurveyForm = () => {
-  const [step, setStep] = useState(6);
+interface Props {
+  surveyType?: 'JOIN';
+}
+
+const SurveyForm = ({ surveyType }: Props) => {
+  const { goBack } = useAppNav();
+  const [step, setStep] = useState(0);
+  const [survey_type, setSurveyType] = useState<number[]>([]);
   const [basicInfo, setBasicInfo] = useState<BasicInfoProps>({
     vaccineType: null,
     vaccineRound: null,
@@ -52,10 +65,24 @@ const SurveyForm = () => {
     q4: { value: [], text: '' },
     q5: { value: [], text: '' },
   });
+  const [surveyB, setSurveyB] = useState<{
+    [key: string]: { value: number[]; text: string };
+  }>({
+    q1: { value: [], text: '' },
+    q2: { value: [], text: '' },
+  });
+  const [surveyC, setSurveyC] = useState<{
+    [key: string]: { value: number[]; text: string };
+  }>({
+    q1: { value: [], text: '' },
+    q2: { value: [], text: '' },
+  });
 
   const handleBack = () => {
     if (step > 0) {
       setStep(prevStep => prevStep - 1);
+    } else {
+      goBack();
     }
   };
 
@@ -66,9 +93,106 @@ const SurveyForm = () => {
       setStep(prevStep => prevStep - 2);
     }
   };
+
+  const surveyBcomponents = [
+    <CheckBoxForm
+      title={'접종하려는 이유가 무엇인가요?'}
+      description="하나만 선택해주세요"
+      options={SURVEY_B_LIST.q1}
+      values={surveyB.q1.value}
+      text={surveyB.q1.text}
+      handleOnPress={(value: number) =>
+        setSurveyB(prevState => ({
+          ...prevState,
+          q1: {
+            value: prevState.q1.value.includes(value) ? [] : [value],
+            text: '',
+          },
+        }))
+      }
+      handleOnChange={(value: string) =>
+        setSurveyB(prevState => ({
+          ...prevState,
+          q1: {
+            value: [],
+            text: value,
+          },
+        }))
+      }
+      onNext={() => setStep(prevStep => prevStep + 1)}
+      onBack={handleBack}
+    />,
+    <CheckBoxForm
+      title={'접종시 무엇이 가장 우려되나요?'}
+      description="하나만 선택해주세요"
+      options={SURVEY_B_LIST.q2}
+      values={surveyB.q2.value}
+      text={surveyB.q2.text}
+      handleOnPress={(value: number) =>
+        setSurveyB(prevState => ({
+          ...prevState,
+          q2: {
+            ...prevState.q2,
+            value: prevState.q2.value.includes(value) ? [] : [value],
+          },
+        }))
+      }
+      onNext={() => setStep(prevStep => prevStep + 1)}
+      onBack={handleBack}
+    />,
+  ];
+
+  const surveyCcomponents = [
+    <CheckBoxForm
+      title={'왜 접종하지 않으셨나요?'}
+      description="하나만 선택해주세요"
+      options={SURVEY_C_LIST.q1}
+      values={surveyC.q1.value}
+      text={surveyC.q1.text}
+      handleOnPress={(value: number) =>
+        setSurveyC(prevState => ({
+          ...prevState,
+          q1: {
+            value: prevState.q1.value.includes(value) ? [] : [value],
+            text: '',
+          },
+        }))
+      }
+      handleOnChange={(value: string) =>
+        setSurveyC(prevState => ({
+          ...prevState,
+          q1: {
+            text: value,
+            value: [],
+          },
+        }))
+      }
+      onNext={() => setStep(prevStep => prevStep + 1)}
+      onBack={handleBack}
+    />,
+    <CheckBoxForm
+      title={'접종시 무엇이 가장 우려되나요?'}
+      description="하나만 선택해주세요"
+      options={SURVEY_C_LIST.q2}
+      values={surveyC.q2.value}
+      text={surveyC.q2.text}
+      handleOnPress={(value: number) =>
+        setSurveyC(prevState => ({
+          ...prevState,
+          q2: {
+            ...prevState.q2,
+            value: prevState.q2.value.includes(value) ? [] : [value],
+          },
+        }))
+      }
+      onNext={() => setStep(prevStep => prevStep + 1)}
+      onBack={handleBack}
+    />,
+  ];
+
   const surveyAComponents = [
     <BasicInfoForm
-      onBack={() => {}}
+      onBack={handleBack}
       basicInfo={basicInfo}
       setBasicInfo={setBasicInfo}
       onNext={() => setStep(prevStep => prevStep + 1)}
@@ -76,15 +200,7 @@ const SurveyForm = () => {
     <CheckBoxForm
       title={'근육통이 있으신가요?'}
       description={'있던 증상 모두를 선택해주세요.'}
-      options={[
-        { label: '근육통은 없었어요', value: 1 },
-        { label: '접종 부위만 아팠어요', value: 2 },
-        { label: '접종한 팔만 아팠어요', value: 3 },
-        { label: '겨드랑이가 아팠어요', value: 4 },
-        { label: '어깨가 아팠어요', value: 5 },
-        { label: '다리가 아팠어요', value: 6 },
-        { label: '전신이 아팠어요', value: 7 },
-      ]}
+      options={SURVEY_A_LIST.q1}
       values={surveyA.q1.value}
       text={surveyA.q1.text}
       handleOnPress={(value: number) =>
@@ -113,14 +229,7 @@ const SurveyForm = () => {
     <CheckBoxForm
       title={'발열증상이 있으셨나요?'}
       description={'하나만 선택해주세요'}
-      options={[
-        { label: '열은 없었어요', value: 1 },
-        { label: '37.5도 미만', value: 2 },
-        { label: '37.5도 이상 ~ 38도 미만', value: 3 },
-        { label: '38도 이상 ~ 39도 미만', value: 4 },
-        { label: '39도 이상 ~ 40도 미만', value: 5 },
-        { label: '40도 이상', value: 6 },
-      ]}
+      options={SURVEY_A_LIST.q2}
       values={surveyA.q2.value}
       handleOnPress={(value: number) =>
         setSurveyA(prevState => ({
@@ -142,12 +251,7 @@ const SurveyForm = () => {
     />,
     <CheckBoxForm
       title={'발열이 있었다면\n얼마나 지속됐나요?'}
-      options={[
-        { label: '반나절', value: 1 },
-        { label: '1일', value: 2 },
-        { label: '2일', value: 3 },
-        { label: '3일 이상', value: 4 },
-      ]}
+      options={SURVEY_A_LIST.q2_1}
       values={surveyA.q2_1.value}
       handleOnPress={(value: number) =>
         setSurveyA(prevState => ({
@@ -162,25 +266,17 @@ const SurveyForm = () => {
       onBack={handleBack}
     />,
     <CheckBoxForm
-      title={'속이 불편한 증상은 있었나요?'}
-      description={'있던 증상 모두를 선택해주세요.'}
-      options={[
-        { label: '없었어요', value: 1 },
-        { label: '울렁거림 또는 매스꺼움', value: 2 },
-        { label: '구토', value: 3 },
-        { label: '복통', value: 4 },
-        { label: '설사', value: 5 },
-      ]}
+      title={'두통 및 어지러움증이 있으셨나요?'}
+      description={'하나만 선택해주세요'}
+      options={SURVEY_A_LIST.q3}
       values={surveyA.q3.value}
       text={surveyA.q3.text}
       handleOnPress={(value: number) =>
         setSurveyA(prevState => ({
           ...prevState,
           q3: {
-            ...prevState.q3,
-            value: prevState.q3.value.includes(value)
-              ? prevState.q3.value.filter(_value => _value !== value)
-              : [...prevState.q3.value, value],
+            value: prevState.q3.value.includes(value) ? [] : [value],
+            text: '',
           },
         }))
       }
@@ -188,7 +284,36 @@ const SurveyForm = () => {
         setSurveyA(prevState => ({
           ...prevState,
           q3: {
-            ...prevState.q3,
+            value: [],
+            text: value,
+          },
+        }))
+      }
+      onNext={() => setStep(prevStep => prevStep + 1)}
+      onBack={handleBackFever}
+    />,
+    <CheckBoxForm
+      title={'속이 불편한 증상은 있었나요?'}
+      description={'있던 증상 모두를 선택해주세요.'}
+      options={SURVEY_A_LIST.q4}
+      values={surveyA.q4.value}
+      text={surveyA.q4.text}
+      handleOnPress={(value: number) =>
+        setSurveyA(prevState => ({
+          ...prevState,
+          q4: {
+            ...prevState.q4,
+            value: prevState.q4.value.includes(value)
+              ? prevState.q4.value.filter(_value => _value !== value)
+              : [...prevState.q4.value, value],
+          },
+        }))
+      }
+      handleOnChange={(value: string) =>
+        setSurveyA(prevState => ({
+          ...prevState,
+          q4: {
+            ...prevState.q4,
             text: value,
           },
         }))
@@ -199,12 +324,7 @@ const SurveyForm = () => {
     <CheckBoxForm
       title={'평소보다 피곤하셨나요?'}
       description={'하나만 선택해주세요'}
-      options={[
-        { label: '평소보다 덜 피곤했어요', value: 1 },
-        { label: '평소와 같았어요', value: 2 },
-        { label: '평소보다 약간 피곤했어요', value: 3 },
-        { label: '평소보다 매우 피곤했어요', value: 4 },
-      ]}
+      options={SURVEY_A_LIST.q5}
       values={surveyA.q4.value}
       handleOnPress={(value: number) =>
         setSurveyA(prevState => ({
@@ -223,17 +343,51 @@ const SurveyForm = () => {
     <ReviewForm onBack={handleBack} />,
   ];
 
+  const surveyJoinComponents = () => {
+    const BASE_COMPONENT = [
+      <CheckBoxForm
+        title={'만나서 반가워요! 백신 접종은 하셨나요?'}
+        options={SURVEY_JOIN_LIST}
+        values={survey_type}
+        handleOnPress={(value: number) =>
+          setSurveyType(prevState => (prevState.includes(value) ? [] : [value]))
+        }
+        onNext={() => setStep(prevStep => prevStep + 1)}
+        onBack={handleBack}
+      />,
+    ];
+
+    switch (survey_type[0]) {
+      case 1:
+        return [...BASE_COMPONENT, ...surveyAComponents];
+      case 2:
+        return [...BASE_COMPONENT, ...surveyBcomponents];
+      case 3:
+        return [...BASE_COMPONENT, ...surveyCcomponents];
+      default:
+        return [...BASE_COMPONENT];
+    }
+  };
+
   return (
     <Container behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <Wrapper>
-          {surveyAComponents.map((component, index) => {
-            if (index === step) {
-              return <Fragment key={index}>{component}</Fragment>;
-            }
+          {surveyType
+            ? surveyJoinComponents().map((component, index) => {
+                if (index === step) {
+                  return <Fragment key={index}>{component}</Fragment>;
+                }
 
-            return null;
-          })}
+                return null;
+              })
+            : surveyAComponents.map((component, index) => {
+                if (index === step) {
+                  return <Fragment key={index}>{component}</Fragment>;
+                }
+
+                return null;
+              })}
         </Wrapper>
       </TouchableWithoutFeedback>
     </Container>

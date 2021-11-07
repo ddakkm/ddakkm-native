@@ -5,21 +5,21 @@ import Buttonbox from '../atoms/Buttonbox';
 import Button from '../atoms/Button';
 import SelectModalTemplate from '../atoms/SelectModalTemplate';
 
+interface Props {
+  handleSignUp: (gender: 'MALE' | 'FEMALE', age: number) => void;
+}
+
 const options = Array(62)
   .fill(0)
   .map((_, index) => ({
     label: 1960 + index + '',
-    value: 1960 + index + '',
+    value: 1960 + index,
   }));
 
-const UserBasicInfoForm = () => {
+const UserBasicInfoForm = ({ handleSignUp }: Props) => {
   const [selected_year, setSelectedYear] = useState<any>();
   const [is_show_modal, setIsShowModal] = useState(false);
   const [selected_sex, setSelectedSex] = useState<boolean | null>(null);
-
-  const handleSignUp = () => {
-    console.log('hihi');
-  };
 
   return (
     <Container>
@@ -50,7 +50,9 @@ const UserBasicInfoForm = () => {
             selected_sex !== null && selected_year ? 'primary' : 'disabled'
           }
           disabled={!(selected_sex !== null && selected_year)}
-          onPress={handleSignUp}
+          onPress={() =>
+            handleSignUp(selected_sex ? 'FEMALE' : 'MALE', selected_year)
+          }
         />
       </StyeldFixedFooter>
       <SelectModalTemplate

@@ -4,7 +4,11 @@ import Icon from '../atoms/Icon';
 import { TouchableOpacityProps } from 'react-native';
 import Button from '../atoms/Button';
 
-const LoginCheckboxForm = () => {
+interface Props {
+  onNext: () => void;
+}
+
+const LoginCheckboxForm = ({ onNext }: Props) => {
   const [active, isActive] = React.useState(false);
   return (
     <Container>
@@ -41,6 +45,7 @@ const LoginCheckboxForm = () => {
           title={'시작하기'}
           theme={active ? 'primary' : 'disabled'}
           disabled={!active}
+          onPress={onNext}
         />
       </Wrapper>
     </Container>

@@ -4,7 +4,7 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/core';
-import {RootStackParamList} from '../navigation/types';
+import { RootStackParamList } from '../navigation/types';
 
 export const useAppNav = () =>
   useNavigation<NavigationProp<RootStackParamList>>();

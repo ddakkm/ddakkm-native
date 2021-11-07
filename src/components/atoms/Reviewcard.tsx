@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, { css } from '@emotion/native';
 import Icon, { AssetIconType } from './Icon';
-import { survay_a } from '../../utils/servayUtil';
+import { SURVEY_A_LIST } from '../../utils/servayUtil';
 
 interface Props {
   id: number;
@@ -116,7 +116,7 @@ const Reviewcard = ({
                   <Icon type={convertQuestionToIcon(key)} />
                   <CardText>
                     {convertQuestionToText(key)} -{' '}
-                    {survay_a[key][convertAnswerToText(value)]}
+                    {SURVEY_A_LIST[key][convertAnswerToText(value)].label}
                   </CardText>
                 </CardRowWrapper>
               ),

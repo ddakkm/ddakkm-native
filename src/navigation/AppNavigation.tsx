@@ -10,12 +10,18 @@ import SignUp from '../screens/SignUp';
 const RootStack = createNativeStackNavigator();
 const RootRouter = () => {
   return (
-    <RootStack.Navigator initialRouteName={'/signUp'}>
+    <RootStack.Navigator initialRouteName={'/'}>
       <RootStack.Group screenOptions={{ headerShown: false }}>
         <RootStack.Screen name={'/'} component={Home} />
         <RootStack.Screen name={'/survey'} component={Survey} />
         <RootStack.Screen name={'/keyword'} component={Keyword} />
         <RootStack.Screen name={'/detail'} component={Detail} />
+      </RootStack.Group>
+      <RootStack.Group
+        screenOptions={{
+          presentation: 'containedModal',
+          headerShown: false,
+        }}>
         <RootStack.Screen name={'/login'} component={Login} />
         <RootStack.Screen name={'/signUp'} component={SignUp} />
       </RootStack.Group>

@@ -9,6 +9,8 @@ import {
 } from '@react-native-seoul/naver-login';
 import Icon from '../components/atoms/Icon';
 import { authApi } from '../api/auth';
+import { useAppNav, useAppRoute } from '../hooks/useNav';
+import { storeTokens } from '../contexts/auth/storage';
 
 const iosKeys = {
   kConsumerKey: 'nFv0sp8OBRZiQG0AzYCB',
@@ -27,7 +29,7 @@ const initials = Platform.OS === 'ios' ? iosKeys : androidKeys;
 
 const { RNKakaoLogins } = NativeModules;
 
-const login = async (): Promise<any> => {
+const kakaoLogin = async (): Promise<any> => {
   try {
     const result = await RNKakaoLogins.login();
 
@@ -89,6 +91,7 @@ export const getAccessToken = async (): Promise<KakaoAccessTokenInfo> => {
 
 const Login = () => {
   const is_loading = React.useRef<boolean>(false);
+  const { navigate } = useAppNav();
   const naverLogin = (props: any) => {
     return new Promise((resolve, reject) => {
       NaverLogin.login(props, (err, token: any) => {
@@ -101,32 +104,25 @@ const Login = () => {
     });
   };
 
-  const signInWithNaver = async () => {
+  const handlesignIn = async (sns_provider: 'KAKAO' | 'NAVER') => {
     if (is_loading.current) {
       return;
     }
     try {
       is_loading.current = true;
-      const token: any = await naverLogin(initials);
-      const { data } = await authApi.login('NAVER', token.accessToken);
-      console.log(data);
-    } catch (e) {
-      console.log(e);
-    } finally {
-      is_loading.current = false;
-    }
-  };
+      const token: any =
+        sns_provider === 'NAVER'
+          ? await naverLogin(initials)
+          : await kakaoLogin();
+      const {
+        data: { access_token, is_user },
+      } = await authApi.login(sns_provider, token.accessToken);
 
-  const signInWithKakao = async (): Promise<void> => {
-    if (is_loading.current) {
-      return;
-    }
-    try {
-      is_loading.current = true;
-      const token: any = await login();
-      const { data } = await authApi.login('KAKAO', token.accessToken);
-
-      console.log(data);
+      if (!is_user) {
+        navigate('/signUp', { access_token: token.accessToken, sns_provider });
+      } else {
+        await storeTokens(access_token);
+      }
     } catch (e) {
       console.log(e);
     } finally {
@@ -173,11 +169,11 @@ const Login = () => {
         <Title>여러분의</Title>
         <Title>백신후기를 공유해주세요.</Title>
         <ButtonWrapper>
-          <StyledKakaoBtn onPress={signInWithKakao}>
+          <StyledKakaoBtn onPress={() => handlesignIn('KAKAO')}>
             <Icon type={'kakao'} style={{ marginRight: 16 }} />
             <BtnText>카카오톡으로 후기 작성하기</BtnText>
           </StyledKakaoBtn>
-          <StyledNaverBtn onPress={signInWithNaver}>
+          <StyledNaverBtn onPress={() => handlesignIn('NAVER')}>
             <Icon type={'naver'} style={{ marginRight: 8 }} />
             <BtnText style={{ color: '#fff' }}>
               네이버으로 후기 작성하기
