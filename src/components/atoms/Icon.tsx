@@ -35,6 +35,7 @@ import Naver from '../../assets/icons/naver.svg';
 import Check from '../../assets/icons/check.svg';
 import UnCheck from '../../assets/icons/unCheck.svg';
 import RightArrow from '../../assets/icons/rightArrow.svg';
+import Search from '../../assets/icons/search.svg';
 
 const icons = {
   gesturingNo: GesturingNo,
@@ -71,6 +72,7 @@ const icons = {
   check: Check,
   unCheck: UnCheck,
   rightArrow: RightArrow,
+  search: Search,
 } as const;
 
 export type AssetIconType = keyof typeof icons;

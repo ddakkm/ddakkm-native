@@ -9,11 +9,11 @@ interface Props {
   handleSignUp: (gender: 'MALE' | 'FEMALE', age: number) => void;
 }
 
-const options = Array(62)
+const options = Array(50)
   .fill(0)
   .map((_, index) => ({
-    label: 1960 + index + '',
-    value: 1960 + index,
+    label: 2010 - index + '',
+    value: 2010 - index,
   }));
 
 const UserBasicInfoForm = ({ handleSignUp }: Props) => {

@@ -1,9 +1,10 @@
+import instance from '../utils/fetcher';
 import { BASE_URL, Contents, PageMeta } from './base';
 
-const getReview = (
+const getReview = async (
   pageParam: number,
   filterValue: { [key: string]: string },
-) => {
+): Promise<ReviewResponse> => {
   const filter = Object.entries(filterValue)
     .map(([key, value]) => {
       switch (key) {
@@ -30,14 +31,52 @@ const getReview = (
       }
     })
     .filter(_filter => _filter);
-
-  return fetch(
+  const { data } = await instance.get(
     `${BASE_URL}/v1/review?page=${pageParam}&${filter.join('&')}`,
-  ).then(res => res.json());
+  );
+
+  return data;
+};
+
+interface Props {
+  survey_type: string;
+  survey_details:
+    | {
+        vaccine_type: string | null;
+        vaccine_round: string | null;
+        is_crossed: boolean | null;
+        is_pregnant: boolean | null;
+        is_underlying_disease: boolean | null;
+        date_from: string | null;
+        data: { [key: string]: any };
+      }
+    | { [key: string]: any };
+}
+
+const postJoinSurvey = async ({ survey_type, survey_details }: Props) => {
+  const { data } = await instance.post(`${BASE_URL}/v1/user/join-survey`, {
+    survey_type,
+    survey_details,
+  });
+
+  return data;
+};
+
+const postImageUpload = async ({ body }: { body: any }) => {
+  console.log(body);
+  const { data } = await instance.post('/v1/review/images', body, {
+    headers: {
+      'content-type': 'multipart/form-data',
+    },
+  });
+  console.log(data);
+  return data;
 };
 
 export const reviewApi = {
   getReview,
+  postJoinSurvey,
+  postImageUpload,
 };
 
 export interface ReviewResponse {

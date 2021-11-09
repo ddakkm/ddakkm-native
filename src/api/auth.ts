@@ -1,4 +1,5 @@
 import axios from 'axios';
+import instance from '../utils/fetcher';
 import { BASE_URL } from './base';
 
 const login = async (
@@ -30,7 +31,12 @@ const signUp = async (
   });
 };
 
+const isJoinSurvey = async () => {
+  return instance.get('/v1/user/join-survey');
+};
+
 export const authApi = {
   login,
   signUp,
+  isJoinSurvey,
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from '@emotion/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import SurveyForm from '../components/templates/SurveyForm';
@@ -8,6 +8,7 @@ const Survey = () => {
   const {
     params: { surveyType },
   } = useAppRoute<'/survey'>();
+
   return (
     <Container>
       <SafeAreaView style={{ flex: 1 }}>

@@ -28,7 +28,6 @@ const SignupForm = () => {
         gender,
         age,
       );
-      console.log(JSON.stringify(data));
 
       if (data.access_token) {
         await storeTokens(data.access_token);
@@ -41,7 +40,10 @@ const SignupForm = () => {
     dispatch(_ => {
       return CommonActions.reset({
         index: 1,
-        routes: [{ name: '/' }, { name: '/survey' }],
+        routes: [
+          { name: '/' },
+          { name: '/survey', params: { surveyType: 'JOIN' } },
+        ],
       });
     });
   };

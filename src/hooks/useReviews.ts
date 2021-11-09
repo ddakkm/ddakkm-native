@@ -10,6 +10,7 @@ export default function useReviews(filterValue: { [key: string]: string }) {
         getNextPageParam: ({ page_meta: { has_next, page } }) => {
           return has_next ? page + 1 : null;
         },
+        useErrorBoundary: true,
       },
     );
 

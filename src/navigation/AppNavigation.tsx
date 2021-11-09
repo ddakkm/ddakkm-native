@@ -6,6 +6,7 @@ import Login from '../screens/Login';
 import Keyword from '../screens/Keyword';
 import Detail from '../screens/Detail';
 import SignUp from '../screens/SignUp';
+import ImageTest from '../screens/ImageTest';
 
 const RootStack = createNativeStackNavigator();
 const RootRouter = () => {
@@ -16,6 +17,7 @@ const RootRouter = () => {
         <RootStack.Screen name={'/survey'} component={Survey} />
         <RootStack.Screen name={'/keyword'} component={Keyword} />
         <RootStack.Screen name={'/detail'} component={Detail} />
+        <RootStack.Screen name={'/test'} component={ImageTest} />
       </RootStack.Group>
       <RootStack.Group
         screenOptions={{

@@ -5,7 +5,7 @@ type RootStackParamList = {
   '/survey': { surveyType?: 'JOIN' };
   '/signUp': { access_token: string; sns_provider: 'KAKAO' | 'NAVER' };
   '/': undefined;
-  '/keyword': undefined;
+  '/keyword': { handleKeywords: (value: string[]) => void; type?: 'SETTING' };
   '/detail': { reviewId: number };
   '/login': undefined;
 };

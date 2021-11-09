@@ -13,8 +13,6 @@ import {
   pregnantOptions,
   underlyingDiseaseOptions,
 } from '../../utils/filterUtil';
-import { useInfiniteQuery } from 'react-query';
-import { reviewApi, ReviewResponse } from '../../api/review';
 import { FlatList, StyleSheet } from 'react-native';
 import { useIsLoggedIn } from '../../contexts/auth';
 import { useAppNav } from '../../hooks/useNav';
@@ -93,9 +91,11 @@ const MainForm = () => {
 
   const navigateSurvey = () => {
     if (!is_loggedIn) {
-      navigate('/survey', { surveyType: 'JOIN' });
+      navigate('/login');
     } else {
-      navigate('/survey', {});
+      is_survey
+        ? navigate('/survey', {})
+        : navigate('/survey', { surveyType: 'JOIN' });
     }
   };
 
@@ -107,7 +107,9 @@ const MainForm = () => {
           <Icon
             type={'notification'}
             style={{ marginRight: 11 }}
-            onPress={() => {}}
+            onPress={() => {
+              navigate('/keyword');
+            }}
           />
           <Icon type={'setting'} onPress={() => {}} />
         </IconWrapper>
@@ -182,8 +184,8 @@ const MainForm = () => {
         ) : null}
       </CardWrapper>
       <FixedWrapper>
-        <FixedButton>
-          <ButtonText onPress={navigateSurvey}>후기 작성하기</ButtonText>
+        <FixedButton onPress={navigateSurvey}>
+          <ButtonText>후기 작성하기</ButtonText>
         </FixedButton>
       </FixedWrapper>
       <SelectModal

@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import { authApi } from '../../api/auth';
 import { readTokens } from './storage';
 
 interface AuthContextProps {
@@ -24,8 +25,14 @@ const AuthProvider: FC = ({ children }) => {
   useEffect(() => {
     (async () => {
       const token = await readTokens();
+      const {
+        data: { done_survey },
+      } = await authApi.isJoinSurvey();
       if (token) {
         setIsLoggedIn(true);
+      }
+      if (done_survey) {
+        setIsSurvey(true);
       }
     })();
   }, []);
