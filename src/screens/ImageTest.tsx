@@ -15,7 +15,7 @@ const ImageTest = () => {
     console.log(photos);
     const data = new FormData();
     for (const photo of photos) {
-      data.append('file', {
+      data.append('files', {
         name: photo.fileName,
         type: photo.type,
         uri:

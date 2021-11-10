@@ -33,7 +33,7 @@ const ReviewForm = ({ onBack, onSubmit }: Props) => {
   };
 
   const handleSubmit = (img?: any) => {
-    // onSubmit(img);
+    onSubmit(img);
     goBack();
   };
 

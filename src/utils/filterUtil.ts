@@ -1,3 +1,5 @@
+import { AssetIconType } from '../components/atoms/Icon';
+
 export const sexOptions = [
   {
     label: '전체',
@@ -126,3 +128,81 @@ export const ageOptions = [
     value: '60',
   },
 ];
+
+export const convertTypeToText = (value: string) => {
+  switch (value) {
+    case 'ETC':
+      return '기타';
+    case 'PFIZER':
+      return '화이자';
+    case 'AZ':
+      return '아스트라제네카';
+    case 'MODERNA':
+      return '모더나';
+    case 'JANSSEN':
+      return '얀센';
+  }
+};
+
+export const convertRoundToText = (value: string) => {
+  switch (value) {
+    case 'FIRST':
+      return '1회차';
+    case 'SECOND':
+      return '2회차';
+    case 'THIRD':
+      return '부스타샷';
+    default:
+      return '';
+  }
+};
+
+export const convertQuestionToText = (key: string) => {
+  switch (key) {
+    case 'q1':
+      return '근육통';
+    case 'q2':
+      return '발열';
+    case 'q3':
+      return '두통,어지럼증';
+    case 'q4':
+      return '속 불편';
+    case 'q5':
+      return '피곤정도';
+    case 'q6':
+      return '자유후기 이모지';
+    default:
+      return '';
+  }
+};
+
+export const convertQuestionToIcon = (key: string): AssetIconType => {
+  switch (key) {
+    case 'q1':
+      return 'imojiArm';
+    case 'q2':
+      return 'imojiFever';
+    case 'q2_1':
+      return 'imojiFever';
+    case 'q3':
+      return 'brain';
+    case 'q4':
+      return 'imojiFeelverysad';
+    case 'q5':
+      return 'imojiLowfever';
+    case 'q6':
+      return 'imojiArm';
+    default:
+      return 'imojiArm';
+  }
+};
+
+export const convertAnswerToText = (
+  value: number | Array<number | string>,
+): number => {
+  if (typeof value === 'number') {
+    return value;
+  } else {
+    return Number(value[0]);
+  }
+};

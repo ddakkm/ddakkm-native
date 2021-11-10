@@ -27,6 +27,7 @@ import ImojiNo from '../../assets/icons/imoji_no.svg';
 import ImojiSad from '../../assets/icons/imoji_sad.svg';
 import ImojiWholebody from '../../assets/icons/imoji_wholebody.svg';
 import ImojiYes from '../../assets/icons/imoji_yes.svg';
+import ImojiChat from '../../assets/icons/imojiChat.svg';
 import Heart from '../../assets/icons/heart.svg';
 import Message from '../../assets/icons/message.svg';
 import Brain from '../../assets/icons/brain.svg';
@@ -36,6 +37,8 @@ import Check from '../../assets/icons/check.svg';
 import UnCheck from '../../assets/icons/unCheck.svg';
 import RightArrow from '../../assets/icons/rightArrow.svg';
 import Search from '../../assets/icons/search.svg';
+import Menu_verticle from '../../assets/icons/menu_vertical.svg';
+import Fill_heart from '../../assets/icons/fill_heart.svg';
 
 const icons = {
   gesturingNo: GesturingNo,
@@ -73,6 +76,9 @@ const icons = {
   unCheck: UnCheck,
   rightArrow: RightArrow,
   search: Search,
+  menu_verticle: Menu_verticle,
+  imojiChat: ImojiChat,
+  fill_heart: Fill_heart,
 } as const;
 
 export type AssetIconType = keyof typeof icons;

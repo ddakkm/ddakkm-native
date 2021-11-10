@@ -1,7 +1,16 @@
 import React from 'react';
 import styled, { css } from '@emotion/native';
-import Icon, { AssetIconType } from './Icon';
+import Icon from './Icon';
 import { SURVEY_A_LIST } from '../../utils/servayUtil';
+import { useAppNav } from '../../hooks/useNav';
+import {
+  convertAnswerToText,
+  convertQuestionToIcon,
+  convertQuestionToText,
+  convertRoundToText,
+  convertTypeToText,
+} from '../../utils/filterUtil';
+import { generateID } from '../../hooks/useId';
 
 interface Props {
   id: number;
@@ -14,83 +23,8 @@ interface Props {
   symptom: {
     [key: string]: Array<number | string>;
   };
+  navigateToDetail: () => void;
 }
-
-const convertTypeToText = (value: string) => {
-  switch (value) {
-    case 'ETC':
-      return '기타';
-    case 'PFIZER':
-      return '화이자';
-    case 'AZ':
-      return '아스트라제네카';
-    case 'MODERNA':
-      return '모더나';
-    case 'JANSSEN':
-      return '얀센';
-  }
-};
-
-const convertRoundToText = (value: string) => {
-  switch (value) {
-    case 'FIRST':
-      return '1회차';
-    case 'SECOND':
-      return '2회차';
-    case 'THIRD':
-      return '부스타샷';
-    default:
-      return '';
-  }
-};
-
-const convertQuestionToText = (key: string) => {
-  switch (key) {
-    case 'q1':
-      return '근육통';
-    case 'q2':
-      return '발열';
-    case 'q3':
-      return '두통,어지럼증';
-    case 'q4':
-      return '속 불편';
-    case 'q5':
-      return '피곤정도';
-    case 'q6':
-      return '자유후기 이모지';
-    default:
-      return '';
-  }
-};
-
-const convertQuestionToIcon = (key: string): AssetIconType => {
-  switch (key) {
-    case 'q1':
-      return 'imojiArm';
-    case 'q2':
-      return 'imojiFever';
-    case 'q3':
-      return 'brain';
-    case 'q4':
-      return 'imojiFeelverysad';
-    case 'q5':
-      return 'imojiLowfever';
-    case 'q6':
-      return 'imojiArm';
-    default:
-      return 'imojiArm';
-  }
-};
-
-const convertAnswerToText = (
-  value: number | Array<number | string>,
-): number => {
-  if (typeof value === 'number') {
-    return value;
-  } else {
-    return Number(value[0]);
-  }
-};
 
 const Reviewcard = ({
   id,
@@ -101,30 +35,32 @@ const Reviewcard = ({
   comment_count,
   user_is_like,
   symptom,
+  navigateToDetail,
 }: Props) => {
   return (
     <Container>
-      <NicknameText>{nickname}</NicknameText>
-      <VaccineText>
-        {convertRoundToText(vaccine_round)} · {convertTypeToText(vaccine_type)}
-      </VaccineText>
-      <CardListWrapper>
-        {symptom
-          ? Object.entries(symptom).map(
-              ([key, value]: [string, Array<number | string>]) => (
-                <CardRowWrapper key={key}>
+      <StyledWrapper onPress={navigateToDetail}>
+        <NicknameText>{nickname}</NicknameText>
+        <VaccineText>
+          {convertRoundToText(vaccine_round)} ·{' '}
+          {convertTypeToText(vaccine_type)}
+        </VaccineText>
+        <CardListWrapper>
+          {symptom
+            ? Object.entries(symptom).map(([key, value]) => (
+                <CardRowWrapper key={generateID()}>
                   <Icon type={convertQuestionToIcon(key)} />
                   <CardText>
                     {convertQuestionToText(key)} -{' '}
                     {SURVEY_A_LIST[key][convertAnswerToText(value)].label}
                   </CardText>
                 </CardRowWrapper>
-              ),
-            )
-          : null}
-      </CardListWrapper>
+              ))
+            : null}
+        </CardListWrapper>
+      </StyledWrapper>
       <Cardfooter>
-        <Icon type={'heart'} onPress={() => {}} />
+        <Icon type={user_is_like ? 'fill_heart' : 'heart'} onPress={() => {}} />
         <Footertext>{like_count}</Footertext>
         <Icon type={'message'} style={{ marginLeft: 9 }} />
         <Footertext>{comment_count}</Footertext>
@@ -138,6 +74,10 @@ export default Reviewcard;
 const Container = styled.View`
   width: 100%;
   padding: 24px 0 34px 0;
+`;
+
+const StyledWrapper = styled.TouchableOpacity`
+  flex: 1;
 `;
 
 const NicknameText = styled.Text`

@@ -107,9 +107,7 @@ const MainForm = () => {
           <Icon
             type={'notification'}
             style={{ marginRight: 11 }}
-            onPress={() => {
-              navigate('/keyword');
-            }}
+            onPress={() => {}}
           />
           <Icon type={'setting'} onPress={() => {}} />
         </IconWrapper>
@@ -156,6 +154,7 @@ const MainForm = () => {
             contentContainerStyle={styles.flatList}
             data={data.pages.map(({ contents }) => contents).flat()}
             keyExtractor={item => item.id + ''}
+            onEndReachedThreshold={0.3}
             onEndReached={loadMore}
             renderItem={({
               item: {
@@ -178,6 +177,9 @@ const MainForm = () => {
                 comment_count={comment_count}
                 user_is_like={user_is_like}
                 symptom={symptom}
+                navigateToDetail={() => {
+                  navigate('/detail', { review_id: id });
+                }}
               />
             )}
           />

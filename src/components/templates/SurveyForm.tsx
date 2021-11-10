@@ -401,7 +401,7 @@ const SurveyForm = ({ surveyType }: Props) => {
       }}
       onBack={handleBack}
     />,
-    <ReviewForm onBack={handleBack} />,
+    <ReviewForm onBack={handleBack} onSubmit={() => {}} />,
   ];
 
   const surveyJoinAComponents = [
