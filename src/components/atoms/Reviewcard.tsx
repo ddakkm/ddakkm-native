@@ -11,6 +11,7 @@ import {
   convertTypeToText,
 } from '../../utils/filterUtil';
 import { generateID } from '../../hooks/useId';
+import { reviewApi } from '../../api/review';
 
 interface Props {
   id: number;
@@ -37,6 +38,19 @@ const Reviewcard = ({
   symptom,
   navigateToDetail,
 }: Props) => {
+  const [is_like, setIsLike] = React.useState(user_is_like);
+  const [likeCount, setLikeCount] = React.useState(like_count);
+  const handlePressLike = () => {
+    try {
+      setIsLike(prev => !prev);
+      setLikeCount(prev => (is_like ? prev - 1 : prev + 1));
+      reviewApi.postReviewLikeStatus(id);
+    } catch (e) {
+      setIsLike(prev => !prev);
+      setLikeCount(prev => (is_like ? prev + 1 : prev - 1));
+    }
+  };
+
   return (
     <Container>
       <StyledWrapper onPress={navigateToDetail}>
@@ -60,8 +74,11 @@ const Reviewcard = ({
         </CardListWrapper>
       </StyledWrapper>
       <Cardfooter>
-        <Icon type={user_is_like ? 'fill_heart' : 'heart'} onPress={() => {}} />
-        <Footertext>{like_count}</Footertext>
+        <Icon
+          type={is_like ? 'fill_heart' : 'heart'}
+          onPress={handlePressLike}
+        />
+        <Footertext>{likeCount}</Footertext>
         <Icon type={'message'} style={{ marginLeft: 9 }} />
         <Footertext>{comment_count}</Footertext>
       </Cardfooter>
@@ -69,7 +86,7 @@ const Reviewcard = ({
   );
 };
 
-export default Reviewcard;
+export default React.memo(Reviewcard);
 
 const Container = styled.View`
   width: 100%;

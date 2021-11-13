@@ -13,6 +13,7 @@ import {
 import { SURVEY_A_LIST } from '../utils/servayUtil';
 import { StyleSheet } from 'react-native';
 import { generateID } from '../hooks/useId';
+import useReviewLikeStatus from '../hooks/useReviewLikeStatus';
 
 const Detail = () => {
   const { goBack, navigate } = useAppNav();
@@ -21,6 +22,7 @@ const Detail = () => {
   } = useAppRoute<'/detail'>();
 
   const { isLoading, data, isError } = useReviewDetail(review_id);
+  const { mutate } = useReviewLikeStatus();
 
   return (
     <Container>
@@ -71,12 +73,12 @@ const Detail = () => {
                     </CardRowWrapper>
                   );
                 })}
-                {data.content && (
+                {data.content ? (
                   <CardRowWrapper key={generateID()}>
                     <Icon type={'imojiChat'} />
                     <CardText>{data.content}</CardText>
                   </CardRowWrapper>
-                )}
+                ) : null}
                 <StyledKeywordWrapper>
                   {data.keywords.map(value => (
                     <StyledKeyword key={generateID()}>
@@ -94,7 +96,11 @@ const Detail = () => {
               </StyledBody>
             </Wrapper>
             <StyledFooter>
-              <Icon type={'heart'} style={{ padding: 10 }} />
+              <Icon
+                type={data.user_is_like ? 'fill_heart' : 'heart'}
+                style={{ padding: 10 }}
+                onPress={() => mutate({ review_id })}
+              />
               <StyledFooterText>{data.like_count}</StyledFooterText>
               <Icon
                 type={'message'}

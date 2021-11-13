@@ -81,12 +81,23 @@ const getReviewDetail = async (
   return data;
 };
 
+const postReviewLikeStatus = async (review_id: number) => {
+  const { data } = await instance.post(`/v1/review/${review_id}/like_status`);
+  console.log(data);
+  return data;
+};
+
 export const reviewApi = {
   getReview,
   postJoinSurvey,
   postImageUpload,
   getReviewDetail,
+  postReviewLikeStatus,
 };
+
+export interface ReviewLikeResponse {
+  status: string;
+}
 
 export interface ReviewResponse {
   page_meta: PageMeta;
@@ -124,4 +135,5 @@ export interface ReviewDetailResponse {
   comment_count: number;
   like_count: number;
   images: string[] | null;
+  user_is_like: boolean;
 }

@@ -13,10 +13,12 @@ import {
   pregnantOptions,
   underlyingDiseaseOptions,
 } from '../../utils/filterUtil';
-import { FlatList, StyleSheet } from 'react-native';
+import { FlatList, Platform, StyleSheet } from 'react-native';
 import { useIsLoggedIn } from '../../contexts/auth';
 import { useAppNav } from '../../hooks/useNav';
 import useReviews from '../../hooks/useReviews';
+import { reviewApi } from '../../api/review';
+import useReviewLikeStatus from '../../hooks/useReviewLikeStatus';
 
 const FilterbuttunArr: Array<{
   title: string;
@@ -81,6 +83,7 @@ const MainForm = () => {
     pregnant: '',
     underlying: '',
   });
+
   const { isLoading, data, hasNextPage, fetchNextPage } =
     useReviews(filterValue);
   const loadMore = () => {
@@ -189,6 +192,7 @@ const MainForm = () => {
         <FixedButton onPress={navigateSurvey}>
           <ButtonText>후기 작성하기</ButtonText>
         </FixedButton>
+        {Platform.OS === 'ios' ? <Space /> : null}
       </FixedWrapper>
       <SelectModal
         isVisible={selectedModal === 'age'}
@@ -300,6 +304,12 @@ const FixedButton = styled.TouchableOpacity`
   background-color: #53a7ff;
   justify-content: center;
   align-items: center;
+`;
+
+const Space = styled.View`
+  width: 100%;
+  height: 32px;
+  background-color: #53a7ff;
 `;
 
 const FixedWrapper = styled.View`

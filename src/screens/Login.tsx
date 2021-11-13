@@ -11,6 +11,7 @@ import Icon from '../components/atoms/Icon';
 import { authApi } from '../api/auth';
 import { useAppNav, useAppRoute } from '../hooks/useNav';
 import { storeTokens } from '../contexts/auth/storage';
+import LoginImage from '../assets/images/login.png';
 
 const iosKeys = {
   kConsumerKey: 'nFv0sp8OBRZiQG0AzYCB',
@@ -121,7 +122,8 @@ const Login = () => {
       if (!is_user) {
         navigate('/signUp', { access_token: token.accessToken, sns_provider });
       } else {
-        await storeTokens(access_token);
+        navigate('/signUp', { access_token: token.accessToken, sns_provider });
+        // await storeTokens(access_token);
       }
     } catch (e) {
       console.log(e);
@@ -166,8 +168,9 @@ const Login = () => {
     <Container>
       <SafeAreaView style={{ backgroundColor: '#fff' }} />
       <Wrapper>
-        <Title>여러분의</Title>
-        <Title>백신후기를 공유해주세요.</Title>
+        <Top03>백신후기를 공유해주세요</Top03>
+        <Top05>여러분은 어떠셨나요?</Top05>
+        <StyledImage source={LoginImage} />
         <ButtonWrapper>
           <StyledKakaoBtn onPress={() => handlesignIn('KAKAO')}>
             <Icon type={'kakao'} style={{ marginRight: 16 }} />
@@ -198,11 +201,21 @@ const Wrapper = styled.View`
   align-items: center;
 `;
 
-const Title = styled.Text`
+const Top03 = styled.Text`
   font-weight: 600;
   font-size: 28px;
   line-height: 36px;
 `;
+
+const Top05 = styled.Text`
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: #afafaf;
+  margin: 8px 0 32px 0;
+`;
+
+const StyledImage = styled.Image``;
 
 const ButtonWrapper = styled.View`
   padding-horizontal: 24px;

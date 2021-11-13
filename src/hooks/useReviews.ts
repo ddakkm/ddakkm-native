@@ -4,7 +4,7 @@ import { reviewApi, ReviewResponse } from '../api/review';
 export default function useReviews(filterValue: { [key: string]: string }) {
   const { isLoading, data, hasNextPage, fetchNextPage } =
     useInfiniteQuery<ReviewResponse>(
-      ['review', filterValue],
+      ['review_list', filterValue],
       ({ pageParam = 1 }) => reviewApi.getReview(pageParam, filterValue),
       {
         getNextPageParam: ({ page_meta: { has_next, page } }) => {
@@ -13,6 +13,7 @@ export default function useReviews(filterValue: { [key: string]: string }) {
         onError: e => {
           console.log(e);
         },
+        staleTime: Infinity,
       },
     );
 

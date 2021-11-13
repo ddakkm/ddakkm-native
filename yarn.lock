@@ -5966,6 +5966,11 @@ react-native-codegen@^0.0.7:
     jscodeshift "^0.11.0"
     nullthrows "^1.1.1"
 
+react-native-flipper@^0.119.0:
+  version "0.119.0"
+  resolved "https://registry.yarnpkg.com/react-native-flipper/-/react-native-flipper-0.119.0.tgz#28fd527892d8486ddb22260c373e1488d9aa3beb"
+  integrity sha512-okID5GGj58Vwb4pIeTc5lF9knB7UFIyqzNPkoWCGgM31B7t6xprOLvleBtkq+zq8tQVqd0UaFd38eBP7CXR3vQ==
+
 react-native-global-props@^1.1.5:
   version "1.1.5"
   resolved "https://registry.yarnpkg.com/react-native-global-props/-/react-native-global-props-1.1.5.tgz#443e0ffc89d5402fa20ebedf37bcbca6d861c34d"
@@ -6059,6 +6064,13 @@ react-native@0.65.1:
     use-subscription "^1.0.0"
     whatwg-fetch "^3.0.0"
     ws "^6.1.4"
+
+react-query-native-devtools@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/react-query-native-devtools/-/react-query-native-devtools-3.0.1.tgz#7244eddb7f6d18bad87a373ba83f16e7a5a0454e"
+  integrity sha512-n7Sf3jQz9kdaEWN1gzZkIOePTQ09KOG1KMEQqJRvMylW7mdG8Ec9GqvuFn8bhZ4Y/mnCQcGMbMpDn0kYmKy2DQ==
+  dependencies:
+    flatted "^3.1.0"
 
 react-query@^3.29.1:
   version "3.29.1"
