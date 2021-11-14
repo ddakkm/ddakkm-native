@@ -7,9 +7,7 @@ import Button from '../components/atoms/Button';
 
 const Keyword = () => {
   const { goBack } = useAppNav();
-  const {
-    params: { handleKeywords },
-  } = useAppRoute<'/keyword'>();
+  const { params } = useAppRoute<'/keyword'>();
 
   const [selected_keyword, setSelectedKeyword] = useState<string[]>([]);
   const handleSelectKeyword = (value: string) => {
@@ -47,20 +45,20 @@ const Keyword = () => {
     { value: '부스터샷', label: '부스터샷' },
   ];
   const setting = [
-    { text: '당일', vallue: '당일' },
-    { text: '2일차', vallue: '2일차' },
-    { text: '3일차', vallue: '3일차' },
-    { text: '5일차', vallue: '5일차' },
-    { text: '1주일 이상', vallue: '1주일 이상' },
-    { text: '1달 이상', vallue: '1달 이상' },
-    { text: '발열', vallue: '발열' },
-    { text: '두통', vallue: '두통' },
-    { text: '어지러움', vallue: '어지러움' },
-    { text: '울렁거림', vallue: '울렁거림' },
-    { text: '메스꺼움', vallue: '메스꺼움' },
-    { text: '구토', vallue: '구토' },
-    { text: '복통', vallue: '복통' },
-    { text: '설사', vallue: '설사' },
+    { label: '당일', value: '당일' },
+    { label: '2일차', value: '2일차' },
+    { label: '3일차', value: '3일차' },
+    { label: '5일차', value: '5일차' },
+    { label: '1주일 이상', value: '1주일 이상' },
+    { label: '1달 이상', value: '1달 이상' },
+    { label: '발열', value: '발열' },
+    { label: '두통', value: '두통' },
+    { label: '어지러움', value: '어지러움' },
+    { label: '울렁거림', value: '울렁거림' },
+    { label: '메스꺼움', value: '메스꺼움' },
+    { label: '구토', value: '구토' },
+    { label: '복통', value: '복통' },
+    { label: '설사', value: '설사' },
   ];
   return (
     <Container>
@@ -71,25 +69,40 @@ const Keyword = () => {
             <HeaderText>키워드 알림</HeaderText>
             <Space />
           </Header>
-          <StyledBtnWrapper>
-            {keywords.map(({ label, value }) => (
-              <StyledBtn
-                onPress={() => handleSelectKeyword(value)}
-                active={selected_keyword.includes(value)}>
-                <StyledBtnText active={selected_keyword.includes(value)}>
-                  {label}
-                </StyledBtnText>
-              </StyledBtn>
-            ))}
-          </StyledBtnWrapper>
+          <BtnList>
+            <StyledBtnWrapper>
+              {keywords.map(({ label, value }) => (
+                <StyledBtn
+                  onPress={() => handleSelectKeyword(value)}
+                  active={selected_keyword.includes(value)}>
+                  <StyledBtnText active={selected_keyword.includes(value)}>
+                    {label}
+                  </StyledBtnText>
+                </StyledBtn>
+              ))}
+              {params.type
+                ? setting.map(({ label, value }) => (
+                    <StyledBtn
+                      onPress={() => handleSelectKeyword(value)}
+                      active={selected_keyword.includes(value)}>
+                      <StyledBtnText active={selected_keyword.includes(value)}>
+                        {label}
+                      </StyledBtnText>
+                    </StyledBtn>
+                  ))
+                : null}
+            </StyledBtnWrapper>
+          </BtnList>
           <StyledFixedBtnWrapper>
             <Button
               title={'적용하기'}
               theme={selected_keyword.length > 0 ? 'primary' : 'disabled'}
               disabled={selected_keyword.length === 0}
               onPress={() => {
-                handleKeywords(selected_keyword);
-                goBack();
+                if (params.handleKeywords) {
+                  params.handleKeywords(selected_keyword);
+                  goBack();
+                }
               }}
             />
           </StyledFixedBtnWrapper>
@@ -126,6 +139,10 @@ const HeaderText = styled.Text`
 const Space = styled.View`
   width: 24px;
   height: 24px;
+`;
+
+const BtnList = styled.ScrollView`
+  flex: 1;
 `;
 
 const StyledBtnWrapper = styled.View`

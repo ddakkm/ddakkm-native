@@ -6,10 +6,11 @@ type RootStackParamList = {
   '/survey': { surveyType?: 'JOIN' };
   '/signUp': { access_token: string; sns_provider: 'KAKAO' | 'NAVER' };
   '/': undefined;
-  '/keyword': { handleKeywords: (value: string[]) => void; type?: 'SETTING' };
+  '/keyword': { handleKeywords?: (value: string[]) => void; type?: 'SETTING' };
   '/detail': { review_id: number };
   '/login': undefined;
   '/comments': { comments: CommentProps[] };
+  '/settings': undefined;
 };
 
 type NavRef = NavigationContainerRef<RootStackParamList>;

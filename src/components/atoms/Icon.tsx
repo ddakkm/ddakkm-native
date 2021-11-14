@@ -39,6 +39,17 @@ import RightArrow from '../../assets/icons/rightArrow.svg';
 import Search from '../../assets/icons/search.svg';
 import Menu_verticle from '../../assets/icons/menu_vertical.svg';
 import Fill_heart from '../../assets/icons/fill_heart.svg';
+import ImojiNoLogin from '../../assets/icons/imoji_no_login.svg';
+import ImojiMonkey from '../../assets/icons/imoji_monkey.svg';
+import ImojiDog from '../../assets/icons/imoji_dog.svg';
+import ImojiCat from '../../assets/icons/imoji_cat.svg';
+import ImojiPanda from '../../assets/icons/imoji_panda.svg';
+import ImojiLion from '../../assets/icons/imoji_rion.svg';
+import ImojiTiger from '../../assets/icons/imoji_tiger.svg';
+import ImojiKoala from '../../assets/icons/imoji_koala.svg';
+import ImojiFox from '../../assets/icons/imoji_fox.svg';
+import ImojiMouse from '../../assets/icons/imoji_mouse.svg';
+import ImojiBaer from '../../assets/icons/imoji_bear.svg';
 
 const icons = {
   gesturingNo: GesturingNo,
@@ -79,6 +90,17 @@ const icons = {
   menu_verticle: Menu_verticle,
   imojiChat: ImojiChat,
   fill_heart: Fill_heart,
+  imojiNoLogin: ImojiNoLogin,
+  imojiMonkey: ImojiMonkey,
+  imojiDog: ImojiDog,
+  imojiCat: ImojiCat,
+  imojiPanda: ImojiPanda,
+  imojiLion: ImojiLion,
+  imojiTiger: ImojiTiger,
+  imojiKoala: ImojiKoala,
+  imojiFox: ImojiFox,
+  imojiMouse: ImojiMouse,
+  imojiBaer: ImojiBaer,
 } as const;
 
 export type AssetIconType = keyof typeof icons;

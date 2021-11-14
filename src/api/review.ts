@@ -62,6 +62,31 @@ const postJoinSurvey = async ({ survey_type, survey_details }: Props) => {
   return data;
 };
 
+interface SurveyReviewProps {
+  content?: string;
+  survey: {
+    vaccine_type: string | null;
+    vaccine_round: string | null;
+    is_crossed: boolean | null;
+    is_pregnant: boolean | null;
+    is_underlying_disease: boolean | null;
+    date_from: string | null;
+    data: { [key: string]: any };
+  };
+  keywords?: string[];
+  images?: {
+    image1_url: 'string';
+    image2_url: 'string';
+    image3_url: 'string';
+  } | null;
+}
+
+const postSurveyReview = async (body: SurveyReviewProps) => {
+  // console.log(body);
+  const { data } = await instance.post('/v1/review', body);
+  return data;
+};
+
 const postImageUpload = async ({ body }: { body: any }) => {
   console.log(body);
   const { data } = await instance.post('/v1/review/images', body, {
@@ -93,6 +118,7 @@ export const reviewApi = {
   postImageUpload,
   getReviewDetail,
   postReviewLikeStatus,
+  postSurveyReview,
 };
 
 export interface ReviewLikeResponse {

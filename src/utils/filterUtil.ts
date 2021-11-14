@@ -163,6 +163,8 @@ export const convertQuestionToText = (key: string) => {
       return '근육통';
     case 'q2':
       return '발열';
+    case 'q2_1':
+      return '발열기간';
     case 'q3':
       return '두통,어지럼증';
     case 'q4':

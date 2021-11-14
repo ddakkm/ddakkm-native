@@ -12,7 +12,6 @@ const ImageTest = () => {
       return null;
     }
 
-    console.log(photos);
     const data = new FormData();
     for (const photo of photos) {
       data.append('files', {
@@ -23,13 +22,6 @@ const ImageTest = () => {
       });
     }
 
-    // for (const photo of photos) {
-    //   data.append(
-    //     'file',
-    //     Platform.OS === 'ios' ? photo.uri.replace('file://', '') : photo.uri,
-    //   );
-    // }
-    console.log('data', data);
     return data;
   };
 
@@ -41,9 +33,10 @@ const ImageTest = () => {
     try {
       is_loading.current = true;
       const result = await reviewApi.postImageUpload({ body: images });
-      console.log(result);
+      return result;
     } catch (e) {
       console.log(e);
+      return null;
     } finally {
       is_loading.current = false;
     }

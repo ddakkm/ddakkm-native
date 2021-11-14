@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import styled from '@emotion/native';
 import Icon, { AssetIconType } from '../atoms/Icon';
 import Filterbutton from '../atoms/Filterbutton';
@@ -17,8 +17,6 @@ import { FlatList, Platform, StyleSheet } from 'react-native';
 import { useIsLoggedIn } from '../../contexts/auth';
 import { useAppNav } from '../../hooks/useNav';
 import useReviews from '../../hooks/useReviews';
-import { reviewApi } from '../../api/review';
-import useReviewLikeStatus from '../../hooks/useReviewLikeStatus';
 
 const FilterbuttunArr: Array<{
   title: string;
@@ -86,6 +84,7 @@ const MainForm = () => {
 
   const { isLoading, data, hasNextPage, fetchNextPage } =
     useReviews(filterValue);
+
   const loadMore = () => {
     if (hasNextPage) {
       fetchNextPage();
@@ -102,6 +101,11 @@ const MainForm = () => {
     }
   };
 
+  const review_list = useMemo(
+    () => (data ? data.pages.map(({ contents }) => contents).flat() : []),
+    [data],
+  );
+
   return (
     <>
       <Header>
@@ -112,7 +116,12 @@ const MainForm = () => {
             style={{ marginRight: 11 }}
             onPress={() => {}}
           />
-          <Icon type={'setting'} onPress={() => {}} />
+          <Icon
+            type={'setting'}
+            onPress={() => {
+              navigate('/setting');
+            }}
+          />
         </IconWrapper>
       </Header>
       <FilterContainer>
@@ -155,7 +164,7 @@ const MainForm = () => {
         {isLoading ? null : data?.pages ? (
           <FlatList
             contentContainerStyle={styles.flatList}
-            data={data.pages.map(({ contents }) => contents).flat()}
+            data={review_list}
             keyExtractor={item => item.id + ''}
             onEndReachedThreshold={0.3}
             onEndReached={loadMore}

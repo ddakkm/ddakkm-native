@@ -96,6 +96,97 @@ const SurveyForm = ({ surveyType }: Props) => {
     }
   };
 
+  const createFormData = (photos: any[], body = {}) => {
+    if (photos.length === 0) {
+      return null;
+    }
+
+    const data = new FormData();
+    for (const photo of photos) {
+      data.append('files', {
+        name: photo.fileName,
+        type: photo.type,
+        uri:
+          Platform.OS === 'ios' ? photo.uri.replace('file://', '') : photo.uri,
+      });
+    }
+
+    return data;
+  };
+
+  const handleImageSubmit = async (imgs: any) => {
+    const images = createFormData(imgs);
+    try {
+      const result = await reviewApi.postImageUpload({ body: images });
+      return result;
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+  };
+
+  const handleSubmitReview = async ({
+    content,
+    imgs,
+    keywords,
+  }: {
+    content?: string;
+    imgs?: any;
+    keywords?: string[];
+  }) => {
+    if (is_loading.current) {
+      return;
+    }
+    try {
+      is_loading.current = true;
+      let surveyBody: { [key: string]: any[] } = {};
+      for (const [key, values] of Object.entries(surveyA)) {
+        const { value, text } = values;
+        if (text) {
+          surveyBody[key] = [...value, text];
+        } else {
+          surveyBody[key] = [...value];
+        }
+      }
+
+      const {
+        vaccineType: vaccine_type,
+        vaccineRound: vaccine_round,
+        dateFrom: date_from,
+        isCrossed: is_crossed,
+        isPregnant: is_pregnant,
+        isUnderlyingDisease: is_underlying_disease,
+      } = basicInfo;
+
+      const survey = {
+        vaccine_type,
+        vaccine_round,
+        date_from,
+        is_crossed,
+        is_pregnant,
+        is_underlying_disease,
+        data: surveyBody,
+      };
+      let imgUrls: any = null;
+      console.log(imgs);
+      if (imgs) {
+        imgUrls = await handleImageSubmit(imgs);
+        console.log(imgUrls);
+      }
+      await reviewApi.postSurveyReview({
+        survey,
+        images: imgUrls,
+        keywords,
+        content,
+      });
+    } catch (e) {
+      console.log(e);
+      return null;
+    } finally {
+      is_loading.current = false;
+    }
+  };
+
   const handleCompleteJoin = async () => {
     if (is_loading.current) {
       return;
@@ -401,7 +492,7 @@ const SurveyForm = ({ surveyType }: Props) => {
       }}
       onBack={handleBack}
     />,
-    <ReviewForm onBack={handleBack} onSubmit={() => {}} />,
+    <ReviewForm onBack={handleBack} onSubmit={handleSubmitReview} />,
   ];
 
   const surveyJoinAComponents = [
@@ -549,9 +640,7 @@ const SurveyForm = ({ surveyType }: Props) => {
           },
         }))
       }
-      onNext={() => {
-        setStep(prevStep => prevStep + 1);
-      }}
+      onNext={handleCompleteJoin}
       onBack={handleBack}
     />,
   ];

@@ -66,7 +66,7 @@ const Reviewcard = ({
                   <Icon type={convertQuestionToIcon(key)} />
                   <CardText>
                     {convertQuestionToText(key)} -{' '}
-                    {SURVEY_A_LIST[key][convertAnswerToText(value)].label}
+                    {SURVEY_A_LIST[key][convertAnswerToText(value)]?.label}
                   </CardText>
                 </CardRowWrapper>
               ))

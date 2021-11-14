@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import styled from '@emotion/native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import Icon from '../atoms/Icon';
@@ -8,13 +8,23 @@ import { useAppNav } from '../../hooks/useNav';
 
 interface Props {
   onBack: () => void;
-  onSubmit: (imgs?: any) => void;
+  onSubmit: ({
+    content,
+    imgs,
+    keywords,
+  }: {
+    content?: string;
+    imgs?: any;
+    keywords?: string[];
+  }) => void;
 }
 
 const ReviewForm = ({ onBack, onSubmit }: Props) => {
+  const [content, setContent] = useState('');
   const [imgUrls, setImgUrls] = useState<any[]>([]);
   const [keywords, setKeywords] = useState<string[]>([]);
   const { navigate, goBack } = useAppNav();
+
   const imageGalleryLaunch = () => {
     launchImageLibrary(
       {
@@ -32,10 +42,14 @@ const ReviewForm = ({ onBack, onSubmit }: Props) => {
     setKeywords([...value]);
   };
 
-  const handleSubmit = (img?: any) => {
-    onSubmit(img);
+  const handleSubmit = useCallback(() => {
+    onSubmit({
+      content,
+      imgs: imgUrls.length > 0 ? imgUrls : null,
+      keywords,
+    });
     goBack();
-  };
+  }, [content, imgUrls, keywords]);
 
   return (
     <>
@@ -50,6 +64,9 @@ const ReviewForm = ({ onBack, onSubmit }: Props) => {
         <BodyWrapper>
           <BodyTitle>자유 후기</BodyTitle>
           <ReviewTextarea
+            value={content}
+            autoCorrect={false}
+            onChangeText={value => setContent(value)}
             placeholder={'3000자 이내'}
             textAlignVertical={'top'}
             multiline={true}
@@ -93,8 +110,15 @@ const ReviewForm = ({ onBack, onSubmit }: Props) => {
       <Footer>
         <Button
           title={'후기 올리기'}
-          theme={'primary'}
-          onPress={() => onSubmit(imgUrls)}
+          theme={
+            content || imgUrls.length > 0 || keywords.length > 0
+              ? 'primary'
+              : 'disabled'
+          }
+          disabled={
+            content || imgUrls.length > 0 || keywords.length > 0 ? false : true
+          }
+          onPress={handleSubmit}
         />
       </Footer>
     </>

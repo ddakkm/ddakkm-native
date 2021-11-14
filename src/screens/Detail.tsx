@@ -14,6 +14,8 @@ import { SURVEY_A_LIST } from '../utils/servayUtil';
 import { StyleSheet } from 'react-native';
 import { generateID } from '../hooks/useId';
 import useReviewLikeStatus from '../hooks/useReviewLikeStatus';
+import { reviewApi } from '../api/review';
+import { useQueryClient } from 'react-query';
 
 const Detail = () => {
   const { goBack, navigate } = useAppNav();
@@ -22,6 +24,20 @@ const Detail = () => {
   } = useAppRoute<'/detail'>();
 
   const { isLoading, data, isError } = useReviewDetail(review_id);
+  const queryClient = useQueryClient();
+  const [is_like, setIsLike] = React.useState(data ? data.user_is_like : false);
+  const [likeCount, setLikeCount] = React.useState(data ? data.like_count : 0);
+  const handlePressLike = () => {
+    try {
+      setIsLike(prev => !prev);
+      setLikeCount(prev => (is_like ? prev - 1 : prev + 1));
+      reviewApi.postReviewLikeStatus(review_id);
+    } catch (e) {
+      setIsLike(prev => !prev);
+      setLikeCount(prev => (is_like ? prev + 1 : prev - 1));
+    }
+  };
+
   const { mutate } = useReviewLikeStatus();
 
   return (

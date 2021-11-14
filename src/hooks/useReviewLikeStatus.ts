@@ -51,7 +51,7 @@ export default function useReviewLikeStatus() {
       // eslint-disable-next-line handle-callback-err
       onError: (err, variables, context) => {
         if (context?.previousReviews) {
-          queryClient.setQueryData<InfiniteData<ReviewResponse>>(
+          queryClient.setQueriesData<InfiniteData<ReviewResponse>>(
             ['review_list'],
             context.previousReviews,
           );

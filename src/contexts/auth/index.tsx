@@ -24,15 +24,19 @@ const AuthProvider: FC = ({ children }) => {
 
   useEffect(() => {
     (async () => {
-      const token = await readTokens();
-      const {
-        data: { done_survey },
-      } = await authApi.isJoinSurvey();
-      if (token) {
-        setIsLoggedIn(true);
-      }
-      if (done_survey) {
-        setIsSurvey(true);
+      try {
+        const token = await readTokens();
+        const {
+          data: { done_survey },
+        } = await authApi.isJoinSurvey();
+        if (token) {
+          setIsLoggedIn(true);
+        }
+        if (done_survey) {
+          setIsSurvey(true);
+        }
+      } catch (e) {
+        console.log(e);
       }
     })();
   }, []);
