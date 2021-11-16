@@ -16,6 +16,9 @@ import { generateID } from '../hooks/useId';
 import useReviewLikeStatus from '../hooks/useReviewLikeStatus';
 import { reviewApi } from '../api/review';
 import { useQueryClient } from 'react-query';
+import Loading from '../components/atoms/Loading';
+import NoReview from '../components/atoms/NoReview';
+import { useMyLikeList } from '../contexts/like';
 
 const Detail = () => {
   const { goBack, navigate } = useAppNav();
@@ -24,15 +27,19 @@ const Detail = () => {
   } = useAppRoute<'/detail'>();
 
   const { isLoading, data, isError } = useReviewDetail(review_id);
-  const queryClient = useQueryClient();
-  const [is_like, setIsLike] = React.useState(data ? data.user_is_like : false);
+  const { updateLikeReview } = useMyLikeList();
+  const [is_like, setIsLike] = React.useState(
+    data?.user_is_like ? data.user_is_like : false,
+  );
   const [likeCount, setLikeCount] = React.useState(data ? data.like_count : 0);
   const handlePressLike = () => {
     try {
+      // updateLikeReview(review_id + '', is_like ? false : true);
       setIsLike(prev => !prev);
       setLikeCount(prev => (is_like ? prev - 1 : prev + 1));
-      reviewApi.postReviewLikeStatus(review_id);
+      mutate({ review_id });
     } catch (e) {
+      // updateLikeReview(review_id + '', is_like ? false : true);
       setIsLike(prev => !prev);
       setLikeCount(prev => (is_like ? prev + 1 : prev - 1));
     }
@@ -49,7 +56,9 @@ const Detail = () => {
           <Icon type={'menu_verticle'} />
         </Header>
 
-        {isLoading ? null : data ? (
+        {isLoading ? (
+          <Loading />
+        ) : data ? (
           <>
             <Wrapper contentContainerStyle={styles.scroll}>
               <StyledBody>
@@ -128,7 +137,9 @@ const Detail = () => {
               <StyledFooterText>{data.comment_count}</StyledFooterText>
             </StyledFooter>
           </>
-        ) : null}
+        ) : (
+          <NoReview />
+        )}
       </SafeAreaView>
     </Container>
   );

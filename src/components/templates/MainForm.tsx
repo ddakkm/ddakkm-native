@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from '@emotion/native';
 import Icon, { AssetIconType } from '../atoms/Icon';
 import Filterbutton from '../atoms/Filterbutton';
@@ -17,6 +17,9 @@ import { FlatList, Platform, StyleSheet } from 'react-native';
 import { useIsLoggedIn } from '../../contexts/auth';
 import { useAppNav } from '../../hooks/useNav';
 import useReviews from '../../hooks/useReviews';
+import NoReview from '../atoms/NoReview';
+import Loading from '../atoms/Loading';
+import { useMyLikeList } from '../../contexts/like';
 
 const FilterbuttunArr: Array<{
   title: string;
@@ -70,6 +73,7 @@ const FilterbuttunArr: Array<{
 
 const MainForm = () => {
   const { is_loggedIn, is_survey } = useIsLoggedIn();
+  const { fetchList, checkLikeReview, updateLikeReview } = useMyLikeList();
   const { navigate } = useAppNav();
   const [selectedModal, setSelectModal] = useState('');
   const [filterValue, setFilterValue] = useState<{ [key: string]: string }>({
@@ -82,8 +86,14 @@ const MainForm = () => {
     underlying: '',
   });
 
-  const { isLoading, data, hasNextPage, fetchNextPage } =
+  const { isLoading, data, hasNextPage, fetchNextPage, refetch } =
     useReviews(filterValue);
+
+  useEffect(() => {
+    if (is_loggedIn) {
+      fetchList();
+    }
+  }, [is_loggedIn]);
 
   const loadMore = () => {
     if (hasNextPage) {
@@ -106,6 +116,9 @@ const MainForm = () => {
     [data],
   );
 
+  const navigateToLogin = () => {
+    navigate('/login');
+  };
   return (
     <>
       <Header>
@@ -114,7 +127,9 @@ const MainForm = () => {
           <Icon
             type={'notification'}
             style={{ marginRight: 11 }}
-            onPress={() => {}}
+            onPress={() => {
+              navigate('/notification');
+            }}
           />
           <Icon
             type={'setting'}
@@ -130,7 +145,7 @@ const MainForm = () => {
             key={'filter-btn-reset'}
             title={'초기화'}
             iconType={'reset'}
-            handleFilterPress={() =>
+            handleFilterPress={() => {
               setFilterValue({
                 age: '',
                 sex: '',
@@ -139,8 +154,9 @@ const MainForm = () => {
                 round: '',
                 pregnant: '',
                 underlying: '',
-              })
-            }
+              });
+              refetch();
+            }}
           />
           {FilterbuttunArr.map(({ title, iconType, value, options }, index) => (
             <Filterbutton
@@ -161,13 +177,16 @@ const MainForm = () => {
         </FilterWrapper>
       </FilterContainer>
       <CardWrapper>
-        {isLoading ? null : data?.pages ? (
+        {isLoading ? (
+          <Loading />
+        ) : review_list.length > 0 ? (
           <FlatList
             contentContainerStyle={styles.flatList}
             data={review_list}
             keyExtractor={item => item.id + ''}
             onEndReachedThreshold={0.3}
             onEndReached={loadMore}
+            ListEmptyComponent={<NoReview />}
             renderItem={({
               item: {
                 id,
@@ -187,15 +206,20 @@ const MainForm = () => {
                 id={id}
                 like_count={like_count}
                 comment_count={comment_count}
+                is_loggedIn={is_loggedIn}
                 user_is_like={user_is_like}
                 symptom={symptom}
                 navigateToDetail={() => {
                   navigate('/detail', { review_id: id });
                 }}
+                navigateToLogin={navigateToLogin}
+                updateLikeReview={updateLikeReview}
               />
             )}
           />
-        ) : null}
+        ) : (
+          <NoReview />
+        )}
       </CardWrapper>
       <FixedWrapper>
         <FixedButton onPress={navigateSurvey}>

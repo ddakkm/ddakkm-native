@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import SplashScreen from 'react-native-splash-screen';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import AuthProvider from './src/contexts/auth';
+import LikeProvider from './src/contexts/like';
 import Router from './src/navigation';
 import { setGlobalProps } from './src/utils/globalProps';
 setGlobalProps(); // set global props
@@ -21,7 +22,9 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <Router />
+        <LikeProvider>
+          <Router />
+        </LikeProvider>
       </AuthProvider>
     </QueryClientProvider>
   );

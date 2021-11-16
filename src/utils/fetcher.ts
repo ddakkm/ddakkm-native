@@ -10,7 +10,7 @@ const instance = axios.create(axiosGlobalConfig);
 const onRequest = async (
   config?: AxiosRequestConfig,
 ): Promise<AxiosRequestConfig> => {
-  const accessToken = (await readTokens()) || null;
+  const { accessToken } = (await readTokens()) || {};
 
   return {
     ...config,

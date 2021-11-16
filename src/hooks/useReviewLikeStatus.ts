@@ -5,7 +5,6 @@ import { reviewApi } from '../api/review';
 
 export default function useReviewLikeStatus() {
   const queryClient = useQueryClient();
-  const { navigate } = useAppNav();
 
   return useMutation(
     ({ review_id }: { review_id: number }) =>

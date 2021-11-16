@@ -99,8 +99,8 @@ const icons = {
   imojiTiger: ImojiTiger,
   imojiKoala: ImojiKoala,
   imojiFox: ImojiFox,
-  imojiMouse: ImojiMouse,
-  imojiBaer: ImojiBaer,
+  imojiRabbit: ImojiMouse,
+  imojiBear: ImojiBaer,
 } as const;
 
 export type AssetIconType = keyof typeof icons;

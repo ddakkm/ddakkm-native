@@ -129,7 +129,7 @@ export const ageOptions = [
   },
 ];
 
-export const convertTypeToText = (value: string) => {
+export const convertTypeToText = (value?: string) => {
   switch (value) {
     case 'ETC':
       return '기타';
@@ -141,10 +141,12 @@ export const convertTypeToText = (value: string) => {
       return '모더나';
     case 'JANSSEN':
       return '얀센';
+    default:
+      return '';
   }
 };
 
-export const convertRoundToText = (value: string) => {
+export const convertRoundToText = (value?: string) => {
   switch (value) {
     case 'FIRST':
       return '1회차';

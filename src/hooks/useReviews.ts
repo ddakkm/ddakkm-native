@@ -2,7 +2,7 @@ import { useInfiniteQuery } from 'react-query';
 import { reviewApi, ReviewResponse } from '../api/review';
 
 export default function useReviews(filterValue: { [key: string]: string }) {
-  const { isLoading, data, hasNextPage, fetchNextPage } =
+  const { isLoading, data, hasNextPage, fetchNextPage, refetch } =
     useInfiniteQuery<ReviewResponse>(
       ['review_list', filterValue],
       ({ pageParam = 1 }) => reviewApi.getReview(pageParam, filterValue),
@@ -13,9 +13,8 @@ export default function useReviews(filterValue: { [key: string]: string }) {
         onError: e => {
           console.log(e);
         },
-        staleTime: Infinity,
       },
     );
 
-  return { isLoading, data, hasNextPage, fetchNextPage };
+  return { isLoading, data, hasNextPage, fetchNextPage, refetch };
 }

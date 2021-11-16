@@ -11,16 +11,33 @@ import { readTokens } from './storage';
 interface AuthContextProps {
   is_loggedIn: boolean | null;
   is_survey: boolean | null;
+  nickname: string;
+  setIsLoggedIn: (value: boolean) => void;
+  setIsSurvey: (value: boolean) => void;
+  setNickname: (value: string) => void;
+  logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextProps>({
   is_loggedIn: null,
   is_survey: null,
+  nickname: '',
+  setIsLoggedIn: () => {},
+  setIsSurvey: () => {},
+  setNickname: () => {},
+  logout: () => {},
 });
 
 const AuthProvider: FC = ({ children }) => {
   const [is_loggedIn, setIsLoggedIn] = useState(false);
   const [is_survey, setIsSurvey] = useState(false);
+  const [nickname, setNickname] = useState('');
+
+  const logout = () => {
+    setIsLoggedIn(false);
+    setIsSurvey(false);
+    setNickname('');
+  };
 
   useEffect(() => {
     (async () => {
@@ -42,7 +59,16 @@ const AuthProvider: FC = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ is_loggedIn, is_survey }}>
+    <AuthContext.Provider
+      value={{
+        is_loggedIn,
+        is_survey,
+        setIsLoggedIn,
+        setIsSurvey,
+        nickname,
+        setNickname,
+        logout,
+      }}>
       {children}
     </AuthContext.Provider>
   );

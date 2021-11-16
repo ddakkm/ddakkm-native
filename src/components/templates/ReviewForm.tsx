@@ -5,6 +5,7 @@ import Icon from '../atoms/Icon';
 import Button from '../atoms/Button';
 import Textarea from '../atoms/Textarea';
 import { useAppNav } from '../../hooks/useNav';
+import KeywordModal from '../atoms/KeywordModal';
 
 interface Props {
   onBack: () => void;
@@ -23,6 +24,7 @@ const ReviewForm = ({ onBack, onSubmit }: Props) => {
   const [content, setContent] = useState('');
   const [imgUrls, setImgUrls] = useState<any[]>([]);
   const [keywords, setKeywords] = useState<string[]>([]);
+  const [show, handleVisible] = useState(false);
   const { navigate, goBack } = useAppNav();
 
   const imageGalleryLaunch = () => {
@@ -74,8 +76,7 @@ const ReviewForm = ({ onBack, onSubmit }: Props) => {
         </BodyWrapper>
         <BodyWrapper>
           <BodyTitle>키워드 알림</BodyTitle>
-          <StyledKeywordBtn
-            onPress={() => navigate('/keyword', { handleKeywords })}>
+          <StyledKeywordBtn onPress={() => handleVisible(true)}>
             <StyledKeywordBtnText>
               여기를 눌러 해시태그를 선택해주세요.
             </StyledKeywordBtnText>
@@ -121,6 +122,12 @@ const ReviewForm = ({ onBack, onSubmit }: Props) => {
           onPress={handleSubmit}
         />
       </Footer>
+      <KeywordModal
+        isVisible={show}
+        handleVisible={() => handleVisible(false)}
+        keyword_param={keywords}
+        handleKeyword={handleKeywords}
+      />
     </>
   );
 };

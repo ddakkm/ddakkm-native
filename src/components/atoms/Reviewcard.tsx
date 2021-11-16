@@ -12,6 +12,7 @@ import {
 } from '../../utils/filterUtil';
 import { generateID } from '../../hooks/useId';
 import { reviewApi } from '../../api/review';
+import { useIsLoggedIn } from '../../contexts/auth';
 
 interface Props {
   id: number;
@@ -25,6 +26,9 @@ interface Props {
     [key: string]: Array<number | string>;
   };
   navigateToDetail: () => void;
+  is_loggedIn: boolean | null;
+  navigateToLogin: () => void;
+  updateLikeReview: (review_id: string, is_like: boolean) => void;
 }
 
 const Reviewcard = ({
@@ -37,10 +41,16 @@ const Reviewcard = ({
   user_is_like,
   symptom,
   navigateToDetail,
+  is_loggedIn,
+  navigateToLogin,
 }: Props) => {
-  const [is_like, setIsLike] = React.useState(user_is_like);
+  const [is_like, setIsLike] = React.useState(!!user_is_like);
   const [likeCount, setLikeCount] = React.useState(like_count);
+
   const handlePressLike = () => {
+    if (!is_loggedIn) {
+      navigateToLogin();
+    }
     try {
       setIsLike(prev => !prev);
       setLikeCount(prev => (is_like ? prev - 1 : prev + 1));

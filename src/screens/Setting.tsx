@@ -5,21 +5,44 @@ import { SafeAreaView } from 'react-native';
 import { useAppNav } from '../hooks/useNav';
 import { useQuery } from 'react-query';
 import { userApi } from '../api/user';
+import { convertToCharactorSrc } from '../utils/charactor_image_utils';
+import { convertRoundToText, convertTypeToText } from '../utils/filterUtil';
+import { removeTokens } from '../contexts/auth/storage';
+import { useIsLoggedIn } from '../contexts/auth';
 
 const Setting = () => {
-  const { navigate } = useAppNav();
+  const { is_loggedIn, logout } = useIsLoggedIn();
+  const { navigate, reset } = useAppNav();
   const { isLoading, data, isError } = useQuery(
     '/user-profile',
     userApi.getProfile,
   );
 
-  console.log(data);
+  const handleLogout = async () => {
+    await removeTokens();
+    logout();
+    reset({ index: 0, routes: [{ name: '/' }] });
+  };
+
+  const navigateToLogin = () => {
+    navigate('/login');
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       <Container>
         <Header>
-          <ProfileCard />
-          <ProfileInfoCount />
+          <ProfileCard
+            character_image={data?.character_image}
+            vaccine_status={data?.vaccine_status}
+            nickname={data?.nickname}
+            navigateToLogin={navigateToLogin}
+          />
+          <ProfileInfoCount
+            comment_counts={data?.comment_counts}
+            like_counts={data?.like_counts}
+            post_counts={data?.post_counts}
+          />
         </Header>
         <MenuListWrapper>
           {/* <MenuListItem>
@@ -28,11 +51,11 @@ const Setting = () => {
           {/* <MenuListItem>
             <MenuListItemText>공지사항</MenuListItemText>
           </MenuListItem>
-          <MenuListItem>
+           */}
+          <MenuListItem onPress={() => navigate('/pushSetting')}>
             <MenuListItemText>알림설정</MenuListItemText>
-          </MenuListItem> */}
-          <MenuListItem
-            onPress={() => navigate('/keyword', { type: 'SETTING' })}>
+          </MenuListItem>
+          <MenuListItem onPress={() => navigate('/keyword')}>
             <MenuListItemText>키워드 설정</MenuListItemText>
           </MenuListItem>
           <MenuListItem>
@@ -41,14 +64,18 @@ const Setting = () => {
           <MenuListItem>
             <MenuListItemText>개인정보처리방침</MenuListItemText>
           </MenuListItem>
-          <MenuListItem>
-            <MenuListItemText>로그아웃</MenuListItemText>
-          </MenuListItem>
-          <MenuListItem>
-            <MenuListItemText style={{ color: '#afafaf' }}>
-              탈퇴하기
-            </MenuListItemText>
-          </MenuListItem>
+          {is_loggedIn ? (
+            <>
+              <MenuListItem onPress={handleLogout}>
+                <MenuListItemText>로그아웃</MenuListItemText>
+              </MenuListItem>
+              <MenuListItem>
+                <MenuListItemText style={{ color: '#afafaf' }}>
+                  탈퇴하기
+                </MenuListItemText>
+              </MenuListItem>
+            </>
+          ) : null}
         </MenuListWrapper>
       </Container>
     </SafeAreaView>
@@ -57,36 +84,83 @@ const Setting = () => {
 
 export default Setting;
 
-const ProfileCard = () => (
+interface ProfileCardProps {
+  character_image?: string;
+  nickname?: string;
+  vaccine_status?: {
+    details: {
+      is_crossed: boolean;
+      vaccine_round: string;
+      vaccine_type: string;
+    } | null;
+    join_survey_code: string;
+  };
+  navigateToLogin: () => void;
+}
+
+const ProfileCard = ({
+  character_image,
+  nickname,
+  vaccine_status,
+  navigateToLogin,
+}: ProfileCardProps) => (
   <ProfileCardWrapper>
     <ProfileImageWrapper>
-      <Icon type={'imojiPanda'} />
+      <Icon type={convertToCharactorSrc(character_image)} />
     </ProfileImageWrapper>
     <ProfileContentWrapper>
-      <Top03>달콤한 호랑이</Top03>
-      <Top05>2차 · 화이자 · 교차접종</Top05>
+      {nickname ? (
+        <Top03>{nickname}</Top03>
+      ) : (
+        <TouchText onPress={navigateToLogin}>
+          <Top03>로그인하러가기 {'>'}</Top03>
+        </TouchText>
+      )}
+      {vaccine_status ? (
+        <Top05>
+          {convertRoundToText(vaccine_status.details?.vaccine_round)} ·{' '}
+          {convertTypeToText(vaccine_status.details?.vaccine_type)}
+          {vaccine_status.details?.is_crossed ? ' · 교차접종' : ''}
+        </Top05>
+      ) : null}
     </ProfileContentWrapper>
   </ProfileCardWrapper>
 );
 
-const ProfileInfoCount = () => (
+interface ProfileInfoCountProps {
+  comment_counts?: number;
+  post_counts?: number;
+  like_counts?: number;
+}
+
+const ProfileInfoCount = ({
+  comment_counts,
+  post_counts,
+  like_counts,
+}: ProfileInfoCountProps) => (
   <ProfileInfoCountWrapper>
     <ProfileInfoBoxWrapper>
-      <ProfileInfoCountText>999+</ProfileInfoCountText>
+      <ProfileInfoCountText>
+        {post_counts ? post_counts : '-'}
+      </ProfileInfoCountText>
       <ProfileInfoText>작성한 후기</ProfileInfoText>
     </ProfileInfoBoxWrapper>
     <DividerWrapper>
       <Divider />
     </DividerWrapper>
     <ProfileInfoBoxWrapper>
-      <ProfileInfoCountText>0</ProfileInfoCountText>
+      <ProfileInfoCountText>
+        {comment_counts ? comment_counts : '-'}
+      </ProfileInfoCountText>
       <ProfileInfoText>댓글 단 후기</ProfileInfoText>
     </ProfileInfoBoxWrapper>
     <DividerWrapper>
       <Divider />
     </DividerWrapper>
     <ProfileInfoBoxWrapper>
-      <ProfileInfoCountText>0</ProfileInfoCountText>
+      <ProfileInfoCountText>
+        {like_counts ? like_counts : '-'}
+      </ProfileInfoCountText>
       <ProfileInfoText>좋아요 한 후기</ProfileInfoText>
     </ProfileInfoBoxWrapper>
   </ProfileInfoCountWrapper>
@@ -185,3 +259,5 @@ const Divider = styled.View`
   border-left-color: #e8e8e8;
   border-left-width: 1px;
 `;
+
+const TouchText = styled.TouchableOpacity``;

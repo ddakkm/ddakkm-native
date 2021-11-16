@@ -30,7 +30,7 @@ const SignupForm = () => {
       );
 
       if (data.access_token) {
-        await storeTokens(data.access_token);
+        await storeTokens({ accessToken: data.access_token });
       }
     } catch (e) {
       console.log(e);

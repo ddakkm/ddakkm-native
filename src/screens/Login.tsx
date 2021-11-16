@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import styled from '@emotion/native';
-import { Alert, Platform, SafeAreaView } from 'react-native';
+import { Platform, SafeAreaView } from 'react-native';
 import { NativeModules } from 'react-native';
-import Button from '../components/atoms/Button';
 import {
   NaverLogin,
   getProfile as getNaverProfile,
 } from '@react-native-seoul/naver-login';
 import Icon from '../components/atoms/Icon';
 import { authApi } from '../api/auth';
-import { useAppNav, useAppRoute } from '../hooks/useNav';
+import { useAppNav } from '../hooks/useNav';
 import { storeTokens } from '../contexts/auth/storage';
 import LoginImage from '../assets/images/login.png';
+import { useIsLoggedIn } from '../contexts/auth';
 
 const iosKeys = {
   kConsumerKey: 'nFv0sp8OBRZiQG0AzYCB',
@@ -93,6 +93,7 @@ export const getAccessToken = async (): Promise<KakaoAccessTokenInfo> => {
 const Login = () => {
   const is_loading = React.useRef<boolean>(false);
   const { navigate } = useAppNav();
+  const { setIsLoggedIn, setIsSurvey, setNickname } = useIsLoggedIn();
   const naverLogin = (props: any) => {
     return new Promise((resolve, reject) => {
       NaverLogin.login(props, (err, token: any) => {
@@ -116,17 +117,21 @@ const Login = () => {
           ? await naverLogin(initials)
           : await kakaoLogin();
       const {
-        data: { access_token, is_user },
+        data: { access_token, is_user, done_survey, nickname },
       } = await authApi.login(sns_provider, token.accessToken);
 
       if (!is_user) {
         navigate('/signUp', { access_token: token.accessToken, sns_provider });
       } else {
-        navigate('/signUp', { access_token: token.accessToken, sns_provider });
-        // await storeTokens(access_token);
+        await storeTokens({ accessToken: access_token });
+        setIsLoggedIn(true);
+        setIsSurvey(done_survey);
+        setNickname(nickname);
+        navigate('/');
       }
     } catch (e) {
       console.log(e);
+      navigate('/');
     } finally {
       is_loading.current = false;
     }
