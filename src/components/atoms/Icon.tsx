@@ -112,7 +112,7 @@ interface Props extends SvgProps {
 
 const Icon: FC<Props> = ({ type, onPress, ...props }) =>
   onPress ? (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={onPress} style={{ padding: 10 }}>
       {createElement(icons[type], { ...props })}
     </TouchableOpacity>
   ) : (

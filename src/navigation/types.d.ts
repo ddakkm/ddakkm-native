@@ -1,5 +1,5 @@
 import { NavigationContainerRef } from '@react-navigation/core';
-import { CommentProps } from '../api/review';
+import { Comment, CommentProps } from '../api/review';
 
 type RootStackParamList = {
   '/review': undefined;
@@ -9,10 +9,11 @@ type RootStackParamList = {
   '/keyword': undefined;
   '/detail': { review_id: number };
   '/login': undefined;
-  '/comments': { comments: CommentProps[] };
+  '/comments': { review_id: number };
   '/settings': undefined;
   '/notification': undefined;
   '/pushSetting': undefined;
+  '/replyComment': { comment: Comment; review_id: number };
 };
 
 type NavRef = NavigationContainerRef<RootStackParamList>;

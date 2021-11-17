@@ -11,6 +11,7 @@ import Comments from '../screens/Comments';
 import Setting from '../screens/Setting';
 import Notification from '../screens/Notification';
 import PushSetting from '../screens/PushSetting';
+import ReplyComment from '../screens/ReplyComment';
 
 const RootStack = createNativeStackNavigator();
 const RootRouter = () => {
@@ -34,6 +35,7 @@ const RootRouter = () => {
         <RootStack.Screen name={'/login'} component={Login} />
         <RootStack.Screen name={'/signUp'} component={SignUp} />
         <RootStack.Screen name={'/comments'} component={Comments} />
+        <RootStack.Screen name={'/replyComment'} component={ReplyComment} />
       </RootStack.Group>
     </RootStack.Navigator>
   );

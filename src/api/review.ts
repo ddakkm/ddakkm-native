@@ -112,6 +112,69 @@ const postReviewLikeStatus = async (review_id: number) => {
   return data;
 };
 
+const postComment = async ({
+  review_id,
+  content,
+}: {
+  review_id: number;
+  content: string;
+}) => {
+  const { data } = await instance.post(`/v1/review/${review_id}/comment`, {
+    content,
+  });
+  return data;
+};
+
+const postReplyComment = async ({
+  comment_id,
+  content,
+}: {
+  comment_id: number;
+  content: string;
+}) => {
+  const { data } = await instance.post(`/v1/comment/${comment_id}`, {
+    content,
+  });
+  return data;
+};
+
+export interface Comment {
+  content: string;
+  id: number;
+  user_id: number;
+  nickname: string;
+  like_count: number;
+  created_at: string;
+  is_delete: boolean;
+  user_is_like: boolean;
+  user_is_active: boolean;
+  nested_comment: ReComment[];
+}
+
+interface ReComment {
+  content: string;
+  id: number;
+  user_id: number;
+  nickname: string;
+  like_count: number;
+  created_at: string;
+  is_delete: boolean;
+  user_is_like: boolean;
+  user_is_active: boolean;
+}
+
+const getCommentList = async (review_id: number) => {
+  const { data } = await instance.get<Comment[]>(`/v1/comment/${review_id}`);
+  return data;
+};
+
+const getReplyComment = async (comment_id: number) => {
+  const { data } = await instance.get<Comment>(
+    `/v1/comment/${comment_id}/content`,
+  );
+  return data;
+};
+
 export const reviewApi = {
   getReview,
   postJoinSurvey,
@@ -119,6 +182,10 @@ export const reviewApi = {
   getReviewDetail,
   postReviewLikeStatus,
   postSurveyReview,
+  getCommentList,
+  postComment,
+  postReplyComment,
+  getReplyComment,
 };
 
 export interface ReviewLikeResponse {

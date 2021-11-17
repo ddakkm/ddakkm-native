@@ -130,9 +130,7 @@ const Detail = () => {
               <Icon
                 type={'message'}
                 style={{ padding: 10 }}
-                onPress={() =>
-                  navigate('/comments', { comments: data.comments })
-                }
+                onPress={() => navigate('/comments', { review_id })}
               />
               <StyledFooterText>{data.comment_count}</StyledFooterText>
             </StyledFooter>

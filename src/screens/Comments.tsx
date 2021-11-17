@@ -1,52 +1,164 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from '@emotion/native';
-import { SafeAreaView } from 'react-native';
+import {
+  Keyboard,
+  Platform,
+  SafeAreaView,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import Icon from '../components/atoms/Icon';
 import { useAppNav, useAppRoute } from '../hooks/useNav';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { reviewApi } from '../api/review';
+import Loading from '../components/atoms/Loading';
+import NoReview from '../components/atoms/NoReview';
+import { generateID } from '../hooks/useId';
+import FixedBottomInput from '../components/atoms/FixedBottomInput';
+import FixedBottomMenuModal from '../components/atoms/FixedBottomMenuModal';
 
 const Comments = () => {
+  const queryClient = useQueryClient();
+  const [content, setContent] = useState('');
   const { goBack, navigate } = useAppNav();
+  const [show, setIsShow] = React.useState(false);
+  const [is_active, setIsActive] = React.useState(false);
+  const options = React.useMemo(() => {
+    return is_active
+      ? [
+          { label: '수정하기', handlePress: () => {} },
+          { label: '삭제하기', handlePress: () => {} },
+        ]
+      : [{ label: '신고하기', handlePress: () => {} }];
+  }, [is_active]);
+
   const {
-    params: { comments },
+    params: { review_id },
   } = useAppRoute<'/comments'>();
 
-  return (
-    <Container>
-      <SafeAreaView style={{ backgroundColor: '#fff', flex: 1 }}>
-        <Header>
-          <Icon type={'close'} onPress={goBack} />
-          <HeaderText>댓글</HeaderText>
-          <HeaderBtn onPress={() => {}}>
-            <HeaderBtnText>댓글쓰기</HeaderBtnText>
-          </HeaderBtn>
-        </Header>
-        <StyledBody>
-          <StyledCommentList>
-            {comments.map(item => (
-              <CommnetItem
-                key={item.id + ''}
-                nickname={item.nickname}
-                created_at={item.created_at}
-                content={item.content}
-                like_count={item.like_count}
-                comment_count={item.nested_comment.length}
+  const { isLoading, data } = useQuery(['comment_list', review_id], () =>
+    reviewApi.getCommentList(review_id),
+  );
+
+  const { mutate } = useMutation(
+    ({ review_id, content }: { review_id: number; content: string }) =>
+      reviewApi.postComment({ review_id, content }),
+    {
+      onMutate: () => {
+        setContent('');
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries(['comment_list', review_id]);
+      },
+    },
+  );
+
+  const comment_list = React.useMemo(() => {
+    return data
+      ? data.map(item => {
+          let result = [
+            <CommnetItem
+              key={generateID()}
+              nickname={item.nickname}
+              created_at={item.created_at}
+              content={item.content}
+              like_count={item.like_count}
+              comment_count={item.nested_comment.length}
+              user_is_like={item.user_is_like}
+              is_comment_option={() => {
+                setIsActive(item.user_is_active);
+                setIsShow(true);
+              }}
+            />,
+          ];
+
+          if (item.nested_comment.length > 0) {
+            const arr = item.nested_comment.map(recomment => (
+              <ReCommnetItem
+                key={generateID()}
+                nickname={recomment.nickname}
+                created_at={recomment.created_at}
+                content={recomment.content}
+                like_count={recomment.like_count}
+                user_is_like={recomment.user_is_like}
+                is_comment_option={() => {
+                  setIsActive(recomment.user_is_active);
+                  setIsShow(true);
+                }}
               />
-            ))}
-          </StyledCommentList>
-        </StyledBody>
-      </SafeAreaView>
-    </Container>
+            ));
+            result = result.concat(arr);
+            result.push(
+              <ReCommentReplyBtn
+                key={generateID()}
+                onPress={() =>
+                  navigate('/replyComment', { comment: item, review_id })
+                }>
+                <Top08>답글을 입력해주세요.</Top08>
+              </ReCommentReplyBtn>,
+            );
+          }
+
+          result.push(<Divider />);
+          return result;
+        })
+      : [];
+  }, [data]);
+
+  return (
+    <SafeAreaView style={{ backgroundColor: '#fff', flex: 1 }}>
+      <Container behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <Wrapper>
+            <Header>
+              <Icon type={'close'} onPress={goBack} />
+              <HeaderText>댓글 {comment_list.length}</HeaderText>
+              <Space />
+            </Header>
+            {isLoading ? (
+              <Loading />
+            ) : comment_list.length > 0 ? (
+              <StyledBody>
+                <StyledCommentList>{comment_list}</StyledCommentList>
+              </StyledBody>
+            ) : (
+              <Wrapper />
+            )}
+            <FixedBottomInput
+              value={content}
+              onChangeText={value => setContent(value)}
+              autoCorrect={false}
+              placeholder={'답글을 입력해주세요'}
+              handleSubmit={() => {
+                if (content) {
+                  mutate({ review_id, content });
+                }
+              }}
+            />
+          </Wrapper>
+        </TouchableWithoutFeedback>
+      </Container>
+      <FixedBottomMenuModal
+        isVisible={show}
+        handleVisible={() => setIsShow(false)}
+        options={options}
+      />
+    </SafeAreaView>
   );
 };
 
 export default Comments;
 
-interface CommentItemProps {
+const Wrapper = styled.View`
+  flex: 1;
+`;
+export interface CommentItemProps {
   nickname: string;
   created_at: string;
   content: string;
   like_count: number;
   comment_count: number;
+  user_is_like: boolean;
+  is_comment_option: () => void;
 }
 
 const CommnetItem = ({
@@ -54,25 +166,102 @@ const CommnetItem = ({
   created_at,
   content,
   like_count,
+  user_is_like,
   comment_count,
+  is_comment_option,
 }: CommentItemProps) => (
   <StyledCommentItemWrapper>
     <StyledCommentItemHeader>
       <StyledCommentNickname>{nickname}</StyledCommentNickname>
       <StyledCommentDate>3일전</StyledCommentDate>
-      <StyledCommentMenu type={'menu_verticle'} />
+      <StyledColumn>
+        <StyledCommentMenu type={'menu_verticle'} onPress={is_comment_option} />
+      </StyledColumn>
     </StyledCommentItemHeader>
     <StyledCommentContent>{content}</StyledCommentContent>
     <StyledCommentFooter>
-      <Icon type={'heart'} style={{ padding: 10 }} />
+      <Icon
+        type={user_is_like ? 'fill_heart' : 'heart'}
+        style={{ padding: 10 }}
+      />
       <StyledFooterText>{like_count}</StyledFooterText>
       <Icon type={'message'} style={{ padding: 10 }} />
       <StyledFooterText>{comment_count}</StyledFooterText>
+      <StyledTextBtn>
+        <Top08>답글쓰기</Top08>
+      </StyledTextBtn>
     </StyledCommentFooter>
   </StyledCommentItemWrapper>
 );
 
-const Container = styled.View`
+const ReCommnetItem = ({
+  nickname,
+  created_at,
+  content,
+  like_count,
+  user_is_like,
+  is_comment_option,
+}: Omit<CommentItemProps, 'comment_count'>) => (
+  <StyledReCommentItemWrapper>
+    <StyledReCommentIcon />
+    <StyledCommentItemHeader>
+      <StyledCommentNickname>{nickname}</StyledCommentNickname>
+      <StyledCommentDate>3일전</StyledCommentDate>
+      <StyledColumn>
+        <StyledCommentMenu type={'menu_verticle'} onPress={is_comment_option} />
+      </StyledColumn>
+    </StyledCommentItemHeader>
+    <StyledCommentContent>{content}</StyledCommentContent>
+    <StyledCommentFooter>
+      <Icon
+        type={user_is_like ? 'fill_heart' : 'heart'}
+        style={{ padding: 10 }}
+      />
+      <StyledFooterText>{like_count}</StyledFooterText>
+      {/* <Icon type={'message'} style={{ padding: 10 }} />
+      <StyledFooterText>{comment_count}</StyledFooterText> */}
+    </StyledCommentFooter>
+  </StyledReCommentItemWrapper>
+);
+
+const Space = styled.View``;
+
+const Divider = styled.View`
+  width: 100%;
+  border-bottom-width: 1px;
+  border-bottom-color: #efefef;
+  margin-top: 24px;
+`;
+
+const StyledReCommentIcon = styled.View`
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  top: -5px;
+  left: -24px;
+
+  border-left-width: 1px;
+  border-left-color: #afafaf;
+  border-bottom-width: 1px;
+  border-bottom-color: #afafaf;
+`;
+
+const StyledReCommentItemWrapper = styled.View`
+  padding-right: 20px;
+  margin-left: 60px;
+  /* margin-bottom: 16px; */
+`;
+
+const ReCommentReplyBtn = styled.TouchableOpacity`
+  margin: 0 24px 0 60px;
+  padding: 12px 0 12px 15px;
+  border-width: 1px;
+  border-color: #e8e8e8;
+  border-radius: 8px;
+`;
+
+const Container = styled.KeyboardAvoidingView`
+  position: relative;
   flex: 1;
 `;
 
@@ -91,27 +280,17 @@ const HeaderText = styled.Text`
   font-size: 18px;
 `;
 
-const HeaderBtn = styled.TouchableOpacity`
-  padding: 0 0;
-`;
-
-const HeaderBtnText = styled.Text`
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 24px;
-  color: #232b3a;
-`;
-
 const StyledBody = styled.View`
   flex: 1;
 `;
 
-const StyledCommentList = styled.ScrollView``;
+const StyledCommentList = styled.ScrollView`
+  flex: 1;
+`;
 
 const StyledCommentItemWrapper = styled.View`
   padding: 24px 24px 0 24px;
-  border-bottom-width: 1px;
-  border-bottom-color: #f7f7f7;
+  margin-bottom: 23px;
 `;
 
 const StyledCommentItemHeader = styled.View`
@@ -133,6 +312,11 @@ const StyledCommentDate = styled.Text`
   line-height: 20px;
   color: #afafaf;
   margin-left: 8px;
+`;
+
+const StyledColumn = styled.View`
+  position: absolute;
+  right: 0;
 `;
 
 const StyledCommentMenu = styled(Icon)`
@@ -161,4 +345,13 @@ const StyledFooterText = styled.Text`
   line-height: 20px;
   color: #555555;
   margin: 0 25px 0 8px;
+`;
+
+const StyledTextBtn = styled.TouchableOpacity``;
+
+const Top08 = styled.Text`
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 20px;
+  color: #555555;
 `;
