@@ -170,8 +170,49 @@ const getCommentList = async (review_id: number) => {
 
 const getReplyComment = async (comment_id: number) => {
   const { data } = await instance.get<Comment>(
-    `/v1/comment/${comment_id}/content`,
+    `/v1/comment/${comment_id}/tree`,
   );
+  return data;
+};
+
+const deleteComment = async (comment_id: number) => {
+  const { data } = await instance.delete(`/v1/comment/${comment_id}`);
+  return data;
+};
+
+const updateComment = async ({
+  comment_id,
+  content,
+}: {
+  comment_id: number;
+  content: string;
+}) => {
+  const { data } = await instance.patch(`/v1/comment/${comment_id}`, {
+    content,
+  });
+  return data;
+};
+
+const postReportComment = async ({
+  comment_id,
+  reason,
+}: {
+  comment_id: number;
+  reason: number;
+}) => {
+  const { data } = await instance.post(`/v1/comment/${comment_id}/report`, {
+    reason,
+  });
+  return data;
+};
+
+const postLikeComment = async ({ comment_id }: { comment_id: number }) => {
+  const { data } = await instance.post(`/v1/comment/${comment_id}/like_status`);
+  return data;
+};
+
+const getCommentContent = async ({ comment_id }: { comment_id: number }) => {
+  const { data } = await instance.get(`/v1/comment/${comment_id}/content`);
   return data;
 };
 
@@ -186,6 +227,11 @@ export const reviewApi = {
   postComment,
   postReplyComment,
   getReplyComment,
+  deleteComment,
+  updateComment,
+  postReportComment,
+  postLikeComment,
+  getCommentContent,
 };
 
 export interface ReviewLikeResponse {

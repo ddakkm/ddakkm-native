@@ -11,19 +11,24 @@ import { generateID } from '../hooks/useId';
 import Icon from '../components/atoms/Icon';
 import { CommentItemProps } from './Comments';
 import FixedBottomInput from '../components/atoms/FixedBottomInput';
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { reviewApi } from '../api/review';
 import FixedBottomMenuModal from '../components/atoms/FixedBottomMenuModal';
+import Loading from '../components/atoms/Loading';
 
 const ReplyComment = () => {
   const queryClient = useQueryClient();
   const { goBack } = useAppNav();
   const {
-    params: { comment, review_id },
+    params: { comment_id, review_id },
   } = useAppRoute<'/replyComment'>();
   const [content, setContent] = React.useState('');
   const [show, setIsShow] = React.useState(false);
   const [is_active, setIsActive] = React.useState(false);
+
+  const { isLoading, data } = useQuery(['comment_replay', comment_id], () =>
+    reviewApi.getReplyComment(comment_id),
+  );
 
   const { mutate } = useMutation(
     ({ comment_id, content }: { comment_id: number; content: string }) =>
@@ -33,6 +38,7 @@ const ReplyComment = () => {
         setContent('');
       },
       onSuccess: () => {
+        queryClient.invalidateQueries(['comment_replay', comment_id]);
         queryClient.invalidateQueries(['comment_list', review_id]);
       },
     },
@@ -48,24 +54,27 @@ const ReplyComment = () => {
   }, [is_active]);
 
   const comment_list = React.useMemo(() => {
+    if (!data) {
+      return [];
+    }
     let result = [
       <CommnetItem
         key={generateID()}
-        nickname={comment.nickname}
-        created_at={comment.created_at}
-        content={comment.content}
-        like_count={comment.like_count}
-        comment_count={comment.nested_comment.length}
-        user_is_like={comment.user_is_like}
+        nickname={data.nickname}
+        created_at={data.created_at}
+        content={data.content}
+        like_count={data.like_count}
+        comment_count={data.nested_comment.length}
+        user_is_like={data.user_is_like}
         is_comment_option={() => {
-          setIsActive(comment.user_is_active);
+          setIsActive(data.user_is_active);
           setIsShow(true);
         }}
       />,
     ];
 
-    if (comment.nested_comment.length > 0) {
-      const arr = comment.nested_comment.map(recomment => (
+    if (data.nested_comment.length > 0) {
+      const arr = data.nested_comment.map(recomment => (
         <ReCommnetItem
           key={generateID()}
           nickname={recomment.nickname}
@@ -83,7 +92,7 @@ const ReplyComment = () => {
     }
 
     return result;
-  }, [comment]);
+  }, [data]);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
@@ -105,12 +114,13 @@ const ReplyComment = () => {
               placeholder={'답글을 입력해주세요'}
               handleSubmit={() => {
                 if (content) {
-                  mutate({ comment_id: comment.id, content });
+                  mutate({ comment_id, content });
                 }
               }}
             />
           </StyledContainer>
         </TouchableWithoutFeedback>
+        {isLoading && <Loading />}
       </Container>
       <FixedBottomMenuModal
         isVisible={show}
@@ -140,7 +150,7 @@ const CommnetItem = ({
     <StyledCommentItemHeader>
       <StyledCommentNickname>{nickname}</StyledCommentNickname>
       <StyledCommentDate>3일전</StyledCommentDate>
-      <StyledCommentMenu type={'menu_verticle'} />
+      {/* <StyledCommentMenu type={'menu_verticle'} /> */}
     </StyledCommentItemHeader>
     <StyledCommentContent>{content}</StyledCommentContent>
     <StyledCommentFooter>
@@ -167,7 +177,7 @@ const ReCommnetItem = ({
     <StyledCommentItemHeader>
       <StyledCommentNickname>{nickname}</StyledCommentNickname>
       <StyledCommentDate>3일전</StyledCommentDate>
-      <StyledCommentMenu type={'menu_verticle'} />
+      {/* <StyledCommentMenu type={'menu_verticle'} /> */}
     </StyledCommentItemHeader>
     <StyledCommentContent>{content}</StyledCommentContent>
     <StyledCommentFooter>
@@ -254,11 +264,6 @@ const StyledCommentDate = styled.Text`
   margin-left: 8px;
 `;
 
-const StyledCommentMenu = styled(Icon)`
-  position: absolute;
-  right: 0;
-`;
-
 const StyledCommentContent = styled.Text`
   width: 100%;
   font-weight: 400;
@@ -280,13 +285,4 @@ const StyledFooterText = styled.Text`
   line-height: 20px;
   color: #555555;
   margin: 0 25px 0 8px;
-`;
-
-const StyledTextBtn = styled.TouchableOpacity``;
-
-const Top08 = styled.Text`
-  font-weight: 400;
-  font-size: 13px;
-  line-height: 20px;
-  color: #555555;
 `;

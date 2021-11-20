@@ -11,26 +11,18 @@ import { useAppNav, useAppRoute } from '../hooks/useNav';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { reviewApi } from '../api/review';
 import Loading from '../components/atoms/Loading';
-import NoReview from '../components/atoms/NoReview';
 import { generateID } from '../hooks/useId';
 import FixedBottomInput from '../components/atoms/FixedBottomInput';
 import FixedBottomMenuModal from '../components/atoms/FixedBottomMenuModal';
 
 const Comments = () => {
+  const is_loading = React.useRef(false);
   const queryClient = useQueryClient();
   const [content, setContent] = useState('');
   const { goBack, navigate } = useAppNav();
   const [show, setIsShow] = React.useState(false);
   const [is_active, setIsActive] = React.useState(false);
-  const options = React.useMemo(() => {
-    return is_active
-      ? [
-          { label: '수정하기', handlePress: () => {} },
-          { label: '삭제하기', handlePress: () => {} },
-        ]
-      : [{ label: '신고하기', handlePress: () => {} }];
-  }, [is_active]);
-
+  const selected_comment_id = React.useRef(0);
   const {
     params: { review_id },
   } = useAppRoute<'/comments'>();
@@ -52,6 +44,38 @@ const Comments = () => {
     },
   );
 
+  const options = React.useMemo(() => {
+    return is_active
+      ? [
+          {
+            label: '수정하기',
+            handlePress: () => {
+              navigate('/modifyComment', {
+                comment_id: selected_comment_id.current,
+              });
+              setIsShow(false);
+            },
+          },
+          {
+            label: '삭제하기',
+            handlePress: async () => {
+              if (is_loading.current) return;
+              try {
+                is_loading.current = true;
+                await reviewApi.deleteComment(selected_comment_id.current);
+                queryClient.invalidateQueries(['comment_list', review_id]);
+              } catch (err) {
+                /** */
+              } finally {
+                is_loading.current = false;
+                setIsShow(false);
+              }
+            },
+          },
+        ]
+      : [{ label: '신고하기', handlePress: () => {} }];
+  }, [is_active]);
+
   const comment_list = React.useMemo(() => {
     return data
       ? data.map(item => {
@@ -65,9 +89,16 @@ const Comments = () => {
               comment_count={item.nested_comment.length}
               user_is_like={item.user_is_like}
               is_comment_option={() => {
+                selected_comment_id.current = item.id;
                 setIsActive(item.user_is_active);
                 setIsShow(true);
               }}
+              navigateToReply={() =>
+                navigate('/replyComment', {
+                  comment_id: selected_comment_id.current,
+                  review_id,
+                })
+              }
             />,
           ];
 
@@ -81,6 +112,7 @@ const Comments = () => {
                 like_count={recomment.like_count}
                 user_is_like={recomment.user_is_like}
                 is_comment_option={() => {
+                  selected_comment_id.current = recomment.id;
                   setIsActive(recomment.user_is_active);
                   setIsShow(true);
                 }}
@@ -91,7 +123,10 @@ const Comments = () => {
               <ReCommentReplyBtn
                 key={generateID()}
                 onPress={() =>
-                  navigate('/replyComment', { comment: item, review_id })
+                  navigate('/replyComment', {
+                    comment_id: selected_comment_id.current,
+                    review_id,
+                  })
                 }>
                 <Top08>답글을 입력해주세요.</Top08>
               </ReCommentReplyBtn>,
@@ -159,6 +194,7 @@ export interface CommentItemProps {
   comment_count: number;
   user_is_like: boolean;
   is_comment_option: () => void;
+  navigateToReply?: () => void;
 }
 
 const CommnetItem = ({
@@ -168,6 +204,7 @@ const CommnetItem = ({
   like_count,
   user_is_like,
   comment_count,
+  navigateToReply,
   is_comment_option,
 }: CommentItemProps) => (
   <StyledCommentItemWrapper>
@@ -175,7 +212,11 @@ const CommnetItem = ({
       <StyledCommentNickname>{nickname}</StyledCommentNickname>
       <StyledCommentDate>3일전</StyledCommentDate>
       <StyledColumn>
-        <StyledCommentMenu type={'menu_verticle'} onPress={is_comment_option} />
+        <StyledCommentMenu
+          type={'menu_verticle'}
+          onPress={is_comment_option}
+          btnStyle={{ width: 24, height: 24 }}
+        />
       </StyledColumn>
     </StyledCommentItemHeader>
     <StyledCommentContent>{content}</StyledCommentContent>
@@ -187,7 +228,7 @@ const CommnetItem = ({
       <StyledFooterText>{like_count}</StyledFooterText>
       <Icon type={'message'} style={{ padding: 10 }} />
       <StyledFooterText>{comment_count}</StyledFooterText>
-      <StyledTextBtn>
+      <StyledTextBtn onPress={navigateToReply}>
         <Top08>답글쓰기</Top08>
       </StyledTextBtn>
     </StyledCommentFooter>

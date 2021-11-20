@@ -13,7 +13,8 @@ type RootStackParamList = {
   '/settings': undefined;
   '/notification': undefined;
   '/pushSetting': undefined;
-  '/replyComment': { comment: Comment; review_id: number };
+  '/replyComment': { comment_id: number; review_id: number };
+  '/modifyComment': { comment_id: number };
 };
 
 type NavRef = NavigationContainerRef<RootStackParamList>;

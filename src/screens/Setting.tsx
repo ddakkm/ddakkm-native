@@ -9,19 +9,32 @@ import { convertToCharactorSrc } from '../utils/charactor_image_utils';
 import { convertRoundToText, convertTypeToText } from '../utils/filterUtil';
 import { removeTokens } from '../contexts/auth/storage';
 import { useIsLoggedIn } from '../contexts/auth';
+import Loading from '../components/atoms/Loading';
 
 const Setting = () => {
+  const [is_logout_loading, setLogoutLoading] = React.useState(false);
   const { is_loggedIn, logout } = useIsLoggedIn();
   const { navigate, reset } = useAppNav();
-  const { isLoading, data, isError } = useQuery(
-    '/user-profile',
+  const { isLoading, data, isError, remove } = useQuery(
+    ['/user-profile'],
     userApi.getProfile,
+    {
+      enabled: !!is_loggedIn,
+    },
   );
 
   const handleLogout = async () => {
-    await removeTokens();
-    logout();
-    reset({ index: 0, routes: [{ name: '/' }] });
+    try {
+      setLogoutLoading(true);
+      await removeTokens();
+      remove();
+      logout();
+      reset({ index: 0, routes: [{ name: '/' }] });
+    } catch {
+      /** */
+    } finally {
+      setLogoutLoading(false);
+    }
   };
 
   const navigateToLogin = () => {
@@ -77,6 +90,7 @@ const Setting = () => {
             </>
           ) : null}
         </MenuListWrapper>
+        {is_logout_loading && <Loading />}
       </Container>
     </SafeAreaView>
   );
@@ -166,7 +180,10 @@ const ProfileInfoCount = ({
   </ProfileInfoCountWrapper>
 );
 
-const Container = styled.View``;
+const Container = styled.View`
+  position: relative;
+  flex: 1;
+`;
 
 const MenuListWrapper = styled.View`
   padding: 16px 24px;
