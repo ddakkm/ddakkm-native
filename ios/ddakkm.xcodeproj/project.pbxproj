@@ -22,6 +22,7 @@
 		C6A52849B09A46A1996E16D2 /* Pretendard-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = CA6FB6391666466EA3779C68 /* Pretendard-Black.otf */; };
 		C90422C25720463DA8BB8408 /* Pretendard-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 43154E5DBB184928B89872DB /* Pretendard-Medium.otf */; };
 		D150BC963E48475A8BFC68F0 /* Pretendard-ExtraLight.otf in Resources */ = {isa = PBXBuildFile; fileRef = 08BD149F7BC74624BE9830E4 /* Pretendard-ExtraLight.otf */; };
+		D24EAD7D2748EDD5006C640C /* AppCenter-Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = D24EAD7C2748EDD5006C640C /* AppCenter-Config.plist */; };
 		DC04D4B9B3A68E2C4372CF55 /* libPods-ddakkm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D68A319F1C0A0795849F1EE4 /* libPods-ddakkm.a */; };
 /* End PBXBuildFile section */
 
@@ -61,6 +62,7 @@
 		CA6FB6391666466EA3779C68 /* Pretendard-Black.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Pretendard-Black.otf"; path = "../src/assets/fonts/Pretendard-Black.otf"; sourceTree = "<group>"; };
 		D00AAFFCFCFDA5787532823F /* Pods-ddakkm.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ddakkm.release.xcconfig"; path = "Target Support Files/Pods-ddakkm/Pods-ddakkm.release.xcconfig"; sourceTree = "<group>"; };
 		D229F72E2711851D00E9CDD6 /* ddakkm-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ddakkm-Bridging-Header.h"; sourceTree = "<group>"; };
+		D24EAD7C2748EDD5006C640C /* AppCenter-Config.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AppCenter-Config.plist"; sourceTree = "<group>"; };
 		D68A319F1C0A0795849F1EE4 /* libPods-ddakkm.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ddakkm.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -107,6 +109,7 @@
 			children = (
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
+				D24EAD7C2748EDD5006C640C /* AppCenter-Config.plist */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
@@ -284,6 +287,7 @@
 				C6A52849B09A46A1996E16D2 /* Pretendard-Black.otf in Resources */,
 				6BA79C595D8B4C3D93265825 /* Pretendard-Bold.otf in Resources */,
 				84AA6EB1744442468E22BBAD /* Pretendard-ExtraBold.otf in Resources */,
+				D24EAD7D2748EDD5006C640C /* AppCenter-Config.plist in Resources */,
 				D150BC963E48475A8BFC68F0 /* Pretendard-ExtraLight.otf in Resources */,
 				ACD5BBEE1B63421083877E8B /* Pretendard-Light.otf in Resources */,
 				C90422C25720463DA8BB8408 /* Pretendard-Medium.otf in Resources */,
