@@ -126,7 +126,7 @@ const MainForm = () => {
         <IconWrapper>
           <Icon
             type={'notification'}
-            style={{ marginRight: 11 }}
+            btnStyle={{ marginRight: 12 }}
             onPress={() => {
               navigate('/notification');
             }}
@@ -134,13 +134,15 @@ const MainForm = () => {
           <Icon
             type={'setting'}
             onPress={() => {
-              navigate('/setting');
+              navigate('/settings');
             }}
           />
         </IconWrapper>
       </Header>
       <FilterContainer>
-        <FilterWrapper horizontal={true} contentContainerStyle={{ height: 60 }}>
+        <FilterWrapper
+          horizontal={true}
+          contentContainerStyle={{ paddingHorizontal: 24, height: 60 }}>
           <Filterbutton
             key={'filter-btn-reset'}
             title={'초기화'}
@@ -312,12 +314,12 @@ const HeaderTitle = styled.Text`
 const IconWrapper = styled.View`
   flex-direction: row;
   align-items: center;
+  justify-content: center;
 `;
 
 const FilterContainer = styled.View`
   width: 100%;
   height: 60px;
-  padding: 0 24px;
 `;
 
 const FilterWrapper = styled.ScrollView`

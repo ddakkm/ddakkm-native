@@ -224,7 +224,10 @@ const ReCommnetItem = ({
   </StyledReCommentItemWrapper>
 );
 
-const Space = styled.View``;
+const Space = styled.View`
+  width: 24px;
+  height: 24px;
+`;
 
 const Divider = styled.View`
   width: 100%;

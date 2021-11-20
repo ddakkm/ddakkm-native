@@ -229,6 +229,7 @@ const ProfileInfoCountWrapper = styled.View`
   background-color: #f7f7f7;
   border-radius: 8px;
   flex-direction: row;
+  justify-content: center;
 `;
 
 const ProfileInfoBoxWrapper = styled.View`

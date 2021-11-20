@@ -1,5 +1,5 @@
 import React, { createElement, FC } from 'react';
-import { TouchableOpacity } from 'react-native';
+import { StyleProp, TouchableOpacity, ViewStyle } from 'react-native';
 import { SvgProps } from 'react-native-svg';
 import GesturingNo from '../../assets/icons/gesturingNo.svg';
 import Leg from '../../assets/icons/leg.svg';
@@ -107,12 +107,13 @@ export type AssetIconType = keyof typeof icons;
 
 interface Props extends SvgProps {
   type: AssetIconType;
+  btnStyle?: StyleProp<ViewStyle>;
   onPress?: () => void;
 }
 
-const Icon: FC<Props> = ({ type, onPress, ...props }) =>
+const Icon: FC<Props> = ({ type, btnStyle, onPress, ...props }) =>
   onPress ? (
-    <TouchableOpacity onPress={onPress} style={{ padding: 10 }}>
+    <TouchableOpacity onPress={onPress} style={btnStyle}>
       {createElement(icons[type], { ...props })}
     </TouchableOpacity>
   ) : (

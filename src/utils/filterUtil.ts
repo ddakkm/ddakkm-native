@@ -36,6 +36,10 @@ export const vaccineTypeOptions = [
     label: '얀센',
     value: 'JANSSEN',
   },
+  {
+    label: '기타',
+    value: 'ETC',
+  },
 ];
 
 export const crossOptions = [

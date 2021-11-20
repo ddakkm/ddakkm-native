@@ -14,7 +14,7 @@ const getReview = async (
             : false;
         case 'sex':
           return value !== ''
-            ? value
+            ? value === 'MALE'
               ? 'gender=MALE'
               : 'gender=FEMALE'
             : false;

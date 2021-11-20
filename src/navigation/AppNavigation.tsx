@@ -23,7 +23,7 @@ const RootRouter = () => {
         <RootStack.Screen name={'/keyword'} component={Keyword} />
         <RootStack.Screen name={'/detail'} component={Detail} />
         <RootStack.Screen name={'/test'} component={ImageTest} />
-        <RootStack.Screen name={'/setting'} component={Setting} />
+        <RootStack.Screen name={'/settings'} component={Setting} />
         <RootStack.Screen name={'/notification'} component={Notification} />
         <RootStack.Screen name={'/pushSetting'} component={PushSetting} />
       </RootStack.Group>
