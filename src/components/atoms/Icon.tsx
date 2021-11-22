@@ -50,6 +50,7 @@ import ImojiKoala from '../../assets/icons/imoji_koala.svg';
 import ImojiFox from '../../assets/icons/imoji_fox.svg';
 import ImojiMouse from '../../assets/icons/imoji_mouse.svg';
 import ImojiBaer from '../../assets/icons/imoji_bear.svg';
+import WhiteClose from '../../assets/icons/whiteClose.svg';
 
 const icons = {
   gesturingNo: GesturingNo,
@@ -101,6 +102,7 @@ const icons = {
   imojiFox: ImojiFox,
   imojiRabbit: ImojiMouse,
   imojiBear: ImojiBaer,
+  whiteClose: WhiteClose,
 } as const;
 
 export type AssetIconType = keyof typeof icons;

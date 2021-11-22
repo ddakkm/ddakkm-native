@@ -15,6 +15,7 @@ type RootStackParamList = {
   '/pushSetting': undefined;
   '/replyComment': { comment_id: number; review_id: number };
   '/modifyComment': { comment_id: number };
+  '/modifyReview': { review_id: number };
 };
 
 type NavRef = NavigationContainerRef<RootStackParamList>;

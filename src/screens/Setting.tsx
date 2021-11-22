@@ -65,12 +65,6 @@ const Setting = () => {
             <MenuListItemText>공지사항</MenuListItemText>
           </MenuListItem>
            */}
-          <MenuListItem onPress={() => navigate('/pushSetting')}>
-            <MenuListItemText>알림설정</MenuListItemText>
-          </MenuListItem>
-          <MenuListItem onPress={() => navigate('/keyword')}>
-            <MenuListItemText>키워드 설정</MenuListItemText>
-          </MenuListItem>
           <MenuListItem>
             <MenuListItemText>문의하기</MenuListItemText>
           </MenuListItem>
@@ -79,6 +73,12 @@ const Setting = () => {
           </MenuListItem>
           {is_loggedIn ? (
             <>
+              <MenuListItem onPress={() => navigate('/pushSetting')}>
+                <MenuListItemText>알림설정</MenuListItemText>
+              </MenuListItem>
+              <MenuListItem onPress={() => navigate('/keyword')}>
+                <MenuListItemText>키워드 설정</MenuListItemText>
+              </MenuListItem>
               <MenuListItem onPress={handleLogout}>
                 <MenuListItemText>로그아웃</MenuListItemText>
               </MenuListItem>

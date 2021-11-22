@@ -22,6 +22,7 @@ interface Props {
   like_count: number;
   comment_count: number;
   user_is_like: boolean;
+  content: string;
   symptom: {
     [key: string]: Array<number | string>;
   };
@@ -40,6 +41,7 @@ const Reviewcard = ({
   comment_count,
   user_is_like,
   symptom,
+  content,
   navigateToDetail,
   is_loggedIn,
   navigateToLogin,
@@ -81,6 +83,12 @@ const Reviewcard = ({
                 </CardRowWrapper>
               ))
             : null}
+          {content ? (
+            <CardRowWrapper key={generateID()}>
+              <Icon type={convertQuestionToIcon('')} />
+              <CardText numberOfLines={3}>{content}</CardText>
+            </CardRowWrapper>
+          ) : null}
         </CardListWrapper>
       </StyledWrapper>
       <Cardfooter>
@@ -96,7 +104,7 @@ const Reviewcard = ({
   );
 };
 
-export default React.memo(Reviewcard);
+export default Reviewcard;
 
 const Container = styled.View`
   width: 100%;
@@ -141,6 +149,7 @@ const text = () => css`
 
 const CardText = styled.Text`
   ${text()};
+  width: 90%;
   margin-left: 6px;
 `;
 

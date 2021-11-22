@@ -201,7 +201,7 @@ export const convertQuestionToIcon = (key: string): AssetIconType => {
     case 'q6':
       return 'imojiArm';
     default:
-      return 'imojiArm';
+      return 'imojiChat';
   }
 };
 

@@ -25,8 +25,7 @@ const ReplyComment = () => {
   const [content, setContent] = React.useState('');
   const [show, setIsShow] = React.useState(false);
   const [is_active, setIsActive] = React.useState(false);
-
-  const { isLoading, data } = useQuery(['comment_replay', comment_id], () =>
+  const { isLoading, data } = useQuery(['comment_replay', { comment_id }], () =>
     reviewApi.getReplyComment(comment_id),
   );
 
@@ -38,7 +37,7 @@ const ReplyComment = () => {
         setContent('');
       },
       onSuccess: () => {
-        queryClient.invalidateQueries(['comment_replay', comment_id]);
+        queryClient.invalidateQueries(['comment_replay', { comment_id }]);
         queryClient.invalidateQueries(['comment_list', review_id]);
       },
     },

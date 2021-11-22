@@ -183,9 +183,7 @@ const Login = () => {
           </StyledKakaoBtn>
           <StyledNaverBtn onPress={() => handlesignIn('NAVER')}>
             <Icon type={'naver'} style={{ marginRight: 8 }} />
-            <BtnText style={{ color: '#fff' }}>
-              네이버으로 후기 작성하기
-            </BtnText>
+            <BtnText style={{ color: '#fff' }}>네이버로 후기 작성하기</BtnText>
           </StyledNaverBtn>
         </ButtonWrapper>
       </Wrapper>

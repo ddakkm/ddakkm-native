@@ -199,12 +199,14 @@ const MainForm = () => {
                 comment_count,
                 user_is_like,
                 symptom,
+                content,
               },
             }: any) => (
               <Reviewcard
                 nickname={nickname}
                 vaccine_round={vaccine_round}
                 vaccine_type={vaccine_type}
+                content={content}
                 id={id}
                 like_count={like_count}
                 comment_count={comment_count}
