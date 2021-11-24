@@ -124,7 +124,7 @@ const Comments = () => {
                 key={generateID()}
                 onPress={() =>
                   navigate('/replyComment', {
-                    comment_id: selected_comment_id.current,
+                    comment_id: item.id,
                     review_id,
                   })
                 }>

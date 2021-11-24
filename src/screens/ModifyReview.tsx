@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/native';
-import { useAppNav } from '../hooks/useNav';
+import { useAppNav, useAppRoute } from '../hooks/useNav';
 import { launchImageLibrary } from 'react-native-image-picker';
 import Icon from '../components/atoms/Icon';
 import KeywordModal from '../components/atoms/KeywordModal';
@@ -13,38 +13,116 @@ import {
 } from 'react-native';
 import Textarea from '../components/atoms/Textarea';
 import ImageCard from '../components/atoms/ImageCard';
+import { useQuery, useQueryClient } from 'react-query';
+import { reviewApi } from '../api/review';
+import Loading from '../components/atoms/Loading';
+import { generateID } from '../hooks/useId';
 
 const ModifyReview = () => {
+  const is_loading = React.useRef(false);
+  const [loading, setLoading] = React.useState(false);
+  const queryClient = useQueryClient();
   const [content, setContent] = React.useState('');
   const [imgUrls, setImgUrls] = React.useState<any[]>([]);
   const [keywords, setKeywords] = React.useState<string[]>([]);
   const [show, handleVisible] = React.useState(false);
-  const { navigate, goBack } = useAppNav();
+  const { navigate, goBack, reset } = useAppNav();
+  const {
+    params: { review_id },
+  } = useAppRoute<'/modifyReview'>();
 
-  const imageGalleryLaunch = () => {
-    launchImageLibrary(
-      {
-        maxHeight: 200,
-        maxWidth: 200,
-        selectionLimit: 3,
-        mediaType: 'photo',
-        includeBase64: false,
-      },
-      res => (res?.assets ? setImgUrls([...res.assets]) : setImgUrls([])),
-    );
-  };
+  React.useEffect(() => {
+    (async () => {
+      try {
+        setLoading(true);
+        const data = await reviewApi.getReviewContent({ review_id });
+        setContent(data.content);
+        setKeywords(data.keywords);
+        if (data.images) {
+          setImgUrls(
+            Object.entries(data.images).map(([key, value]) => {
+              return {
+                fileName: key,
+                uri: value,
+              };
+            }),
+          );
+        }
+      } catch (e) {
+        /** */
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [review_id]);
+
+  // const imageGalleryLaunch = () => {
+  //   launchImageLibrary(
+  //     {
+  //       maxHeight: 200,
+  //       maxWidth: 200,
+  //       selectionLimit: 3,
+  //       mediaType: 'photo',
+  //       includeBase64: false,
+  //     },
+  //     res =>
+  //       res?.assets
+  //         ? setImgUrls(
+  //             res.assets.map((asset, index) => ({
+  //               fileName: `image${index + 1}+url`,
+  //               uri: asset.uri,
+  //             })),
+  //           )
+  //         : setImgUrls([]),
+  //   );
+  // };
 
   const handleKeywords = (value: string[]) => {
     setKeywords([...value]);
   };
 
   const handleRemoveImage = (uri: string) => {
-    setImgUrls(prev => prev.filter(img => img.uri !== uri));
+    setImgUrls(prev =>
+      prev.map(img => {
+        if (img.uri === uri) {
+          img.uri = null;
+          return img;
+        }
+        return img;
+      }),
+    );
   };
 
-  const handleSubmit = React.useCallback(() => {
-    goBack();
-  }, []);
+  const handleSubmit = async () => {
+    if (is_loading.current) {
+      return;
+    }
+    try {
+      is_loading.current = true;
+      const body: { content?: string; keywords?: string[]; images?: any } = {
+        content,
+        keywords,
+      };
+
+      console.log(imgUrls);
+      if (imgUrls.length > 0) {
+        body.images = imgUrls.reduce(
+          (acc, cur) => (acc[cur.fileName] = cur.uri),
+          {},
+        );
+      }
+
+      await reviewApi.updateReviewContent({ review_id, body });
+
+      queryClient.invalidateQueries('review_list');
+      queryClient.invalidateQueries(['review_detail', review_id]);
+      goBack();
+    } catch (e) {
+      /** */
+    } finally {
+      is_loading.current = false;
+    }
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
@@ -54,9 +132,7 @@ const ModifyReview = () => {
             <Header>
               <Icon type={'leftArrow'} onPress={goBack} />
               <HeaderText>후기쓰기</HeaderText>
-              <HeaderBtn onPress={() => handleSubmit()}>
-                <HeaderBtnText>건너뛰기</HeaderBtnText>
-              </HeaderBtn>
+              <Space />
             </Header>
             <Wrapper>
               <BodyWrapper>
@@ -79,7 +155,7 @@ const ModifyReview = () => {
                 </StyledKeywordBtn>
                 <StyledBtnWrapper>
                   {keywords.map(value => (
-                    <StyledBtn>
+                    <StyledBtn key={generateID()}>
                       <StyledBtnText>{value}</StyledBtnText>
                       <Icon
                         type={'close'}
@@ -92,37 +168,33 @@ const ModifyReview = () => {
                 </StyledBtnWrapper>
               </BodyWrapper>
               <BodyWrapper>
-                <BodyTitle>사진 첨부(선택)</BodyTitle>
+                <BodyTitle>사진 수정</BodyTitle>
                 <StyledImgWrapper>
-                  <StyledImgBtn onPress={imageGalleryLaunch}>
+                  {/* <StyledImgBtn onPress={imageGalleryLaunch}>
                     <Icon type={'search'} />
-                    <StyledImgText>{imgUrls.length}/3</StyledImgText>
-                  </StyledImgBtn>
-                  {imgUrls.map(img => (
-                    <ImageCard
-                      key={img.fileName}
-                      source={{ uri: img.uri }}
-                      handleRemoveImage={() => {
-                        handleRemoveImage(img.uri);
-                      }}
-                    />
-                  ))}
+                    <StyledImgText>
+                      {imgUrls.filter(img => img.uri !== null).length}/3
+                    </StyledImgText>
+                  </StyledImgBtn> */}
+                  {imgUrls.map(img =>
+                    img.uri ? (
+                      <ImageCard
+                        key={img.fileName}
+                        source={{ uri: img.uri }}
+                        handleRemoveImage={() => {
+                          handleRemoveImage(img.uri);
+                        }}
+                      />
+                    ) : null,
+                  )}
                 </StyledImgWrapper>
               </BodyWrapper>
             </Wrapper>
             <Footer>
               <Button
-                title={'후기 올리기'}
-                theme={
-                  content || imgUrls.length > 0 || keywords.length > 0
-                    ? 'primary'
-                    : 'disabled'
-                }
-                disabled={
-                  content || imgUrls.length > 0 || keywords.length > 0
-                    ? false
-                    : true
-                }
+                title={'후기 수정하기'}
+                theme={content || keywords.length > 0 ? 'primary' : 'disabled'}
+                disabled={content || keywords.length > 0 ? false : true}
                 onPress={handleSubmit}
               />
             </Footer>
@@ -134,6 +206,7 @@ const ModifyReview = () => {
             />
           </StyledWrapper>
         </TouchableWithoutFeedback>
+        {loading && <Loading />}
       </Container>
     </SafeAreaView>
   );
@@ -148,6 +221,11 @@ const Container = styled.KeyboardAvoidingView`
 const StyledWrapper = styled.View`
   flex: 1;
   padding: 0 24px;
+`;
+
+const Space = styled.View`
+  width: 24px;
+  height: 24px;
 `;
 
 const Header = styled.View`

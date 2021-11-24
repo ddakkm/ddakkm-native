@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import styled, { css } from '@emotion/native';
 import Icon from './Icon';
 import { SURVEY_A_LIST } from '../../utils/servayUtil';
@@ -46,23 +46,22 @@ const Reviewcard = ({
   is_loggedIn,
   navigateToLogin,
 }: Props) => {
-  const [is_like, setIsLike] = React.useState(!!user_is_like);
-  const [likeCount, setLikeCount] = React.useState(like_count);
+  // const [is_like, setIsLike] = React.useState(!!user_is_like);
+  // const [likeCount, setLikeCount] = React.useState(like_count);
 
-  const handlePressLike = () => {
-    if (!is_loggedIn) {
-      navigateToLogin();
-    }
-    try {
-      setIsLike(prev => !prev);
-      setLikeCount(prev => (is_like ? prev - 1 : prev + 1));
-      reviewApi.postReviewLikeStatus(id);
-    } catch (e) {
-      setIsLike(prev => !prev);
-      setLikeCount(prev => (is_like ? prev + 1 : prev - 1));
-    }
-  };
-
+  // const handlePressLike = () => {
+  //   if (!is_loggedIn) {
+  //     navigateToLogin();
+  //   }
+  //   try {
+  //     setIsLike(prev => !prev);
+  //     setLikeCount(prev => (is_like ? prev - 1 : prev + 1));
+  //     reviewApi.postReviewLikeStatus(id);
+  //   } catch (e) {
+  //     setIsLike(prev => !prev);
+  //     setLikeCount(prev => (is_like ? prev + 1 : prev - 1));
+  //   }
+  // };
   return (
     <Container>
       <StyledWrapper onPress={navigateToDetail}>
@@ -92,11 +91,8 @@ const Reviewcard = ({
         </CardListWrapper>
       </StyledWrapper>
       <Cardfooter>
-        <Icon
-          type={is_like ? 'fill_heart' : 'heart'}
-          onPress={handlePressLike}
-        />
-        <Footertext>{likeCount}</Footertext>
+        <Icon type={user_is_like ? 'fill_heart' : 'heart'} onPress={() => {}} />
+        <Footertext>{like_count}</Footertext>
         <Icon type={'message'} style={{ marginLeft: 9 }} />
         <Footertext>{comment_count}</Footertext>
       </Cardfooter>
@@ -104,7 +100,7 @@ const Reviewcard = ({
   );
 };
 
-export default Reviewcard;
+export default memo(Reviewcard);
 
 const Container = styled.View`
   width: 100%;
@@ -149,7 +145,7 @@ const text = () => css`
 
 const CardText = styled.Text`
   ${text()};
-  width: 90%;
+  padding-right: 20px;
   margin-left: 6px;
 `;
 

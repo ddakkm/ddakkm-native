@@ -168,10 +168,9 @@ const SurveyForm = ({ surveyType }: Props) => {
         data: surveyBody,
       };
       let imgUrls: any = null;
-      console.log(imgs);
+
       if (imgs) {
         imgUrls = await handleImageSubmit(imgs);
-        console.log(imgUrls);
       }
       await reviewApi.postSurveyReview({
         survey,

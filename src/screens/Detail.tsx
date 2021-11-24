@@ -19,19 +19,21 @@ import { useQueryClient } from 'react-query';
 import Loading from '../components/atoms/Loading';
 import NoReview from '../components/atoms/NoReview';
 import { useMyLikeList } from '../contexts/like';
+import FixedBottomMenuModal from '../components/atoms/FixedBottomMenuModal';
 
 const Detail = () => {
-  const { goBack, navigate } = useAppNav();
+  const { goBack, navigate, reset } = useAppNav();
   const {
     params: { review_id },
   } = useAppRoute<'/detail'>();
-
+  const [show, setIsShow] = React.useState(false);
   const { isLoading, data, isError } = useReviewDetail(review_id);
   const { updateLikeReview } = useMyLikeList();
   const [is_like, setIsLike] = React.useState(
     data?.user_is_like ? data.user_is_like : false,
   );
   const [likeCount, setLikeCount] = React.useState(data ? data.like_count : 0);
+  const queryClient = useQueryClient();
   const handlePressLike = () => {
     try {
       // updateLikeReview(review_id + '', is_like ? false : true);
@@ -45,7 +47,33 @@ const Detail = () => {
     }
   };
 
+  const options = React.useMemo(() => {
+    return data?.is_writer
+      ? [
+          {
+            label: '수정하기',
+            handlePress: () => {
+              navigate('/modifyReview', { review_id });
+              setIsShow(false);
+            },
+          },
+          {
+            label: '삭제하기',
+            handlePress: async () => {
+              const data = await reviewApi.deleteReview({ review_id });
+              console.log(data);
+              queryClient.invalidateQueries('review_list');
+              setIsShow(false);
+              goBack();
+            },
+          },
+        ]
+      : [{ label: '신고하기', handlePress: () => {} }];
+  }, [data]);
+
   const { mutate } = useReviewLikeStatus();
+  const regex =
+    /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
 
   return (
     <Container>
@@ -53,7 +81,12 @@ const Detail = () => {
         <Header>
           <Icon type={'leftArrow'} onPress={goBack} />
           <HeaderText>리뷰 상세 후기</HeaderText>
-          <Icon type={'menu_verticle'} />
+          <Icon
+            type={'menu_verticle'}
+            onPress={() => {
+              setIsShow(true);
+            }}
+          />
         </Header>
 
         {isLoading ? (
@@ -113,9 +146,11 @@ const Detail = () => {
                 </StyledKeywordWrapper>
                 <StyledImgWrapper>
                   {data.images
-                    ? Object.values(data.images).map(img => (
-                        <StyledImg key={generateID()} source={{ uri: img }} />
-                      ))
+                    ? Object.values(data.images).map(img =>
+                        regex.test(img) ? (
+                          <StyledImg key={generateID()} source={{ uri: img }} />
+                        ) : null,
+                      )
                     : null}
                 </StyledImgWrapper>
               </StyledBody>
@@ -138,6 +173,11 @@ const Detail = () => {
         ) : (
           <NoReview />
         )}
+        <FixedBottomMenuModal
+          isVisible={show}
+          handleVisible={() => setIsShow(false)}
+          options={options}
+        />
       </SafeAreaView>
     </Container>
   );

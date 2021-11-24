@@ -216,6 +216,31 @@ const getCommentContent = async ({ comment_id }: { comment_id: number }) => {
   return data;
 };
 
+const getReviewContent = async ({ review_id }: { review_id: number }) => {
+  const { data } = await instance.get(`/v1/review/${review_id}/content`);
+  return data;
+};
+
+const updateReviewContent = async ({
+  review_id,
+  body,
+}: {
+  review_id: number;
+  body: {
+    content?: string;
+    keywords?: string[];
+    images?: { [key: string]: string };
+  };
+}) => {
+  const { data } = await instance.patch(`/v1/review/${review_id}`, body);
+  return data;
+};
+
+const deleteReview = async ({ review_id }: { review_id: number }) => {
+  const { data } = await instance.delete(`/v1/review/${review_id}`);
+  return data;
+};
+
 export const reviewApi = {
   getReview,
   postJoinSurvey,
@@ -232,6 +257,9 @@ export const reviewApi = {
   postReportComment,
   postLikeComment,
   getCommentContent,
+  getReviewContent,
+  updateReviewContent,
+  deleteReview,
 };
 
 export interface ReviewLikeResponse {

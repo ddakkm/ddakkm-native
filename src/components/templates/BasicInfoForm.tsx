@@ -102,7 +102,7 @@ const BasicInfoForm = ({ onBack, basicInfo, setBasicInfo, onNext }: Props) => {
       <Footer>
         <Button
           theme={isNext ? 'primary' : 'disabled'}
-          title={'동의 완료 했어요'}
+          title={'입력 완료했어요'}
           onPress={() => onNext()}
           disabled={!isNext}
         />

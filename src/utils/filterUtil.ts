@@ -211,6 +211,6 @@ export const convertAnswerToText = (
   if (typeof value === 'number') {
     return value;
   } else {
-    return Number(value[0]);
+    return Number(value[0]) > 0 ? Number(value[0]) - 1 : Number(value[0]);
   }
 };

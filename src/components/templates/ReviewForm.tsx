@@ -6,6 +6,8 @@ import Button from '../atoms/Button';
 import Textarea from '../atoms/Textarea';
 import { useAppNav } from '../../hooks/useNav';
 import KeywordModal from '../atoms/KeywordModal';
+import ImageCard from '../atoms/ImageCard';
+import { generateID } from '../../hooks/useId';
 
 interface Props {
   onBack: () => void;
@@ -53,14 +55,16 @@ const ReviewForm = ({ onBack, onSubmit }: Props) => {
     goBack();
   }, [content, imgUrls, keywords]);
 
+  const handleRemoveImage = (uri: string) => {
+    setImgUrls(prev => prev.filter(img => img.uri !== uri));
+  };
+
   return (
     <>
       <Header>
         <Icon type={'leftArrow'} onPress={onBack} />
         <HeaderText>후기쓰기</HeaderText>
-        <HeaderBtn onPress={() => handleSubmit()}>
-          <HeaderBtnText>건너뛰기</HeaderBtnText>
-        </HeaderBtn>
+        <Space />
       </Header>
       <Wrapper>
         <BodyWrapper>
@@ -83,7 +87,7 @@ const ReviewForm = ({ onBack, onSubmit }: Props) => {
           </StyledKeywordBtn>
           <StyledBtnWrapper>
             {keywords.map(value => (
-              <StyledBtn>
+              <StyledBtn key={generateID()}>
                 <StyledBtnText>{value}</StyledBtnText>
                 <Icon
                   type={'close'}
@@ -103,7 +107,13 @@ const ReviewForm = ({ onBack, onSubmit }: Props) => {
               <StyledImgText>{imgUrls.length}/3</StyledImgText>
             </StyledImgBtn>
             {imgUrls.map(img => (
-              <StyledImg key={img.fileName} source={{ uri: img.uri }} />
+              <ImageCard
+                key={img.fileName}
+                source={{ uri: img.uri }}
+                handleRemoveImage={() => {
+                  handleRemoveImage(img.uri);
+                }}
+              />
             ))}
           </StyledImgWrapper>
         </BodyWrapper>
@@ -133,6 +143,11 @@ const ReviewForm = ({ onBack, onSubmit }: Props) => {
 };
 
 export default ReviewForm;
+
+const Space = styled.View`
+  width: 24px;
+  height: 24px;
+`;
 
 const Header = styled.View`
   width: 100%;

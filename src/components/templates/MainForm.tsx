@@ -20,6 +20,8 @@ import useReviews from '../../hooks/useReviews';
 import NoReview from '../atoms/NoReview';
 import Loading from '../atoms/Loading';
 import { useMyLikeList } from '../../contexts/like';
+import { useInfiniteQuery } from 'react-query';
+import { reviewApi } from '../../api/review';
 
 const FilterbuttunArr: Array<{
   title: string;
@@ -86,8 +88,33 @@ const MainForm = () => {
     underlying: '',
   });
 
-  const { isLoading, data, hasNextPage, fetchNextPage, refetch } =
-    useReviews(filterValue);
+  // const { isLoading, data, hasNextPage, fetchNextPage, refetch } =
+  //   useReviews(filterValue);
+  const { isLoading, isFetching, data, hasNextPage, fetchNextPage, refetch } =
+    useInfiniteQuery(
+      ['review_list', filterValue],
+      async ({ pageParam = 1 }) => {
+        const { contents, page_meta } = await reviewApi.getReview(
+          pageParam,
+          filterValue,
+        );
+        const next_page_index = page_meta.has_next
+          ? pageParam + 1
+          : page_meta.has_next;
+        return {
+          review_list: contents,
+          next_page_index,
+        };
+      },
+      {
+        getNextPageParam: last_page => last_page.next_page_index,
+        onError: e => {
+          console.log(e);
+        },
+        retry: false,
+        staleTime: Infinity,
+      },
+    );
 
   useEffect(() => {
     if (is_loggedIn) {
@@ -96,7 +123,7 @@ const MainForm = () => {
   }, [is_loggedIn]);
 
   const loadMore = () => {
-    if (hasNextPage) {
+    if (hasNextPage && !isFetching) {
       fetchNextPage();
     }
   };
@@ -111,14 +138,48 @@ const MainForm = () => {
     }
   };
 
-  const review_list = useMemo(
-    () => (data ? data.pages.map(({ contents }) => contents).flat() : []),
-    [data],
-  );
+  const review_list = useMemo(() => {
+    return data ? data.pages.map(page => page.review_list).flat() : [];
+  }, [data]);
 
+  const is_filter_value = useMemo(
+    () => Object.values(filterValue).filter(value => !!value).length > 0,
+    [filterValue],
+  );
   const navigateToLogin = () => {
     navigate('/login');
   };
+
+  const renderItem = React.useCallback(({ item }: any) => {
+    return (
+      <Reviewcard
+        nickname={item.nickname}
+        vaccine_round={item.vaccine_round}
+        vaccine_type={item.vaccine_type}
+        content={item.content}
+        id={item.id}
+        like_count={item.like_count}
+        comment_count={item.comment_count}
+        is_loggedIn={is_loggedIn}
+        user_is_like={item.user_is_like}
+        symptom={item.symptom}
+        navigateToDetail={() => {
+          navigate('/detail', { review_id: item.id });
+        }}
+        navigateToLogin={navigateToLogin}
+        updateLikeReview={updateLikeReview}
+      />
+    );
+  }, []);
+
+  const getItemLayout = React.useCallback(
+    (data, index) => ({
+      length: 260,
+      offset: 260 * index,
+      index,
+    }),
+    [],
+  );
   return (
     <>
       <Header>
@@ -143,23 +204,25 @@ const MainForm = () => {
         <FilterWrapper
           horizontal={true}
           contentContainerStyle={{ paddingHorizontal: 24, height: 60 }}>
-          <Filterbutton
-            key={'filter-btn-reset'}
-            title={'초기화'}
-            iconType={'reset'}
-            handleFilterPress={() => {
-              setFilterValue({
-                age: '',
-                sex: '',
-                type: '',
-                cross: '',
-                round: '',
-                pregnant: '',
-                underlying: '',
-              });
-              refetch();
-            }}
-          />
+          {is_filter_value ? (
+            <Filterbutton
+              key={'filter-btn-reset'}
+              title={'초기화'}
+              iconType={'reset'}
+              handleFilterPress={() => {
+                setFilterValue({
+                  age: '',
+                  sex: '',
+                  type: '',
+                  cross: '',
+                  round: '',
+                  pregnant: '',
+                  underlying: '',
+                });
+                refetch();
+              }}
+            />
+          ) : null}
           {FilterbuttunArr.map(({ title, iconType, value, options }, index) => (
             <Filterbutton
               key={`filter-btn-${index}`}
@@ -179,51 +242,23 @@ const MainForm = () => {
         </FilterWrapper>
       </FilterContainer>
       <CardWrapper>
-        {isLoading ? (
-          <Loading />
-        ) : review_list.length > 0 ? (
-          <FlatList
-            contentContainerStyle={styles.flatList}
-            data={review_list}
-            keyExtractor={item => item.id + ''}
-            onEndReachedThreshold={0.3}
-            onEndReached={loadMore}
-            ListEmptyComponent={<NoReview />}
-            renderItem={({
-              item: {
-                id,
-                nickname,
-                vaccine_round,
-                vaccine_type,
-                like_count,
-                comment_count,
-                user_is_like,
-                symptom,
-                content,
-              },
-            }: any) => (
-              <Reviewcard
-                nickname={nickname}
-                vaccine_round={vaccine_round}
-                vaccine_type={vaccine_type}
-                content={content}
-                id={id}
-                like_count={like_count}
-                comment_count={comment_count}
-                is_loggedIn={is_loggedIn}
-                user_is_like={user_is_like}
-                symptom={symptom}
-                navigateToDetail={() => {
-                  navigate('/detail', { review_id: id });
-                }}
-                navigateToLogin={navigateToLogin}
-                updateLikeReview={updateLikeReview}
-              />
-            )}
-          />
-        ) : (
-          <NoReview />
-        )}
+        <FlatList
+          refreshing={isLoading}
+          onRefresh={() => {
+            refetch();
+          }}
+          contentContainerStyle={styles.flatList}
+          data={review_list}
+          style={{ marginBottom: 56 }}
+          keyExtractor={item => `review-list-${item.id}`}
+          onEndReached={loadMore}
+          windowSize={13}
+          initialNumToRender={7}
+          onEndReachedThreshold={0.3}
+          ListEmptyComponent={<NoReview />}
+          renderItem={renderItem}
+          getItemLayout={getItemLayout}
+        />
       </CardWrapper>
       <FixedWrapper>
         <FixedButton onPress={navigateSurvey}>
@@ -294,6 +329,7 @@ const MainForm = () => {
           setFilterValue({ ...filterValue, underlying });
         }}
       />
+      {isLoading ? <Loading /> : null}
     </>
   );
 };
