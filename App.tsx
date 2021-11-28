@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import SplashScreen from 'react-native-splash-screen';
 import { QueryClient, QueryClientProvider } from 'react-query';
+// import DeviceInfo from 'react-native-device-info';
 import AuthProvider from './src/contexts/auth';
 import LikeProvider from './src/contexts/like';
 import Router from './src/navigation';
@@ -19,6 +20,8 @@ const App = () => {
   useEffect(() => {
     SplashScreen.hide();
   }, []);
+
+  // console.log(DeviceInfo.getUniqueId());
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>

@@ -12,7 +12,22 @@ const getMyLikePost = async () => {
   return data;
 };
 
-const getMyPost = async () => {
+interface MyPostResponse {
+  comment_count: number;
+  like_count: number;
+  created_at: string;
+  id: number;
+  nickname: string;
+  vaccine_status: {
+    details: {
+      is_crossed: boolean;
+      vaccine_round: string;
+      vaccine_type: string;
+    };
+  };
+}
+
+const getMyPost = async (): Promise<MyPostResponse[]> => {
   const { data } = await instance.get('/v1/user/me/post');
   return data;
 };
@@ -47,12 +62,46 @@ const postKeyword = async ({ keywords }: { keywords: string[] }) => {
   return data;
 };
 
-const getOtherProfile = async (user_id: number) => {
+interface OtherProfileResponse {
+  id: number;
+  character_image: string;
+  comment_counts: number;
+  like_counts: number;
+  nickname: string;
+  post_counts: number;
+  vaccine_status: {
+    details: {
+      is_crossed: boolean;
+      vaccine_round: string;
+      vaccine_type: string;
+    };
+  };
+  created_at: string;
+}
+
+const getOtherProfile = async (
+  user_id: number,
+): Promise<OtherProfileResponse> => {
   const { data } = await axios.get(`${BASE_URL}/v1/user/${user_id}/profile`);
   return data;
 };
 
-const getOtherPost = async (user_id: number) => {
+interface OtherPost {
+  comment_count: number;
+  like_count: number;
+  created_at: string;
+  id: number;
+  nickname: string;
+  vaccine_status: {
+    details: {
+      is_crossed: boolean;
+      vaccine_round: string;
+      vaccine_type: string;
+    };
+  };
+}
+
+const getOtherPost = async (user_id: number): Promise<OtherPost[]> => {
   const { data } = await axios.get(`${BASE_URL}/v1/user/${user_id}/post`);
   return data;
 };

@@ -41,6 +41,10 @@ const Setting = () => {
     navigate('/login');
   };
 
+  const navigateToMyReviews = () => {
+    navigate('/myReviews');
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       <Container>
@@ -55,6 +59,7 @@ const Setting = () => {
             comment_counts={data?.comment_counts}
             like_counts={data?.like_counts}
             post_counts={data?.post_counts}
+            navigateToMyReviews={navigateToMyReviews}
           />
         </Header>
         <MenuListWrapper>
@@ -66,7 +71,7 @@ const Setting = () => {
           </MenuListItem>
            */}
           <MenuListItem>
-            <MenuListItemText>문의하기</MenuListItemText>
+            <MenuListItemText>피드백 남기기</MenuListItemText>
           </MenuListItem>
           <MenuListItem>
             <MenuListItemText>개인정보처리방침</MenuListItemText>
@@ -145,14 +150,16 @@ interface ProfileInfoCountProps {
   comment_counts?: number;
   post_counts?: number;
   like_counts?: number;
+  navigateToMyReviews: () => void;
 }
 
 const ProfileInfoCount = ({
   comment_counts,
   post_counts,
   like_counts,
+  navigateToMyReviews,
 }: ProfileInfoCountProps) => (
-  <ProfileInfoCountWrapper>
+  <ProfileInfoCountWrapper onPress={navigateToMyReviews}>
     <ProfileInfoBoxWrapper>
       <ProfileInfoCountText>
         {post_counts ? post_counts : '-'}
@@ -240,7 +247,7 @@ const Top05 = styled.Text`
   color: #555;
 `;
 
-const ProfileInfoCountWrapper = styled.View`
+const ProfileInfoCountWrapper = styled.TouchableOpacity`
   width: 100%;
   height: 96px;
   background-color: #f7f7f7;

@@ -14,6 +14,8 @@ import PushSetting from '../screens/PushSetting';
 import ReplyComment from '../screens/ReplyComment';
 import ModifyComment from '../screens/ModifyComment';
 import ModifyReview from '../screens/ModifyReview';
+import MyReviews from '../screens/MyReviews';
+import UserProfile from '../screens/UserProfile';
 
 const RootStack = createNativeStackNavigator();
 const RootRouter = () => {
@@ -28,6 +30,8 @@ const RootRouter = () => {
         <RootStack.Screen name={'/settings'} component={Setting} />
         <RootStack.Screen name={'/notification'} component={Notification} />
         <RootStack.Screen name={'/pushSetting'} component={PushSetting} />
+        <RootStack.Screen name={'/myReviews'} component={MyReviews} />
+        <RootStack.Screen name={'/userProfile'} component={UserProfile} />
       </RootStack.Group>
       <RootStack.Group
         screenOptions={{

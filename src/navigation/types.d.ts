@@ -16,6 +16,8 @@ type RootStackParamList = {
   '/replyComment': { comment_id: number; review_id: number };
   '/modifyComment': { comment_id: number };
   '/modifyReview': { review_id: number };
+  '/myReviews': undefined;
+  '/userProfile': { user_id: number };
 };
 
 type NavRef = NavigationContainerRef<RootStackParamList>;

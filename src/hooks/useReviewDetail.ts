@@ -30,9 +30,6 @@ export default function useReviewDetail(review_id: number) {
     () => reviewApi.getReviewDetail(review_id),
     {
       initialData: INITIAL_DATA,
-      onError: e => {
-        console.log(e);
-      },
     },
   );
   return { isLoading, data, isError };

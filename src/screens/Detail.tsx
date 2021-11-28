@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled, { css } from '@emotion/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from '../components/atoms/Icon';
@@ -20,18 +20,22 @@ import Loading from '../components/atoms/Loading';
 import NoReview from '../components/atoms/NoReview';
 import { useMyLikeList } from '../contexts/like';
 import FixedBottomMenuModal from '../components/atoms/FixedBottomMenuModal';
+import ImageView from 'react-native-image-viewing';
 
 const Detail = () => {
   const { goBack, navigate, reset } = useAppNav();
   const {
     params: { review_id },
   } = useAppRoute<'/detail'>();
+  const [is_show_image, setIsShowImage] = React.useState(false);
+  const [image_index, setImageIndex] = React.useState(0);
   const [show, setIsShow] = React.useState(false);
   const { isLoading, data, isError } = useReviewDetail(review_id);
   const { updateLikeReview } = useMyLikeList();
   const [is_like, setIsLike] = React.useState(
     data?.user_is_like ? data.user_is_like : false,
   );
+
   const [likeCount, setLikeCount] = React.useState(data ? data.like_count : 0);
   const queryClient = useQueryClient();
   const handlePressLike = () => {
@@ -45,6 +49,26 @@ const Detail = () => {
       setIsLike(prev => !prev);
       setLikeCount(prev => (is_like ? prev + 1 : prev - 1));
     }
+  };
+
+  useEffect(() => {
+    if (isError) {
+      goBack();
+    }
+  }, [isError]);
+
+  const viewer_images = React.useMemo(() => {
+    if (data?.images) {
+      return Object.values(data.images)
+        .filter(img => img !== null)
+        .map(img => ({ uri: img }));
+    }
+    return [];
+  }, [data]);
+
+  console.log(viewer_images);
+  const navigateToUserProfile = (user_id: number) => {
+    navigate('/userProfile', { user_id });
   };
 
   const options = React.useMemo(() => {
@@ -88,7 +112,6 @@ const Detail = () => {
             }}
           />
         </Header>
-
         {isLoading ? (
           <Loading />
         ) : data ? (
@@ -101,7 +124,10 @@ const Detail = () => {
                     {convertTypeToText(data.survey.vaccine_type)}
                     {data.survey.is_crossed ? ' · 교차접종' : null}
                   </StyledBodyTitle>
-                  <StyledBodyTop03>{data.nickname}님</StyledBodyTop03>
+                  <NicknameBtn
+                    onPress={() => navigateToUserProfile(data.user_id)}>
+                    <StyledBodyTop03>{data.nickname}님</StyledBodyTop03>
+                  </NicknameBtn>
                 </BodyTitleWrapper>
                 {Object.entries(data.survey.data).map(([key, value]: any[]) => {
                   if (value.length === 0) {
@@ -146,9 +172,16 @@ const Detail = () => {
                 </StyledKeywordWrapper>
                 <StyledImgWrapper>
                   {data.images
-                    ? Object.values(data.images).map(img =>
+                    ? Object.values(data.images).map((img, index) =>
                         regex.test(img) ? (
-                          <StyledImg key={generateID()} source={{ uri: img }} />
+                          <StyledImgBtn
+                            key={generateID()}
+                            onPress={() => {
+                              setImageIndex(index);
+                              setIsShowImage(true);
+                            }}>
+                            <StyledImg source={{ uri: img }} />
+                          </StyledImgBtn>
                         ) : null,
                       )
                     : null}
@@ -179,11 +212,22 @@ const Detail = () => {
           options={options}
         />
       </SafeAreaView>
+      <ImageView
+        images={viewer_images}
+        imageIndex={image_index}
+        visible={is_show_image}
+        onRequestClose={() => setIsShowImage(false)}
+        animationType={'slide'}
+      />
     </Container>
   );
 };
 
 export default Detail;
+
+const NicknameBtn = styled.TouchableOpacity`
+  width: 100%;
+`;
 
 const Container = styled.View`
   flex: 1;
@@ -301,6 +345,8 @@ const StyledImgWrapper = styled.View`
   flex-direction: row;
   margin-top: 8px;
 `;
+
+const StyledImgBtn = styled.TouchableOpacity``;
 
 const StyledImg = styled.Image`
   width: 72px;
