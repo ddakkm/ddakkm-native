@@ -30,6 +30,7 @@ interface Props {
   is_loggedIn: boolean | null;
   navigateToLogin: () => void;
   updateLikeReview: (review_id: string, is_like: boolean) => void;
+  navigateToComment: () => void;
 }
 
 const Reviewcard = ({
@@ -45,23 +46,8 @@ const Reviewcard = ({
   navigateToDetail,
   is_loggedIn,
   navigateToLogin,
+  navigateToComment,
 }: Props) => {
-  // const [is_like, setIsLike] = React.useState(!!user_is_like);
-  // const [likeCount, setLikeCount] = React.useState(like_count);
-
-  // const handlePressLike = () => {
-  //   if (!is_loggedIn) {
-  //     navigateToLogin();
-  //   }
-  //   try {
-  //     setIsLike(prev => !prev);
-  //     setLikeCount(prev => (is_like ? prev - 1 : prev + 1));
-  //     reviewApi.postReviewLikeStatus(id);
-  //   } catch (e) {
-  //     setIsLike(prev => !prev);
-  //     setLikeCount(prev => (is_like ? prev + 1 : prev - 1));
-  //   }
-  // };
   return (
     <Container>
       <StyledWrapper onPress={navigateToDetail}>
@@ -91,16 +77,26 @@ const Reviewcard = ({
         </CardListWrapper>
       </StyledWrapper>
       <Cardfooter>
-        <Icon type={user_is_like ? 'fill_heart' : 'heart'} onPress={() => {}} />
-        <Footertext>{like_count}</Footertext>
-        <Icon type={'message'} style={{ marginLeft: 9 }} />
-        <Footertext>{comment_count}</Footertext>
+        <FooterBtn onPress={() => {}}>
+          <Icon type={user_is_like ? 'fill_heart' : 'heart'} />
+          <Footertext>좋아요 {like_count}</Footertext>
+        </FooterBtn>
+        <FooterBtn onPress={navigateToComment}>
+          <Icon type={'message'} />
+          <Footertext>답글쓰기 {comment_count}</Footertext>
+        </FooterBtn>
       </Cardfooter>
     </Container>
   );
 };
 
 export default memo(Reviewcard);
+
+const FooterBtn = styled.TouchableOpacity`
+  flex-direction: row;
+  align-items: center;
+  margin-right: 20px;
+`;
 
 const Container = styled.View`
   width: 100%;
@@ -158,7 +154,8 @@ const Cardfooter = styled.View`
 
 const Footertext = styled.Text`
   font-weight: 400;
-  font-size: 12px;
+  font-size: 13px;
+  line-height: 20px;
   color: #a5a5a5;
   margin-left: 3px;
 `;

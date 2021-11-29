@@ -38,8 +38,8 @@ const UserProfile = () => {
   };
 
   return (
-    <Container>
-      <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea}>
+      <Container>
         <Header>
           <Icon type={'leftArrow'} onPress={goBack} />
         </Header>
@@ -75,8 +75,8 @@ const UserProfile = () => {
             </StyledScroll>
           </>
         ) : null}
-      </SafeAreaView>
-    </Container>
+      </Container>
+    </SafeAreaView>
   );
 };
 

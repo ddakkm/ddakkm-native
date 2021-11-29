@@ -66,7 +66,6 @@ const Detail = () => {
     return [];
   }, [data]);
 
-  console.log(viewer_images);
   const navigateToUserProfile = (user_id: number) => {
     navigate('/userProfile', { user_id });
   };
@@ -189,18 +188,16 @@ const Detail = () => {
               </StyledBody>
             </Wrapper>
             <StyledFooter>
-              <Icon
-                type={data.user_is_like ? 'fill_heart' : 'heart'}
-                style={{ padding: 10 }}
-                onPress={() => mutate({ review_id })}
-              />
-              <StyledFooterText>{data.like_count}</StyledFooterText>
-              <Icon
-                type={'message'}
-                style={{ padding: 10 }}
-                onPress={() => navigate('/comments', { review_id })}
-              />
-              <StyledFooterText>{data.comment_count}</StyledFooterText>
+              <FooterBtn onPress={() => mutate({ review_id })}>
+                <Icon type={data.user_is_like ? 'fill_heart' : 'heart'} />
+                <StyledFooterText>좋아요 {data.like_count}</StyledFooterText>
+              </FooterBtn>
+              <FooterBtn onPress={() => navigate('/comments', { review_id })}>
+                <Icon type={'message'} />
+                <StyledFooterText>
+                  댓글쓰기 {data.comment_count}
+                </StyledFooterText>
+              </FooterBtn>
             </StyledFooter>
           </>
         ) : (
@@ -224,6 +221,11 @@ const Detail = () => {
 };
 
 export default Detail;
+
+const FooterBtn = styled.TouchableOpacity`
+  flex-direction: row;
+  align-items: center;
+`;
 
 const NicknameBtn = styled.TouchableOpacity`
   width: 100%;
@@ -302,6 +304,7 @@ const CardText = styled.Text`
 
 const StyledKeywordWrapper = styled.View`
   flex-direction: row;
+  flex-wrap: wrap;
   padding-left: 35px;
 `;
 
@@ -328,7 +331,7 @@ const StyledFooter = styled.View`
   bottom: 0;
   border-top-width: 1px;
   border-top-color: #f7f7f7;
-  padding: 18px 24px;
+  padding: 0 24px 18px 24px;
   flex-direction: row;
   background-color: #fff;
 `;
@@ -337,7 +340,7 @@ const StyledFooterText = styled.Text`
   font-weight: 400;
   font-size: 13px;
   line-height: 20px;
-  color: #555555;
+  color: #afafaf;
   margin: 0 25px 0 8px;
 `;
 

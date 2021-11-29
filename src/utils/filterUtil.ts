@@ -157,7 +157,7 @@ export const convertRoundToText = (value?: string) => {
     case 'SECOND':
       return '2회차';
     case 'THIRD':
-      return '부스타샷';
+      return '부스터샷';
     default:
       return '';
   }

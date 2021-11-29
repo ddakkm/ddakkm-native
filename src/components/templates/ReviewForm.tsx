@@ -73,7 +73,7 @@ const ReviewForm = ({ onBack, onSubmit }: Props) => {
             value={content}
             autoCorrect={false}
             onChangeText={value => setContent(value)}
-            placeholder={'3000자 이내'}
+            placeholder={'10자 이상 입력'}
             textAlignVertical={'top'}
             multiline={true}
           />
@@ -121,14 +121,8 @@ const ReviewForm = ({ onBack, onSubmit }: Props) => {
       <Footer>
         <Button
           title={'후기 올리기'}
-          theme={
-            content || imgUrls.length > 0 || keywords.length > 0
-              ? 'primary'
-              : 'disabled'
-          }
-          disabled={
-            content || imgUrls.length > 0 || keywords.length > 0 ? false : true
-          }
+          theme={content.length > 9 ? 'primary' : 'disabled'}
+          disabled={content.length > 9 ? false : true}
           onPress={handleSubmit}
         />
       </Footer>

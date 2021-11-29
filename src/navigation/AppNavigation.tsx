@@ -32,6 +32,10 @@ const RootRouter = () => {
         <RootStack.Screen name={'/pushSetting'} component={PushSetting} />
         <RootStack.Screen name={'/myReviews'} component={MyReviews} />
         <RootStack.Screen name={'/userProfile'} component={UserProfile} />
+        <RootStack.Screen name={'/comments'} component={Comments} />
+        <RootStack.Screen name={'/replyComment'} component={ReplyComment} />
+        <RootStack.Screen name={'/modifyComment'} component={ModifyComment} />
+        <RootStack.Screen name={'/modifyReview'} component={ModifyReview} />
       </RootStack.Group>
       <RootStack.Group
         screenOptions={{
@@ -40,10 +44,6 @@ const RootRouter = () => {
         }}>
         <RootStack.Screen name={'/login'} component={Login} />
         <RootStack.Screen name={'/signUp'} component={SignUp} />
-        <RootStack.Screen name={'/comments'} component={Comments} />
-        <RootStack.Screen name={'/replyComment'} component={ReplyComment} />
-        <RootStack.Screen name={'/modifyComment'} component={ModifyComment} />
-        <RootStack.Screen name={'/modifyReview'} component={ModifyReview} />
       </RootStack.Group>
     </RootStack.Navigator>
   );

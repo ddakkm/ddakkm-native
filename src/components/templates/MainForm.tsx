@@ -168,6 +168,9 @@ const MainForm = () => {
         }}
         navigateToLogin={navigateToLogin}
         updateLikeReview={updateLikeReview}
+        navigateToComment={() => {
+          navigate('/comments', { review_id: item.id });
+        }}
       />
     );
   }, []);

@@ -46,13 +46,11 @@ const AuthProvider: FC = ({ children }) => {
         if (token) {
           setIsLoggedIn(true);
         }
-        if (is_loggedIn) {
-          const {
-            data: { done_survey },
-          } = await authApi.isJoinSurvey();
-          if (done_survey) {
-            setIsSurvey(true);
-          }
+        const {
+          data: { done_survey },
+        } = await authApi.isJoinSurvey();
+        if (done_survey) {
+          setIsSurvey(true);
         }
       } catch (e) {
         console.log(e);

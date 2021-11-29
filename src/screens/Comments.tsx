@@ -90,7 +90,7 @@ const Comments = () => {
               user_is_like={item.user_is_like}
               is_comment_option={() => {
                 selected_comment_id.current = item.id;
-                setIsActive(item.user_is_active);
+                setIsActive(item.user_is_writer);
                 setIsShow(true);
               }}
               navigateToReply={() =>
@@ -99,6 +99,9 @@ const Comments = () => {
                   review_id,
                 })
               }
+              navigateToUserProfile={() => {
+                navigate('/userProfile', { user_id: item.user_id });
+              }}
             />,
           ];
 
@@ -106,6 +109,9 @@ const Comments = () => {
             const arr = item.nested_comment.map(recomment => (
               <ReCommnetItem
                 key={generateID()}
+                navigateToUserProfile={() => {
+                  navigate('/userProfile', { user_id: recomment.user_id });
+                }}
                 nickname={recomment.nickname}
                 created_at={recomment.created_at}
                 content={recomment.content}
@@ -113,7 +119,7 @@ const Comments = () => {
                 user_is_like={recomment.user_is_like}
                 is_comment_option={() => {
                   selected_comment_id.current = recomment.id;
-                  setIsActive(recomment.user_is_active);
+                  setIsActive(recomment.user_is_writer);
                   setIsShow(true);
                 }}
               />
@@ -195,6 +201,7 @@ export interface CommentItemProps {
   user_is_like: boolean;
   is_comment_option: () => void;
   navigateToReply?: () => void;
+  navigateToUserProfile: () => void;
 }
 
 const CommnetItem = ({
@@ -206,17 +213,16 @@ const CommnetItem = ({
   comment_count,
   navigateToReply,
   is_comment_option,
+  navigateToUserProfile,
 }: CommentItemProps) => (
   <StyledCommentItemWrapper>
     <StyledCommentItemHeader>
-      <StyledCommentNickname>{nickname}</StyledCommentNickname>
+      <StyledNicknameBtn onPress={navigateToUserProfile}>
+        <StyledCommentNickname>{nickname}</StyledCommentNickname>
+      </StyledNicknameBtn>
       <StyledCommentDate>3일전</StyledCommentDate>
       <StyledColumn>
-        <StyledCommentMenu
-          type={'menu_verticle'}
-          onPress={is_comment_option}
-          btnStyle={{ width: 24, height: 24 }}
-        />
+        <Icon type={'menu_verticle'} onPress={is_comment_option} />
       </StyledColumn>
     </StyledCommentItemHeader>
     <StyledCommentContent>{content}</StyledCommentContent>
@@ -242,14 +248,17 @@ const ReCommnetItem = ({
   like_count,
   user_is_like,
   is_comment_option,
+  navigateToUserProfile,
 }: Omit<CommentItemProps, 'comment_count'>) => (
   <StyledReCommentItemWrapper>
     <StyledReCommentIcon />
     <StyledCommentItemHeader>
-      <StyledCommentNickname>{nickname}</StyledCommentNickname>
+      <StyledNicknameBtn onPress={navigateToUserProfile}>
+        <StyledCommentNickname>{nickname}</StyledCommentNickname>
+      </StyledNicknameBtn>
       <StyledCommentDate>3일전</StyledCommentDate>
       <StyledColumn>
-        <StyledCommentMenu type={'menu_verticle'} onPress={is_comment_option} />
+        <Icon type={'menu_verticle'} onPress={is_comment_option} />
       </StyledColumn>
     </StyledCommentItemHeader>
     <StyledCommentContent>{content}</StyledCommentContent>
@@ -342,6 +351,8 @@ const StyledCommentItemHeader = styled.View`
   flex-direction: row;
   position: relative;
 `;
+
+const StyledNicknameBtn = styled.TouchableOpacity``;
 
 const StyledCommentNickname = styled.Text`
   font-size: 13px;

@@ -106,6 +106,11 @@ const getOtherPost = async (user_id: number): Promise<OtherPost[]> => {
   return data;
 };
 
+const deleteDeactiveUser = async () => {
+  const { data } = instance.delete('/v1/auth/deactive');
+  return data;
+};
+
 export const userApi = {
   getProfile,
   getKeyword,
@@ -117,6 +122,7 @@ export const userApi = {
   getMyPush,
   postKeywordPush,
   postActivityPush,
+  deleteDeactiveUser,
 };
 
 interface ProfileResponse {

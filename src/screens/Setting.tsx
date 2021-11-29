@@ -14,7 +14,7 @@ import Loading from '../components/atoms/Loading';
 const Setting = () => {
   const [is_logout_loading, setLogoutLoading] = React.useState(false);
   const { is_loggedIn, logout } = useIsLoggedIn();
-  const { navigate, reset } = useAppNav();
+  const { navigate, reset, goBack } = useAppNav();
   const { isLoading, data, isError, remove } = useQuery(
     ['/user-profile'],
     userApi.getProfile,
@@ -37,6 +37,21 @@ const Setting = () => {
     }
   };
 
+  const handleLeaveUser = async () => {
+    try {
+      setLogoutLoading(true);
+      await userApi.deleteDeactiveUser();
+      await removeTokens();
+      remove();
+      logout();
+      reset({ index: 0, routes: [{ name: '/' }] });
+    } catch {
+      /** */
+    } finally {
+      setLogoutLoading(false);
+    }
+  };
+
   const navigateToLogin = () => {
     navigate('/login');
   };
@@ -48,6 +63,9 @@ const Setting = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       <Container>
+        <Nav>
+          <Icon type={'leftArrow'} onPress={goBack} />
+        </Nav>
         <Header>
           <ProfileCard
             character_image={data?.character_image}
@@ -87,7 +105,7 @@ const Setting = () => {
               <MenuListItem onPress={handleLogout}>
                 <MenuListItemText>로그아웃</MenuListItemText>
               </MenuListItem>
-              <MenuListItem>
+              <MenuListItem onPress={handleLeaveUser}>
                 <MenuListItemText style={{ color: '#afafaf' }}>
                   탈퇴하기
                 </MenuListItemText>
@@ -187,6 +205,15 @@ const ProfileInfoCount = ({
   </ProfileInfoCountWrapper>
 );
 
+const Nav = styled.View`
+  width: 100%;
+  height: 60px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding-horizontal: 24px;
+`;
+
 const Container = styled.View`
   position: relative;
   flex: 1;
@@ -217,7 +244,7 @@ const ProfileCardWrapper = styled.View`
   width: 100%;
   flex-direction: row;
   margin-top: 16px;
-  padding: 16px 0 24px 0;
+  padding: 0 0 24px 0;
 `;
 
 const ProfileImageWrapper = styled.View`

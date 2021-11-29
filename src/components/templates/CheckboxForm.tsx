@@ -59,6 +59,7 @@ const CheckBoxForm: React.FC<Props> = ({
               onChangeText={handleOnChange}
               textAlign={'center'}
               textAlignVertical={'center'}
+              placeholderTextColor={'#afafaf'}
             />
           )}
         </ListWrapper>

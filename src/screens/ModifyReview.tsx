@@ -104,7 +104,6 @@ const ModifyReview = () => {
         keywords,
       };
 
-      console.log(imgUrls);
       if (imgUrls.length > 0) {
         body.images = imgUrls.reduce(
           (acc, cur) => (acc[cur.fileName] = cur.uri),

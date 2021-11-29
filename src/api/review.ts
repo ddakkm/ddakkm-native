@@ -147,7 +147,7 @@ export interface Comment {
   created_at: string;
   is_delete: boolean;
   user_is_like: boolean;
-  user_is_active: boolean;
+  user_is_writer: boolean;
   nested_comment: ReComment[];
 }
 
@@ -160,7 +160,7 @@ interface ReComment {
   created_at: string;
   is_delete: boolean;
   user_is_like: boolean;
-  user_is_active: boolean;
+  user_is_writer: boolean;
 }
 
 const getCommentList = async (review_id: number) => {
