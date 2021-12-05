@@ -92,7 +92,7 @@ export const getAccessToken = async (): Promise<KakaoAccessTokenInfo> => {
 
 const Login = () => {
   const is_loading = React.useRef<boolean>(false);
-  const { navigate } = useAppNav();
+  const { navigate, goBack } = useAppNav();
   const { setIsLoggedIn, setIsSurvey, setNickname } = useIsLoggedIn();
   const naverLogin = (props: any) => {
     return new Promise((resolve, reject) => {
@@ -171,7 +171,15 @@ const Login = () => {
 
   return (
     <Container>
-      <SafeAreaView style={{ backgroundColor: '#fff' }} />
+      <SafeAreaView style={{ backgroundColor: '#fff', position: 'relative' }} />
+      <HeaderWrapper>
+        <Icon
+          onPress={() => {
+            goBack();
+          }}
+          type={'close'}
+        />
+      </HeaderWrapper>
       <Wrapper>
         <Top03>백신후기를 공유해주세요</Top03>
         <Top05>여러분은 어떠셨나요?</Top05>
@@ -252,4 +260,13 @@ const BtnText = styled.Text`
   font-size: 16px;
   line-height: 24px;
   color: #3c1c1e;
+`;
+
+const HeaderWrapper = styled.View`
+  display: flex;
+  height: 60px;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 30px;
 `;
