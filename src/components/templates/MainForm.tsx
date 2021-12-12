@@ -12,16 +12,21 @@ import {
   roundOptions,
   pregnantOptions,
   underlyingDiseaseOptions,
+  convertRoundToText,
+  convertTypeToText,
+  convertAnswerToText,
+  convertQuestionToIcon,
+  convertQuestionToText,
 } from '../../utils/filterUtil';
 import { FlatList, Platform, StyleSheet } from 'react-native';
 import { useIsLoggedIn } from '../../contexts/auth';
 import { useAppNav } from '../../hooks/useNav';
-import useReviews from '../../hooks/useReviews';
 import NoReview from '../atoms/NoReview';
 import Loading from '../atoms/Loading';
 import { useMyLikeList } from '../../contexts/like';
 import { useInfiniteQuery } from 'react-query';
 import { reviewApi } from '../../api/review';
+import { SURVEY_A_LIST } from '../../utils/servayUtil';
 
 const FilterbuttunArr: Array<{
   title: string;
@@ -72,6 +77,27 @@ const FilterbuttunArr: Array<{
     options: underlyingDiseaseOptions,
   },
 ];
+
+const CardRowWrapper = styled.View`
+  height: 40px;
+  width: 100%;
+  padding: 9px;
+  border-width: 1px;
+  border-color: #f8f8f8;
+  border-radius: 8px;
+  margin-bottom: 4px;
+  flex-direction: row;
+  align-items: center;
+`;
+
+const CardText = styled.Text`
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+  color: #000;
+  padding-right: 20px;
+  margin-left: 6px;
+`;
 
 const MainForm = () => {
   const { is_loggedIn, is_survey } = useIsLoggedIn();
@@ -150,39 +176,72 @@ const MainForm = () => {
     navigate('/login');
   };
 
-  const renderItem = React.useCallback(({ item }: any) => {
+  const handleUpdateLikeReview = (review_id: number, is_like: boolean) => {
+    if (!is_loggedIn) {
+      navigate('/login');
+      return;
+    }
+    try {
+      updateLikeReview(review_id + '', !is_like);
+      reviewApi.postReviewLikeStatus(review_id);
+    } catch (e) {
+      updateLikeReview(review_id + '', !is_like);
+    }
+  };
+
+  const renderItem = ({ item }: any) => {
+    const is_liked_review = checkLikeReview(item.id);
     return (
       <Reviewcard
         nickname={item.nickname}
-        vaccine_round={item.vaccine_round}
-        vaccine_type={item.vaccine_type}
-        content={item.content}
-        id={item.id}
-        like_count={item.like_count}
+        vaccine_text={`${convertRoundToText(
+          item.vaccine_round,
+        )} · ${convertTypeToText(item.vaccine_type)}`}
+        is_content={!!item.content}
+        like_count={
+          !item.user_is_like && is_liked_review
+            ? item.like_count + 1
+            : item.user_is_like && !is_liked_review
+            ? item.like_count - 1
+            : item.like_count
+        }
+        card_list={
+          <>
+            {item.symptom
+              ? Object.entries(item.symptom).map(([key, value], idx) => (
+                  <CardRowWrapper key={`${item.id}-cardItem-${idx}`}>
+                    <Icon type={convertQuestionToIcon(key)} />
+                    <CardText>
+                      {convertQuestionToText(key)} -{' '}
+                      {SURVEY_A_LIST[key][convertAnswerToText(value)]?.label}
+                    </CardText>
+                  </CardRowWrapper>
+                ))
+              : null}
+            {item.content ? (
+              <CardRowWrapper key={`${item.id}-cardItem-3`}>
+                <Icon type={convertQuestionToIcon('')} />
+                <CardText numberOfLines={3}>{item.content}</CardText>
+              </CardRowWrapper>
+            ) : null}
+          </>
+        }
         comment_count={item.comment_count}
-        is_loggedIn={is_loggedIn}
-        user_is_like={item.user_is_like}
-        symptom={item.symptom}
+        user_is_like={is_liked_review}
         navigateToDetail={() => {
           navigate('/detail', { review_id: item.id });
         }}
         navigateToLogin={navigateToLogin}
-        updateLikeReview={updateLikeReview}
+        updateLikeReview={() => {
+          handleUpdateLikeReview(item.id, is_liked_review);
+        }}
         navigateToComment={() => {
           navigate('/comments', { review_id: item.id });
         }}
       />
     );
-  }, []);
+  };
 
-  const getItemLayout = React.useCallback(
-    (data, index) => ({
-      length: 260,
-      offset: 260 * index,
-      index,
-    }),
-    [],
-  );
   return (
     <>
       <Header>
@@ -253,14 +312,11 @@ const MainForm = () => {
           contentContainerStyle={styles.flatList}
           data={review_list}
           style={{ marginBottom: 56 }}
-          keyExtractor={item => `review-list-${item.id}`}
+          keyExtractor={(item, idx) => `review-list-${item.id}:${idx}`}
           onEndReached={loadMore}
-          windowSize={13}
-          initialNumToRender={7}
           onEndReachedThreshold={0.3}
           ListEmptyComponent={<NoReview />}
           renderItem={renderItem}
-          getItemLayout={getItemLayout}
         />
       </CardWrapper>
       <FixedWrapper>

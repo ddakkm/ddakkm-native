@@ -107,7 +107,25 @@ const getOtherPost = async (user_id: number): Promise<OtherPost[]> => {
 };
 
 const deleteDeactiveUser = async () => {
-  const { data } = instance.delete('/v1/auth/deactive');
+  const { data } = await instance.delete('/v1/auth/deactive');
+  return data;
+};
+
+const postQna = async (
+  content: string,
+  user_email: string,
+  user_phone: string,
+) => {
+  const body: { [key: string]: string } = { content };
+  if (user_email) {
+    body['user_email'] = user_email;
+  }
+
+  if (user_phone) {
+    body['user_phone'] = user_phone;
+  }
+  const { data } = await instance.post('/v1/qna', body);
+
   return data;
 };
 
@@ -123,6 +141,7 @@ export const userApi = {
   postKeywordPush,
   postActivityPush,
   deleteDeactiveUser,
+  postQna,
 };
 
 interface ProfileResponse {

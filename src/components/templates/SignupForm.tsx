@@ -4,6 +4,7 @@ import { Keyboard, Platform, TouchableWithoutFeedback } from 'react-native';
 import LoginCheckboxForm from './LoginCheckboxForm';
 import UserBasicInfoForm from './UserBasicInfoForm';
 import { useAppNav, useAppRoute } from '../../hooks/useNav';
+import DeviceInfo from 'react-native-device-info';
 import { CommonActions } from '@react-navigation/native';
 import { authApi } from '../../api/auth';
 import { storeTokens } from '../../contexts/auth/storage';
@@ -22,11 +23,13 @@ const SignupForm = () => {
     }
     try {
       is_loading.current = true;
+      const fcm_token = DeviceInfo.getUniqueId();
       const { data } = await authApi.signUp(
         sns_provider,
         access_token,
         gender,
         age,
+        fcm_token,
       );
 
       if (data.access_token) {

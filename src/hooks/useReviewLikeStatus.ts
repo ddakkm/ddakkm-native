@@ -12,15 +12,13 @@ export default function useReviewLikeStatus() {
     {
       onMutate: async ({ review_id }) => {
         await queryClient.cancelQueries(['review_list']);
-        const previousReviews = queryClient.getQueryData<
-          InfiniteData<ReviewResponse>
-        >(['review_list'], {
+        const previousReviews = queryClient.getQueryData(['review_list'], {
           exact: false,
         });
         if (previousReviews && previousReviews.pages) {
           const newPagesArray =
-            previousReviews.pages.map(page => ({
-              contents: page.contents.map(content => {
+            previousReviews.pages.map(page => {
+              const contents = page.review_list.map(content => {
                 if (content.id === review_id) {
                   return {
                     ...content,
@@ -31,9 +29,13 @@ export default function useReviewLikeStatus() {
                   };
                 }
                 return content;
-              }),
-              page_meta: page.page_meta,
-            })) ?? [];
+              });
+
+              return {
+                review_list: contents,
+                next_page_index: page.next_page_index,
+              };
+            }) ?? [];
           queryClient.setQueriesData<InfiniteData<ReviewResponse>>(
             ['review_list'],
             data => {

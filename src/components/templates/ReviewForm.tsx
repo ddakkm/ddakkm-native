@@ -4,7 +4,6 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import Icon from '../atoms/Icon';
 import Button from '../atoms/Button';
 import Textarea from '../atoms/Textarea';
-import { useAppNav } from '../../hooks/useNav';
 import KeywordModal from '../atoms/KeywordModal';
 import ImageCard from '../atoms/ImageCard';
 import { generateID } from '../../hooks/useId';
@@ -27,7 +26,6 @@ const ReviewForm = ({ onBack, onSubmit }: Props) => {
   const [imgUrls, setImgUrls] = useState<any[]>([]);
   const [keywords, setKeywords] = useState<string[]>([]);
   const [show, handleVisible] = useState(false);
-  const { navigate, goBack } = useAppNav();
 
   const imageGalleryLaunch = () => {
     launchImageLibrary(
@@ -52,7 +50,7 @@ const ReviewForm = ({ onBack, onSubmit }: Props) => {
       imgs: imgUrls.length > 0 ? imgUrls : null,
       keywords,
     });
-    goBack();
+    // goBack();
   }, [content, imgUrls, keywords]);
 
   const handleRemoveImage = (uri: string) => {
@@ -161,17 +159,6 @@ const Wrapper = styled.ScrollView`
   padding-top: 25px;
 `;
 
-const HeaderBtn = styled.TouchableOpacity`
-  width: 45px;
-`;
-
-const HeaderBtnText = styled.Text`
-  font-size: 13px;
-  font-weight: 400;
-  line-height: 20px;
-  color: #a5a5a5;
-`;
-
 const Footer = styled.View`
   width: 100%;
   height: 112px;
@@ -231,13 +218,6 @@ const StyledImgText = styled.Text`
 const StyledImgWrapper = styled.View`
   flex-direction: row;
   margin-top: 8px;
-`;
-
-const StyledImg = styled.Image`
-  width: 72px;
-  height: 72px;
-  border-radius: 8px;
-  margin-left: 8px;
 `;
 
 const StyledBtnWrapper = styled.View`

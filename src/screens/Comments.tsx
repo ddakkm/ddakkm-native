@@ -14,6 +14,8 @@ import Loading from '../components/atoms/Loading';
 import { generateID } from '../hooks/useId';
 import FixedBottomInput from '../components/atoms/FixedBottomInput';
 import FixedBottomMenuModal from '../components/atoms/FixedBottomMenuModal';
+import { getTime } from '../utils/timeUtil';
+import { AxiosError } from 'axios';
 
 const Comments = () => {
   const is_loading = React.useRef(false);
@@ -40,6 +42,25 @@ const Comments = () => {
       },
       onSuccess: () => {
         queryClient.invalidateQueries(['comment_list', review_id]);
+      },
+      onError: (err: AxiosError) => {
+        if (err.response?.status === 401) {
+          navigate('/login');
+        }
+      },
+    },
+  );
+
+  const { mutate: updateCommentLike } = useMutation(
+    (comment_id: number) => reviewApi.postLikeComment({ comment_id }),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['comment_list', review_id]);
+      },
+      onError: (err: AxiosError) => {
+        if (err.response?.status === 401) {
+          navigate('/login');
+        }
       },
     },
   );
@@ -102,6 +123,7 @@ const Comments = () => {
               navigateToUserProfile={() => {
                 navigate('/userProfile', { user_id: item.user_id });
               }}
+              updateCommentLike={() => updateCommentLike(item.id)}
             />,
           ];
 
@@ -122,6 +144,7 @@ const Comments = () => {
                   setIsActive(recomment.user_is_writer);
                   setIsShow(true);
                 }}
+                updateCommentLike={() => updateCommentLike(recomment.id)}
               />
             ));
             result = result.concat(arr);
@@ -202,6 +225,7 @@ export interface CommentItemProps {
   is_comment_option: () => void;
   navigateToReply?: () => void;
   navigateToUserProfile: () => void;
+  updateCommentLike: () => void;
 }
 
 const CommnetItem = ({
@@ -214,26 +238,31 @@ const CommnetItem = ({
   navigateToReply,
   is_comment_option,
   navigateToUserProfile,
+  updateCommentLike,
 }: CommentItemProps) => (
   <StyledCommentItemWrapper>
     <StyledCommentItemHeader>
       <StyledNicknameBtn onPress={navigateToUserProfile}>
         <StyledCommentNickname>{nickname}</StyledCommentNickname>
       </StyledNicknameBtn>
-      <StyledCommentDate>3일전</StyledCommentDate>
+      <StyledCommentDate>{getTime(created_at)}</StyledCommentDate>
       <StyledColumn>
         <Icon type={'menu_verticle'} onPress={is_comment_option} />
       </StyledColumn>
     </StyledCommentItemHeader>
     <StyledCommentContent>{content}</StyledCommentContent>
     <StyledCommentFooter>
-      <Icon
-        type={user_is_like ? 'fill_heart' : 'heart'}
-        style={{ padding: 10 }}
-      />
-      <StyledFooterText>{like_count}</StyledFooterText>
-      <Icon type={'message'} style={{ padding: 10 }} />
-      <StyledFooterText>{comment_count}</StyledFooterText>
+      <FooterBtn onPress={updateCommentLike}>
+        <Icon
+          type={user_is_like ? 'fill_heart' : 'heart'}
+          style={{ padding: 10 }}
+        />
+        <StyledFooterText>좋아요 {like_count}</StyledFooterText>
+      </FooterBtn>
+      <FooterBtn>
+        <Icon type={'message'} style={{ padding: 10 }} />
+        <StyledFooterText>댓글 {comment_count}</StyledFooterText>
+      </FooterBtn>
       <StyledTextBtn onPress={navigateToReply}>
         <Top08>답글쓰기</Top08>
       </StyledTextBtn>
@@ -249,6 +278,7 @@ const ReCommnetItem = ({
   user_is_like,
   is_comment_option,
   navigateToUserProfile,
+  updateCommentLike,
 }: Omit<CommentItemProps, 'comment_count'>) => (
   <StyledReCommentItemWrapper>
     <StyledReCommentIcon />
@@ -263,16 +293,24 @@ const ReCommnetItem = ({
     </StyledCommentItemHeader>
     <StyledCommentContent>{content}</StyledCommentContent>
     <StyledCommentFooter>
-      <Icon
-        type={user_is_like ? 'fill_heart' : 'heart'}
-        style={{ padding: 10 }}
-      />
-      <StyledFooterText>{like_count}</StyledFooterText>
+      <FooterBtn onPress={updateCommentLike}>
+        <Icon
+          type={user_is_like ? 'fill_heart' : 'heart'}
+          style={{ padding: 10 }}
+        />
+        <StyledFooterText>좋아요 {like_count}</StyledFooterText>
+      </FooterBtn>
       {/* <Icon type={'message'} style={{ padding: 10 }} />
       <StyledFooterText>{comment_count}</StyledFooterText> */}
     </StyledCommentFooter>
   </StyledReCommentItemWrapper>
 );
+
+const FooterBtn = styled.TouchableOpacity`
+  flex-direction: row;
+  align-items: center;
+  margin-right: 20px;
+`;
 
 const Space = styled.View`
   width: 24px;
@@ -398,8 +436,8 @@ const StyledFooterText = styled.Text`
   font-weight: 400;
   font-size: 13px;
   line-height: 20px;
-  color: #555555;
-  margin: 0 25px 0 8px;
+  color: #c9c6c6;
+  margin: 0 0 0 8px;
 `;
 
 const StyledTextBtn = styled.TouchableOpacity``;

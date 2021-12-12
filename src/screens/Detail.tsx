@@ -21,33 +21,31 @@ import NoReview from '../components/atoms/NoReview';
 import { useMyLikeList } from '../contexts/like';
 import FixedBottomMenuModal from '../components/atoms/FixedBottomMenuModal';
 import ImageView from 'react-native-image-viewing';
+import { useIsLoggedIn } from '../contexts/auth';
 
 const Detail = () => {
-  const { goBack, navigate, reset } = useAppNav();
+  const { goBack, navigate } = useAppNav();
   const {
     params: { review_id },
   } = useAppRoute<'/detail'>();
+  const { is_loggedIn } = useIsLoggedIn();
   const [is_show_image, setIsShowImage] = React.useState(false);
   const [image_index, setImageIndex] = React.useState(0);
   const [show, setIsShow] = React.useState(false);
   const { isLoading, data, isError } = useReviewDetail(review_id);
-  const { updateLikeReview } = useMyLikeList();
-  const [is_like, setIsLike] = React.useState(
-    data?.user_is_like ? data.user_is_like : false,
-  );
-
-  const [likeCount, setLikeCount] = React.useState(data ? data.like_count : 0);
+  const { updateLikeReview, checkLikeReview } = useMyLikeList();
   const queryClient = useQueryClient();
-  const handlePressLike = () => {
+
+  const handleUpdateLikeReview = (review_id: number, is_like: boolean) => {
+    if (!is_loggedIn) {
+      navigate('/login');
+      return;
+    }
     try {
-      // updateLikeReview(review_id + '', is_like ? false : true);
-      setIsLike(prev => !prev);
-      setLikeCount(prev => (is_like ? prev - 1 : prev + 1));
-      mutate({ review_id });
+      updateLikeReview(review_id + '', is_like);
+      reviewApi.postReviewLikeStatus(review_id);
     } catch (e) {
-      // updateLikeReview(review_id + '', is_like ? false : true);
-      setIsLike(prev => !prev);
-      setLikeCount(prev => (is_like ? prev + 1 : prev - 1));
+      updateLikeReview(review_id + '', is_like);
     }
   };
 
@@ -94,10 +92,14 @@ const Detail = () => {
       : [{ label: '신고하기', handlePress: () => {} }];
   }, [data]);
 
-  const { mutate } = useReviewLikeStatus();
   const regex =
     /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
 
+  if (!data) {
+    return null;
+  }
+
+  const is_liked_review = checkLikeReview(data.id + '');
   return (
     <Container>
       <SafeAreaView style={styles.safeArea}>
@@ -188,9 +190,19 @@ const Detail = () => {
               </StyledBody>
             </Wrapper>
             <StyledFooter>
-              <FooterBtn onPress={() => mutate({ review_id })}>
-                <Icon type={data.user_is_like ? 'fill_heart' : 'heart'} />
-                <StyledFooterText>좋아요 {data.like_count}</StyledFooterText>
+              <FooterBtn
+                onPress={() =>
+                  handleUpdateLikeReview(review_id, !is_liked_review)
+                }>
+                <Icon type={is_liked_review ? 'fill_heart' : 'heart'} />
+                <StyledFooterText>
+                  좋아요{' '}
+                  {!data.user_is_like && is_liked_review
+                    ? data.like_count + 1
+                    : data.user_is_like && !is_liked_review
+                    ? data.like_count - 1
+                    : data.like_count}
+                </StyledFooterText>
               </FooterBtn>
               <FooterBtn onPress={() => navigate('/comments', { review_id })}>
                 <Icon type={'message'} />

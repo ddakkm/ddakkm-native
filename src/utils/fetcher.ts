@@ -1,5 +1,6 @@
+import { useAppNav } from './../hooks/useNav';
 import { readTokens } from '../contexts/auth/storage';
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 
 export const axiosGlobalConfig: AxiosRequestConfig = {
   baseURL: 'http://3.34.44.39',

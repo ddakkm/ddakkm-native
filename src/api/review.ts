@@ -51,12 +51,26 @@ interface Props {
         data: { [key: string]: any };
       }
     | { [key: string]: any };
+  review_detail?: {
+    content?: string;
+    keywords?: string[];
+    images?: {
+      image1_url: 'string';
+      image2_url: 'string';
+      image3_url: 'string';
+    } | null;
+  };
 }
 
-const postJoinSurvey = async ({ survey_type, survey_details }: Props) => {
+const postJoinSurvey = async ({
+  survey_type,
+  survey_details,
+  review_detail,
+}: Props) => {
   const { data } = await instance.post(`${BASE_URL}/v1/user/join-survey`, {
     survey_type,
     survey_details,
+    review_detail,
   });
 
   return data;

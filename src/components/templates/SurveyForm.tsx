@@ -178,6 +178,7 @@ const SurveyForm = ({ surveyType }: Props) => {
         keywords,
         content,
       });
+      goBack();
     } catch (e) {
       console.log(e);
       return null;
@@ -186,7 +187,15 @@ const SurveyForm = ({ surveyType }: Props) => {
     }
   };
 
-  const handleCompleteJoin = async () => {
+  const handleCompleteJoin = async ({
+    content,
+    imgs,
+    keywords,
+  }: {
+    content?: string;
+    imgs?: any;
+    keywords?: string[];
+  }) => {
     if (is_loading.current) {
       return;
     }
@@ -218,6 +227,12 @@ const SurveyForm = ({ surveyType }: Props) => {
         isUnderlyingDisease: is_underlying_disease,
       } = basicInfo;
 
+      let imgUrls: any = null;
+
+      if (imgs) {
+        imgUrls = await handleImageSubmit(imgs);
+      }
+
       const body =
         survey_type[0] === 1
           ? {
@@ -231,11 +246,18 @@ const SurveyForm = ({ surveyType }: Props) => {
                 is_underlying_disease,
                 data: surveyBody,
               },
+              review_detail: {
+                images: imgUrls,
+                keywords,
+                content,
+              },
             }
           : {
               survey_type: survey_type[0] === 2 ? 'B' : 'C',
               survey_details: surveyBody,
             };
+
+      console.log(survey_type[0], body);
       await reviewApi.postJoinSurvey(body);
       goBack();
     } catch (e) {
@@ -639,9 +661,10 @@ const SurveyForm = ({ surveyType }: Props) => {
           },
         }))
       }
-      onNext={handleCompleteJoin}
+      onNext={() => setStep(prevStep => prevStep + 1)}
       onBack={handleBack}
     />,
+    <ReviewForm onBack={handleBack} onSubmit={handleCompleteJoin} />,
   ];
 
   const surveyJoinComponents = () => {

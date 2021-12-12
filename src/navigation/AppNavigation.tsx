@@ -16,6 +16,7 @@ import ModifyComment from '../screens/ModifyComment';
 import ModifyReview from '../screens/ModifyReview';
 import MyReviews from '../screens/MyReviews';
 import UserProfile from '../screens/UserProfile';
+import Feedback from '../screens/Feedback';
 
 const RootStack = createNativeStackNavigator();
 const RootRouter = () => {
@@ -36,6 +37,7 @@ const RootRouter = () => {
         <RootStack.Screen name={'/replyComment'} component={ReplyComment} />
         <RootStack.Screen name={'/modifyComment'} component={ModifyComment} />
         <RootStack.Screen name={'/modifyReview'} component={ModifyReview} />
+        <RootStack.Screen name={'/feedback'} component={Feedback} />
       </RootStack.Group>
       <RootStack.Group
         screenOptions={{

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from '@emotion/native';
 import { Platform, SafeAreaView } from 'react-native';
 import { NativeModules } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import {
   NaverLogin,
   getProfile as getNaverProfile,
@@ -112,13 +113,14 @@ const Login = () => {
     }
     try {
       is_loading.current = true;
+      const fcm_token = DeviceInfo.getUniqueId();
       const token: any =
         sns_provider === 'NAVER'
           ? await naverLogin(initials)
           : await kakaoLogin();
       const {
         data: { access_token, is_user, done_survey, nickname },
-      } = await authApi.login(sns_provider, token.accessToken);
+      } = await authApi.login(sns_provider, token.accessToken, fcm_token);
 
       if (!is_user) {
         navigate('/signUp', { access_token: token.accessToken, sns_provider });

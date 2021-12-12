@@ -1,4 +1,4 @@
-import React, { createContext, FC, useContext, useRef, useState } from 'react';
+import React, { createContext, FC, useContext, useState } from 'react';
 import { userApi } from '../../api/user';
 
 interface LikeReviewHash {
@@ -13,7 +13,7 @@ interface LikeStoreContext {
 
 const LikeStore = () => {
   const [like_hash, setLikeHash] = useState<LikeReviewHash>({});
-
+  console.log(like_hash);
   const fetchList = async () => {
     try {
       const data = await userApi.getMyLikePost();

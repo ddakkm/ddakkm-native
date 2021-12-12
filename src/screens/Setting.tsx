@@ -89,13 +89,13 @@ const Setting = () => {
           </MenuListItem>
            */}
           <MenuListItem>
-            <MenuListItemText>피드백 남기기</MenuListItemText>
-          </MenuListItem>
-          <MenuListItem>
             <MenuListItemText>개인정보처리방침</MenuListItemText>
           </MenuListItem>
           {is_loggedIn ? (
             <>
+              <MenuListItem onPress={() => navigate('/feedback')}>
+                <MenuListItemText>피드백 남기기</MenuListItemText>
+              </MenuListItem>
               <MenuListItem onPress={() => navigate('/pushSetting')}>
                 <MenuListItemText>알림설정</MenuListItemText>
               </MenuListItem>
