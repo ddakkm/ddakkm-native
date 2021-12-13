@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { StatusBar } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import { QueryClient, QueryClientProvider } from 'react-query';
 // import DeviceInfo from 'react-native-device-info';
@@ -19,6 +20,7 @@ if (__DEV__) {
 const App = () => {
   useEffect(() => {
     SplashScreen.hide();
+    StatusBar.setBarStyle('dark-content');
   }, []);
 
   // console.log(DeviceInfo.getUniqueId());

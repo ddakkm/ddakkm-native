@@ -7,7 +7,7 @@ dayjs.extend(relativeTime);
 dayjs.updateLocale('en', {
   relativeTime: {
     future: '%s',
-    past: '%초 전',
+    past: '%s초 전',
     s: '1초 전',
     m: '1분 전',
     mm: '%d분 전',

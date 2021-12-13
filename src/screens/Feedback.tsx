@@ -40,7 +40,12 @@ const Feedback = () => {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <>
             <Header>
-              <Icon type={'leftArrow'} onPress={() => {}} />
+              <Icon
+                type={'leftArrow'}
+                onPress={() => {
+                  goBack();
+                }}
+              />
               <HeaderText>피드백 남기기</HeaderText>
               <Space />
             </Header>
@@ -71,7 +76,7 @@ const Feedback = () => {
                     autoCorrect={false}
                     placeholder={'이메일을 입력해주세요.'}
                     onChangeText={value => setEmail(value)}
-                    style={{ padding: 24 }}
+                    style={{ paddingHorizontal: 24 }}
                     placeholderTextColor={'#afafaf'}
                   />
                 )}
@@ -87,7 +92,7 @@ const Feedback = () => {
                     autoCorrect={false}
                     placeholder={"'-'를 빼고 입력해주세요."}
                     onChangeText={value => setPhone(value)}
-                    style={{ padding: 24 }}
+                    style={{ paddingHorizontal: 24 }}
                     placeholderTextColor={'#afafaf'}
                   />
                 )}

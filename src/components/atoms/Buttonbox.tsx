@@ -19,14 +19,14 @@ const Buttonbox = ({
   <Container>
     <ButtonboxTitle>{title}</ButtonboxTitle>
     <ButtonGroup>
-      <Button onPress={() => handlePress(false)} active={value === false}>
-        <ButtonText active={value === false}>
-          {leftBtnText ? leftBtnText : '아니오'}
-        </ButtonText>
-      </Button>
       <Button onPress={() => handlePress(true)} active={value === true}>
         <ButtonText active={value === true}>
           {rightBtnText ? rightBtnText : '예'}
+        </ButtonText>
+      </Button>
+      <Button onPress={() => handlePress(false)} active={value === false}>
+        <ButtonText active={value === false}>
+          {leftBtnText ? leftBtnText : '아니오'}
         </ButtonText>
       </Button>
     </ButtonGroup>

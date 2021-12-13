@@ -204,7 +204,12 @@ const Detail = () => {
                     : data.like_count}
                 </StyledFooterText>
               </FooterBtn>
-              <FooterBtn onPress={() => navigate('/comments', { review_id })}>
+              <FooterBtn
+                onPress={() =>
+                  is_loggedIn
+                    ? navigate('/comments', { review_id })
+                    : navigate('/login')
+                }>
                 <Icon type={'message'} />
                 <StyledFooterText>
                   댓글쓰기 {data.comment_count}

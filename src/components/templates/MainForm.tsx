@@ -236,7 +236,9 @@ const MainForm = () => {
           handleUpdateLikeReview(item.id, is_liked_review);
         }}
         navigateToComment={() => {
-          navigate('/comments', { review_id: item.id });
+          is_loggedIn
+            ? navigate('/comments', { review_id: item.id })
+            : navigate('/login');
         }}
       />
     );
@@ -244,7 +246,7 @@ const MainForm = () => {
 
   return (
     <>
-      <Header>
+      <Header is_android={Platform.OS === 'android'}>
         <HeaderTitle>백신후기</HeaderTitle>
         <IconWrapper>
           <Icon
@@ -395,11 +397,11 @@ const MainForm = () => {
 
 export default MainForm;
 
-const Header = styled.View`
+const Header = styled.View<{ is_android: boolean }>`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 0 24px;
+  padding: ${({ is_android }) => (is_android ? `24px 24px 0` : `0 24px`)};
 `;
 
 const HeaderTitle = styled.Text`

@@ -187,15 +187,11 @@ const SurveyForm = ({ surveyType }: Props) => {
     }
   };
 
-  const handleCompleteJoin = async ({
-    content,
-    imgs,
-    keywords,
-  }: {
-    content?: string;
-    imgs?: any;
-    keywords?: string[];
-  }) => {
+  const handleCompleteJoin = async (
+    content?: string,
+    imgs?: any,
+    keywords?: string[],
+  ) => {
     if (is_loading.current) {
       return;
     }
@@ -257,7 +253,6 @@ const SurveyForm = ({ surveyType }: Props) => {
               survey_details: surveyBody,
             };
 
-      console.log(survey_type[0], body);
       await reviewApi.postJoinSurvey(body);
       goBack();
     } catch (e) {

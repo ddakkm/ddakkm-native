@@ -13,6 +13,7 @@
     "@emotion/native": "^11.0.0",
     "@emotion/react": "^11.4.1",
     "@react-native-async-storage/async-storage": "^1.15.11",
+    "@react-native-firebase/app": "^13.1.0",
     "@react-native-seoul/kakao-login": "^3.3.3",
     "@react-native-seoul/naver-login": "^2.1.1",
     "@react-navigation/native": "^6.0.4",

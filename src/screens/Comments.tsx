@@ -99,7 +99,7 @@ const Comments = () => {
 
   const comment_list = React.useMemo(() => {
     return data
-      ? data.map(item => {
+      ? data.comment_list.map(item => {
           let result = [
             <CommnetItem
               key={generateID()}
@@ -175,15 +175,13 @@ const Comments = () => {
           <Wrapper>
             <Header>
               <Icon type={'close'} onPress={goBack} />
-              <HeaderText>댓글 {comment_list.length}</HeaderText>
+              <HeaderText>댓글 {data?.comment_count}</HeaderText>
               <Space />
             </Header>
             {isLoading ? (
               <Loading />
             ) : comment_list.length > 0 ? (
-              <StyledBody>
-                <StyledCommentList>{comment_list}</StyledCommentList>
-              </StyledBody>
+              <StyledCommentList>{comment_list}</StyledCommentList>
             ) : (
               <Wrapper />
             )}

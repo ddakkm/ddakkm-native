@@ -13,7 +13,7 @@ interface Props {
   values?: Array<number>;
   handleOnPress: (value: number) => void;
   handleOnChange?: (value: string) => void;
-  onNext: () => void;
+  onNext: (content?: string, imgs?: any, keywords?: string[]) => void;
   onBack: () => void;
 }
 

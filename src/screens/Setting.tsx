@@ -3,18 +3,21 @@ import styled from '@emotion/native';
 import Icon from '../components/atoms/Icon';
 import { SafeAreaView } from 'react-native';
 import { useAppNav } from '../hooks/useNav';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { userApi } from '../api/user';
 import { convertToCharactorSrc } from '../utils/charactor_image_utils';
 import { convertRoundToText, convertTypeToText } from '../utils/filterUtil';
 import { removeTokens } from '../contexts/auth/storage';
 import { useIsLoggedIn } from '../contexts/auth';
 import Loading from '../components/atoms/Loading';
+import { useMyLikeList } from '../contexts/like';
 
 const Setting = () => {
   const [is_logout_loading, setLogoutLoading] = React.useState(false);
   const { is_loggedIn, logout } = useIsLoggedIn();
+  const { clearLikeReview } = useMyLikeList();
   const { navigate, reset, goBack } = useAppNav();
+  const queryClient = useQueryClient();
   const { isLoading, data, isError, remove } = useQuery(
     ['/user-profile'],
     userApi.getProfile,
@@ -29,6 +32,8 @@ const Setting = () => {
       await removeTokens();
       remove();
       logout();
+      clearLikeReview();
+      queryClient.clear();
       reset({ index: 0, routes: [{ name: '/' }] });
     } catch {
       /** */
@@ -44,6 +49,8 @@ const Setting = () => {
       await removeTokens();
       remove();
       logout();
+      clearLikeReview();
+      queryClient.clear();
       reset({ index: 0, routes: [{ name: '/' }] });
     } catch {
       /** */
@@ -57,6 +64,9 @@ const Setting = () => {
   };
 
   const navigateToMyReviews = () => {
+    if (!is_loggedIn) {
+      return;
+    }
     navigate('/myReviews');
   };
 

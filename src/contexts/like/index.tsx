@@ -9,11 +9,12 @@ interface LikeStoreContext {
   fetchList: () => void;
   updateLikeReview: (review_id: string, is_like: boolean) => void;
   checkLikeReview: (review_id: string) => boolean;
+  clearLikeReview: () => void;
 }
 
 const LikeStore = () => {
   const [like_hash, setLikeHash] = useState<LikeReviewHash>({});
-  console.log(like_hash);
+
   const fetchList = async () => {
     try {
       const data = await userApi.getMyLikePost();
@@ -42,7 +43,11 @@ const LikeStore = () => {
     return like_hash[review_id];
   };
 
-  return { fetchList, updateLikeReview, checkLikeReview };
+  const clearLikeReview = () => {
+    setLikeHash({});
+  };
+
+  return { fetchList, updateLikeReview, checkLikeReview, clearLikeReview };
 };
 
 const Context = createContext<LikeStoreContext>({} as LikeStoreContext);

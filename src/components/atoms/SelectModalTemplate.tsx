@@ -26,6 +26,7 @@ function SelectModalTemplate<T>({
     <Modal
       isVisible={isVisible}
       style={styles.modalStyle}
+      onBackButtonPress={() => handleVisible(false)}
       onBackdropPress={() => handleVisible(false)}>
       <ModalWrapper>
         <ModalHeader>

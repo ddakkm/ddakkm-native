@@ -41,16 +41,19 @@ const LoginCheckboxForm = ({ onNext }: Props) => {
           <CheckboxButton
             title={'서비스 이용 약관 동의'}
             active={active.one}
+            goToPage={() => {}}
             onPress={() => isActive({ ...active, one: !active.one })}
           />
           <CheckboxButton
             title={'개인정보 수집 및 이용동의'}
             active={active.two}
+            goToPage={() => {}}
             onPress={() => isActive({ ...active, two: !active.two })}
           />
           <CheckboxButton
             title={'개인 민감정보 처리 방침 동의'}
             active={active.three}
+            goToPage={() => {}}
             onPress={() => isActive({ ...active, three: !active.three })}
           />
           <CheckboxButton
@@ -92,11 +95,13 @@ const CheckboxButton = ({
     <Icon type={active ? 'check' : 'unCheck'} />
     <BtnText style={{ color: '#53A7FF' }}>[필수]</BtnText>
     <BtnText style={{ marginLeft: 5 }}>{title}</BtnText>
-    <Icon
-      style={{ position: 'absolute', right: 16 }}
-      type={'rightArrow'}
-      onPress={goToPage}
-    />
+    {goToPage && (
+      <Icon
+        btnStyle={{ position: 'absolute', right: 16 }}
+        type={'rightArrow'}
+        onPress={goToPage}
+      />
+    )}
   </CheckboxBtn>
 );
 
@@ -155,6 +160,7 @@ const BtnText = styled.Text<{ active?: boolean }>`
 `;
 
 const CheckboxBtn = styled.TouchableOpacity`
+  position: relative;
   width: 100%;
   height: 24px;
   margin-top: 16px;

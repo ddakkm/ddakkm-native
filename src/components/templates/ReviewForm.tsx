@@ -10,15 +10,7 @@ import { generateID } from '../../hooks/useId';
 
 interface Props {
   onBack: () => void;
-  onSubmit: ({
-    content,
-    imgs,
-    keywords,
-  }: {
-    content?: string;
-    imgs?: any;
-    keywords?: string[];
-  }) => void;
+  onSubmit: (content?: string, imgs?: any, keywords?: string[]) => void;
 }
 
 const ReviewForm = ({ onBack, onSubmit }: Props) => {
@@ -45,11 +37,7 @@ const ReviewForm = ({ onBack, onSubmit }: Props) => {
   };
 
   const handleSubmit = useCallback(() => {
-    onSubmit({
-      content,
-      imgs: imgUrls.length > 0 ? imgUrls : null,
-      keywords,
-    });
+    onSubmit(content, imgUrls.length > 0 ? imgUrls : null, keywords);
     // goBack();
   }, [content, imgUrls, keywords]);
 

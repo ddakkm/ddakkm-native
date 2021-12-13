@@ -178,7 +178,10 @@ interface ReComment {
 }
 
 const getCommentList = async (review_id: number) => {
-  const { data } = await instance.get<Comment[]>(`/v1/comment/${review_id}`);
+  const { data } = await instance.get<{
+    comment_list: Comment[];
+    comment_count: number;
+  }>(`/v1/comment/${review_id}`);
   return data;
 };
 
