@@ -13,7 +13,6 @@ import {
 import { SURVEY_A_LIST } from '../utils/servayUtil';
 import { StyleSheet } from 'react-native';
 import { generateID } from '../hooks/useId';
-import useReviewLikeStatus from '../hooks/useReviewLikeStatus';
 import { reviewApi } from '../api/review';
 import { useQueryClient } from 'react-query';
 import Loading from '../components/atoms/Loading';
@@ -22,12 +21,15 @@ import { useMyLikeList } from '../contexts/like';
 import FixedBottomMenuModal from '../components/atoms/FixedBottomMenuModal';
 import ImageView from 'react-native-image-viewing';
 import { useIsLoggedIn } from '../contexts/auth';
+import Popup from '../components/atoms/Popup';
 
 const Detail = () => {
   const { goBack, navigate } = useAppNav();
   const {
     params: { review_id },
   } = useAppRoute<'/detail'>();
+  const [is_delete_popup, setIsDeletePopup] = React.useState(false);
+  const [is_loading, setIsLoading] = React.useState(false);
   const { is_loggedIn } = useIsLoggedIn();
   const [is_show_image, setIsShowImage] = React.useState(false);
   const [image_index, setImageIndex] = React.useState(0);
@@ -80,17 +82,43 @@ const Detail = () => {
           },
           {
             label: '삭제하기',
-            handlePress: async () => {
-              const data = await reviewApi.deleteReview({ review_id });
-              console.log(data);
-              queryClient.invalidateQueries('review_list');
+            handlePress: () => {
               setIsShow(false);
-              goBack();
+              setTimeout(() => {
+                setIsDeletePopup(true);
+              }, 300);
             },
           },
         ]
-      : [{ label: '신고하기', handlePress: () => {} }];
+      : [
+          {
+            label: '신고하기',
+            handlePress: () => {
+              setIsShow(false);
+              setTimeout(() => {
+                if (!is_loading) {
+                  navigate('/login');
+                  return;
+                }
+                navigate('/report', { review_id });
+              }, 300);
+            },
+          },
+        ];
   }, [data]);
+
+  const handleDeleteReview = async () => {
+    try {
+      setIsDeletePopup(false);
+      setIsLoading(true);
+      await reviewApi.deleteReview({ review_id });
+      queryClient.invalidateQueries('review_list');
+      setIsLoading(false);
+      goBack();
+    } catch {
+      setIsLoading(false);
+    }
+  };
 
   const regex =
     /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
@@ -220,11 +248,21 @@ const Detail = () => {
         ) : (
           <NoReview />
         )}
+        <Popup
+          isVisible={is_delete_popup}
+          handleVisible={setIsDeletePopup}
+          title="후기를 삭제하시겠어요?"
+          ok_text="삭제"
+          close_text="취소"
+          onOk={handleDeleteReview}
+          onClose={() => setIsDeletePopup(false)}
+        />
         <FixedBottomMenuModal
           isVisible={show}
           handleVisible={() => setIsShow(false)}
           options={options}
         />
+        {is_loading && <Loading />}
       </SafeAreaView>
       <ImageView
         images={viewer_images}

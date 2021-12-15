@@ -11,6 +11,7 @@ import { removeTokens } from '../contexts/auth/storage';
 import { useIsLoggedIn } from '../contexts/auth';
 import Loading from '../components/atoms/Loading';
 import { useMyLikeList } from '../contexts/like';
+import Popup from '../components/atoms/Popup';
 
 const Setting = () => {
   const [is_logout_loading, setLogoutLoading] = React.useState(false);
@@ -18,6 +19,7 @@ const Setting = () => {
   const { clearLikeReview } = useMyLikeList();
   const { navigate, reset, goBack } = useAppNav();
   const queryClient = useQueryClient();
+  const [is_visible, setIsVisible] = React.useState(false);
   const { isLoading, data, isError, remove } = useQuery(
     ['/user-profile'],
     userApi.getProfile,
@@ -115,7 +117,7 @@ const Setting = () => {
               <MenuListItem onPress={handleLogout}>
                 <MenuListItemText>로그아웃</MenuListItemText>
               </MenuListItem>
-              <MenuListItem onPress={handleLeaveUser}>
+              <MenuListItem onPress={() => setIsVisible(true)}>
                 <MenuListItemText style={{ color: '#afafaf' }}>
                   탈퇴하기
                 </MenuListItemText>
@@ -125,6 +127,21 @@ const Setting = () => {
         </MenuListWrapper>
         {is_logout_loading && <Loading />}
       </Container>
+      <Popup
+        isVisible={is_visible}
+        handleVisible={setIsVisible}
+        title={'정말 탈퇴하시겠어요?'}
+        sub_title={'탈퇴 시, 더 이상 백신후기를\n 공유받으실 수 없어요ㅠㅠ'}
+        ok_text="탈퇴"
+        onClose={() => {
+          setIsVisible(false);
+        }}
+        onOk={() => {
+          setIsVisible(false);
+          handleLeaveUser();
+        }}
+        close_text="취소"
+      />
     </SafeAreaView>
   );
 };

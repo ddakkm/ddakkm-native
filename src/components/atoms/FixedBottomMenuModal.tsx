@@ -9,7 +9,7 @@ interface Props {
   isVisible: boolean;
   handleVisible: (visible: boolean) => void;
   title?: string;
-  options: { label: string; handlePress: () => void }[];
+  options: { label: string; sub_label?: string; handlePress: () => void }[];
 }
 
 function FixedBottomMenuModal({
@@ -22,6 +22,7 @@ function FixedBottomMenuModal({
     <Modal
       isVisible={isVisible}
       style={styles.modalStyle}
+      animationOutTiming={100}
       onBackButtonPress={() => handleVisible(false)}
       onBackdropPress={() => handleVisible(false)}>
       <ModalWrapper>
@@ -32,9 +33,10 @@ function FixedBottomMenuModal({
           </IconWrapper>
         </ModalHeader>
         <ModalBody>
-          {options.map(({ label, handlePress }) => (
+          {options.map(({ label, sub_label, handlePress }) => (
             <ModalItemWrapper key={generateID()} onPress={handlePress}>
               <ModalItemTitle>{label}</ModalItemTitle>
+              {sub_label && <ModalItemSubTitle>{sub_label}</ModalItemSubTitle>}
             </ModalItemWrapper>
           ))}
         </ModalBody>
@@ -90,9 +92,19 @@ const ModalItemTitle = styled.Text`
   color: #555555;
 `;
 
+const ModalItemSubTitle = styled.Text`
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 20px;
+  color: #555;
+  text-align: center;
+  margin-top: 4px;
+`;
+
 const ModalItemWrapper = styled.TouchableOpacity`
   width: 100%;
-  height: 60px;
+  min-height: 60px;
+  padding: 16px;
   justify-content: center;
   align-items: center;
   border-top-width: 1px;

@@ -11,6 +11,7 @@ const Loading = () => (
 export default Loading;
 
 const Container = styled.View`
+  z-index: 1000;
   position: absolute;
   top: 0;
   left: 0;

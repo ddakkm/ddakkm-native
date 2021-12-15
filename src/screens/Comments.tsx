@@ -16,6 +16,7 @@ import FixedBottomInput from '../components/atoms/FixedBottomInput';
 import FixedBottomMenuModal from '../components/atoms/FixedBottomMenuModal';
 import { getTime } from '../utils/timeUtil';
 import { AxiosError } from 'axios';
+import Popup from '../components/atoms/Popup';
 
 const Comments = () => {
   const is_loading = React.useRef(false);
@@ -25,6 +26,7 @@ const Comments = () => {
   const [show, setIsShow] = React.useState(false);
   const [is_active, setIsActive] = React.useState(false);
   const selected_comment_id = React.useRef(0);
+  const [is_delete_comment, setIsDeleteComment] = React.useState(false);
   const {
     params: { review_id },
   } = useAppRoute<'/comments'>();
@@ -65,37 +67,58 @@ const Comments = () => {
     },
   );
 
-  const options = React.useMemo(() => {
-    return is_active
-      ? [
-          {
-            label: '수정하기',
-            handlePress: () => {
-              navigate('/modifyComment', {
+  const options = is_active
+    ? [
+        {
+          label: '수정하기',
+          handlePress: () => {
+            navigate('/modifyComment', {
+              comment_id: selected_comment_id.current,
+            });
+            setIsShow(false);
+          },
+        },
+        {
+          label: '삭제하기',
+          handlePress: () => {
+            setIsShow(false);
+            setTimeout(() => {
+              setIsDeleteComment(true);
+            }, 300);
+          },
+        },
+      ]
+    : [
+        {
+          label: '신고하기',
+          handlePress: () => {
+            setIsShow(false);
+            setTimeout(() => {
+              if (!is_loading) {
+                navigate('/login');
+                return;
+              }
+              navigate('/report', {
                 comment_id: selected_comment_id.current,
               });
-              setIsShow(false);
-            },
+            }, 300);
           },
-          {
-            label: '삭제하기',
-            handlePress: async () => {
-              if (is_loading.current) return;
-              try {
-                is_loading.current = true;
-                await reviewApi.deleteComment(selected_comment_id.current);
-                queryClient.invalidateQueries(['comment_list', review_id]);
-              } catch (err) {
-                /** */
-              } finally {
-                is_loading.current = false;
-                setIsShow(false);
-              }
-            },
-          },
-        ]
-      : [{ label: '신고하기', handlePress: () => {} }];
-  }, [is_active]);
+        },
+      ];
+
+  const handleDeleteComment = async () => {
+    if (is_loading.current) return;
+    try {
+      is_loading.current = true;
+      await reviewApi.deleteComment(selected_comment_id.current);
+      queryClient.invalidateQueries(['comment_list', review_id]);
+    } catch (err) {
+      /** */
+    } finally {
+      is_loading.current = false;
+      setIsDeleteComment(false);
+    }
+  };
 
   const comment_list = React.useMemo(() => {
     return data
@@ -203,6 +226,15 @@ const Comments = () => {
         isVisible={show}
         handleVisible={() => setIsShow(false)}
         options={options}
+      />
+      <Popup
+        isVisible={is_delete_comment}
+        handleVisible={setIsDeleteComment}
+        title="댓글을 삭제하시겠어요?"
+        ok_text="삭제"
+        close_text="취소"
+        onOk={handleDeleteComment}
+        onClose={() => setIsDeleteComment(false)}
       />
     </SafeAreaView>
   );

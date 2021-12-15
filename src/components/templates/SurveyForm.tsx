@@ -125,15 +125,11 @@ const SurveyForm = ({ surveyType }: Props) => {
     }
   };
 
-  const handleSubmitReview = async ({
-    content,
-    imgs,
-    keywords,
-  }: {
-    content?: string;
-    imgs?: any;
-    keywords?: string[];
-  }) => {
+  const handleSubmitReview = async (
+    content?: string,
+    imgs?: any,
+    keywords?: string[],
+  ) => {
     if (is_loading.current) {
       return;
     }

@@ -258,6 +258,32 @@ const deleteReview = async ({ review_id }: { review_id: number }) => {
   return data;
 };
 
+const reportReview = async ({
+  review_id,
+  reason,
+}: {
+  review_id: number;
+  reason: number;
+}) => {
+  const { data } = await instance.post(`/v1/review/${review_id}/report`, {
+    reason,
+  });
+  return data;
+};
+
+const reportComment = async ({
+  comment_id,
+  reason,
+}: {
+  comment_id: number;
+  reason: number;
+}) => {
+  const { data } = await instance.post(`/v1/comment/${comment_id}/report`, {
+    reason,
+  });
+  return data;
+};
+
 export const reviewApi = {
   getReview,
   postJoinSurvey,
@@ -277,6 +303,8 @@ export const reviewApi = {
   getReviewContent,
   updateReviewContent,
   deleteReview,
+  reportReview,
+  reportComment,
 };
 
 export interface ReviewLikeResponse {

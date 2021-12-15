@@ -8,10 +8,12 @@ import DeviceInfo from 'react-native-device-info';
 import { CommonActions } from '@react-navigation/native';
 import { authApi } from '../../api/auth';
 import { storeTokens } from '../../contexts/auth/storage';
+import { useIsLoggedIn } from '../../contexts/auth';
 
 const SignupForm = () => {
   const is_loading = React.useRef<boolean>(false);
   const [step, setStep] = useState(0);
+  const { setIsLoggedIn, setIsSurvey, setNickname } = useIsLoggedIn();
   const { dispatch } = useAppNav();
   const {
     params: { access_token, sns_provider },
@@ -34,6 +36,9 @@ const SignupForm = () => {
 
       if (data.access_token) {
         await storeTokens({ accessToken: data.access_token });
+        setIsLoggedIn(true);
+        setIsSurvey(data.done_survey);
+        setNickname(data.nickname);
       }
     } catch (e) {
       console.log(e);
