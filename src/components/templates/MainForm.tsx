@@ -91,6 +91,7 @@ const CardRowWrapper = styled.View`
 `;
 
 const CardText = styled.Text`
+  width: 100%;
   font-weight: 400;
   font-size: 14px;
   line-height: 22px;
@@ -221,7 +222,9 @@ const MainForm = () => {
             {item.content ? (
               <CardRowWrapper key={`${item.id}-cardItem-3`}>
                 <Icon type={convertQuestionToIcon('')} />
-                <CardText numberOfLines={3}>{item.content}</CardText>
+                <CardText numberOfLines={1} ellipsizeMode="tail">
+                  {item.content}
+                </CardText>
               </CardRowWrapper>
             ) : null}
           </>
