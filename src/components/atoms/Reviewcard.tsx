@@ -59,7 +59,7 @@ const FooterBtn = styled.TouchableOpacity`
 
 const Container = styled.View<{ is_content: boolean }>`
   width: 100%;
-  padding: 24px 0 34px 0;
+  padding: 24px 24px 34px 24px;
   height: ${({ is_content }) => (is_content ? '270' : '226')}px;
 `;
 

@@ -12,6 +12,7 @@ import {
 } from '../../utils/servayUtil';
 import { useAppNav } from '../../hooks/useNav';
 import { reviewApi } from '../../api/review';
+import { useQueryClient } from 'react-query';
 
 export type VaccineType =
   | 'ETC'
@@ -45,6 +46,7 @@ interface Props {
 }
 
 const SurveyForm = ({ surveyType }: Props) => {
+  const queryClient = useQueryClient();
   const is_loading = useRef<boolean>(false);
   const { goBack } = useAppNav();
   const [step, setStep] = useState(0);
@@ -174,6 +176,7 @@ const SurveyForm = ({ surveyType }: Props) => {
         keywords,
         content,
       });
+      queryClient.refetchQueries('review_list');
       goBack();
     } catch (e) {
       console.log(e);
@@ -250,6 +253,7 @@ const SurveyForm = ({ surveyType }: Props) => {
             };
 
       await reviewApi.postJoinSurvey(body);
+      queryClient.refetchQueries('review_list');
       goBack();
     } catch (e) {
       console.log(e);

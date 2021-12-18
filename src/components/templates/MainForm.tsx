@@ -314,6 +314,7 @@ const MainForm = () => {
           onRefresh={() => {
             refetch();
           }}
+          ItemSeparatorComponent={ListItemSeparator}
           contentContainerStyle={styles.flatList}
           data={review_list}
           style={{ marginBottom: 56 }}
@@ -431,7 +432,7 @@ const FilterWrapper = styled.ScrollView`
 
 const CardWrapper = styled.View`
   flex: 1;
-  padding: 0 24px;
+  /* padding: 0 24px; */
 `;
 
 const FixedButton = styled.TouchableOpacity`
@@ -465,3 +466,9 @@ const styles = StyleSheet.create({
     paddingBottom: 60,
   },
 });
+
+const ListItemSeparator = styled.View`
+  width: 100%;
+  height: 8px;
+  background-color: #f2f2f2;
+`;
