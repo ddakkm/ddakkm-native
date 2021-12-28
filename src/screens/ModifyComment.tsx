@@ -58,7 +58,7 @@ const ModifyComment = () => {
               <Icon type={'close'} onPress={goBack} />
               <HeaderText>수정</HeaderText>
               <HeaderTextBtn disabled={!content} onPress={modifyComment}>
-                <Top05 isActive={!!content}>댓글쓰기</Top05>
+                <Top05 isActive={!!content}>답글쓰기</Top05>
               </HeaderTextBtn>
             </Header>
             <StyledBody>

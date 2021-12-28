@@ -100,7 +100,7 @@ const ReplyComment = () => {
           <StyledContainer>
             <Header>
               <Icon type={'close'} onPress={goBack} />
-              <HeaderText>댓글</HeaderText>
+              <HeaderText>답글</HeaderText>
               <Space />
             </Header>
             <StyledBody>

@@ -4,6 +4,7 @@ import Icon from '../atoms/Icon';
 import { TouchableOpacityProps } from 'react-native';
 import Button from '../atoms/Button';
 import LoginImage from '../../assets/images/login.png';
+import { useAppNav } from '../../hooks/useNav';
 interface Props {
   onNext: () => void;
 }
@@ -16,6 +17,7 @@ const LoginCheckboxForm = ({ onNext }: Props) => {
     three: false,
     four: false,
   });
+  const { navigate } = useAppNav();
 
   const handleAllCheck = () => {
     setIsAllCheck(!is_all_check);
@@ -41,19 +43,25 @@ const LoginCheckboxForm = ({ onNext }: Props) => {
           <CheckboxButton
             title={'서비스 이용 약관 동의'}
             active={active.one}
-            goToPage={() => {}}
+            goToPage={() => {
+              navigate('/terms', { type: '서비스 이용 약관 동의' });
+            }}
             onPress={() => isActive({ ...active, one: !active.one })}
           />
           <CheckboxButton
             title={'개인정보 수집 및 이용동의'}
             active={active.two}
-            goToPage={() => {}}
+            goToPage={() => {
+              navigate('/terms', { type: '개인정보 수집 및 이용동의' });
+            }}
             onPress={() => isActive({ ...active, two: !active.two })}
           />
           <CheckboxButton
             title={'개인 민감정보 처리 방침 동의'}
             active={active.three}
-            goToPage={() => {}}
+            goToPage={() => {
+              navigate('/terms', { type: '개인 민감정보 처리 방침 동의' });
+            }}
             onPress={() => isActive({ ...active, three: !active.three })}
           />
           <CheckboxButton

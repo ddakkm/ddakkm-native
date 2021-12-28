@@ -321,7 +321,6 @@ const MainForm = () => {
           keyExtractor={(item, idx) => `review-list-${item.id}:${idx}`}
           onEndReached={loadMore}
           onEndReachedThreshold={0.3}
-          ListEmptyComponent={<NoReview />}
           renderItem={renderItem}
         />
       </CardWrapper>

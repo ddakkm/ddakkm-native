@@ -48,7 +48,7 @@ const ReplyCommentModal = ({ show, handleVisible, comment }: Props) => {
       <StyledContainer>
         <Header>
           <Icon type={'close'} onPress={handleVisible} />
-          <HeaderText>댓글</HeaderText>
+          <HeaderText>답글</HeaderText>
           <Space />
         </Header>
         <StyledBody>

@@ -100,8 +100,8 @@ const Setting = () => {
             <MenuListItemText>공지사항</MenuListItemText>
           </MenuListItem>
            */}
-          <MenuListItem>
-            <MenuListItemText>개인정보처리방침</MenuListItemText>
+          <MenuListItem onPress={() => navigate('/terms')}>
+            <MenuListItemText>약관 안내</MenuListItemText>
           </MenuListItem>
           {is_loggedIn ? (
             <>
@@ -218,7 +218,7 @@ const ProfileInfoCount = ({
       <ProfileInfoCountText>
         {comment_counts ? comment_counts : '-'}
       </ProfileInfoCountText>
-      <ProfileInfoText>댓글 단 후기</ProfileInfoText>
+      <ProfileInfoText>답글 단 후기</ProfileInfoText>
     </ProfileInfoBoxWrapper>
     <DividerWrapper>
       <Divider />

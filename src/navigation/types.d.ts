@@ -20,6 +20,7 @@ type RootStackParamList = {
   '/userProfile': { user_id: number };
   '/feedback': undefined;
   '/report': { comment_id?: number; review_id?: number };
+  '/terms': { type?: string };
 };
 
 type NavRef = NavigationContainerRef<RootStackParamList>;

@@ -79,7 +79,7 @@ const PushSetting = () => {
                 <StyledLitItem>
                   <StyledTextWrapper>
                     <Top03>활동 알림</Top03>
-                    <Top05>댓글, 좋아요 알림</Top05>
+                    <Top05>답글, 좋아요 알림</Top05>
                   </StyledTextWrapper>
                   <StyledSwitch
                     trackColor={{ false: '#767577', true: '#3a3a3a' }}

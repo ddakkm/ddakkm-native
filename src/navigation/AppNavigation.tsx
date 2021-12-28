@@ -18,6 +18,7 @@ import MyReviews from '../screens/MyReviews';
 import UserProfile from '../screens/UserProfile';
 import Feedback from '../screens/Feedback';
 import Report from '../screens/Report';
+import Terms from '../screens/Terms';
 
 const RootStack = createNativeStackNavigator();
 const RootRouter = () => {
@@ -48,6 +49,7 @@ const RootRouter = () => {
         <RootStack.Screen name={'/login'} component={Login} />
         <RootStack.Screen name={'/signUp'} component={SignUp} />
         <RootStack.Screen name={'/report'} component={Report} />
+        <RootStack.Screen name={'/terms'} component={Terms} />
       </RootStack.Group>
     </RootStack.Navigator>
   );

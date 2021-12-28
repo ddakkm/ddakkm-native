@@ -240,7 +240,7 @@ const Detail = () => {
                 }>
                 <Icon type={'message'} />
                 <StyledFooterText>
-                  댓글쓰기 {data.comment_count}
+                  답글쓰기 {data.comment_count}
                 </StyledFooterText>
               </FooterBtn>
             </StyledFooter>

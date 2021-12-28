@@ -1,5 +1,6 @@
 import React, { useCallback, useRef, useState } from 'react';
 import {
+  Alert,
   Keyboard,
   Platform,
   SafeAreaView,
@@ -23,6 +24,21 @@ const Feedback = () => {
 
   const handleSubmit = () => {
     if (is_loading.current) return;
+    if (phone && !/010[^0][0-9]{2,3}[0-9]{3,4}/.test(phone)) {
+      Alert.alert('휴대폰 번호를 확인 해주세요.');
+      return;
+    }
+
+    if (
+      email &&
+      !/^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i.test(
+        email,
+      )
+    ) {
+      Alert.alert('이메일 형식이 맞지 않습니다.');
+      return;
+    }
+
     try {
       is_loading.current = true;
       userApi.postQna(content, email, phone);
@@ -64,7 +80,12 @@ const Feedback = () => {
               </BodyWrapper>
               <BodyWrapper>
                 <BodyTitle>답변 받을 방식 (선택)</BodyTitle>
-                <CheckboxWrapper onPress={() => setIsVisible(true)}>
+                <CheckboxWrapper
+                  onPress={() => {
+                    setPhone('');
+                    setEmail('');
+                    setIsVisible(true);
+                  }}>
                   <Checkbox is_active={is_visible === true}>
                     {is_visible === true && <InnerCheckbox />}
                   </Checkbox>
@@ -80,7 +101,12 @@ const Feedback = () => {
                     placeholderTextColor={'#afafaf'}
                   />
                 )}
-                <CheckboxWrapper onPress={() => setIsVisible(false)}>
+                <CheckboxWrapper
+                  onPress={() => {
+                    setPhone('');
+                    setEmail('');
+                    setIsVisible(false);
+                  }}>
                   <Checkbox is_active={is_visible === false}>
                     {is_visible === false && <InnerCheckbox />}
                   </Checkbox>

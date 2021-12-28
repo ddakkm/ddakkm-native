@@ -198,7 +198,7 @@ const Comments = () => {
           <Wrapper>
             <Header>
               <Icon type={'close'} onPress={goBack} />
-              <HeaderText>댓글 {data?.comment_count}</HeaderText>
+              <HeaderText>답글 {data?.comment_count}</HeaderText>
               <Space />
             </Header>
             {isLoading ? (
@@ -230,7 +230,7 @@ const Comments = () => {
       <Popup
         isVisible={is_delete_comment}
         handleVisible={setIsDeleteComment}
-        title="댓글을 삭제하시겠어요?"
+        title="답글을 삭제하시겠어요?"
         ok_text="삭제"
         close_text="취소"
         onOk={handleDeleteComment}
@@ -291,7 +291,7 @@ const CommnetItem = ({
       </FooterBtn>
       <FooterBtn>
         <Icon type={'message'} style={{ padding: 10 }} />
-        <StyledFooterText>댓글 {comment_count}</StyledFooterText>
+        <StyledFooterText>답글 {comment_count}</StyledFooterText>
       </FooterBtn>
       <StyledTextBtn onPress={navigateToReply}>
         <Top08>답글쓰기</Top08>
@@ -316,7 +316,7 @@ const ReCommnetItem = ({
       <StyledNicknameBtn onPress={navigateToUserProfile}>
         <StyledCommentNickname>{nickname}</StyledCommentNickname>
       </StyledNicknameBtn>
-      <StyledCommentDate>3일전</StyledCommentDate>
+      <StyledCommentDate>{getTime(created_at)}</StyledCommentDate>
       <StyledColumn>
         <Icon type={'menu_verticle'} onPress={is_comment_option} />
       </StyledColumn>
