@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import messaging from '@react-native-firebase/messaging';
 import Home from '../screens/Home';
 import Survey from '../screens/Survey';
 import Login from '../screens/Login';
@@ -18,9 +19,39 @@ import MyReviews from '../screens/MyReviews';
 import UserProfile from '../screens/UserProfile';
 import Feedback from '../screens/Feedback';
 import Report from '../screens/Report';
+import { useAppNav } from '../hooks/useNav';
+import { Alert } from 'react-native';
 
 const RootStack = createNativeStackNavigator();
 const RootRouter = () => {
+  const { navigate } = useAppNav();
+  useEffect(() => {
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      console.log(
+        'Notification caused app to open from background state:',
+        remoteMessage.notification,
+      );
+      navigate(remoteMessage.data.type);
+    });
+
+    messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+        if (remoteMessage) {
+          console.log(
+            'Notification caused app to open from quit state:',
+            remoteMessage.notification,
+          );
+          // navigate(remoteMessage.data.type);
+        }
+      });
+
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    });
+    return unsubscribe;
+  }, []);
+
   return (
     <RootStack.Navigator initialRouteName={'/'}>
       <RootStack.Group screenOptions={{ headerShown: false }}>

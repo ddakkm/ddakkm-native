@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { StatusBar } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import messaging from '@react-native-firebase/messaging';
 // import DeviceInfo from 'react-native-device-info';
 import AuthProvider from './src/contexts/auth';
 import LikeProvider from './src/contexts/like';
@@ -18,9 +19,25 @@ if (__DEV__) {
 }
 
 const App = () => {
+  async function requestUserPermission() {
+    const authStatus = await messaging().requestPermission();
+    await messaging().registerDeviceForRemoteMessages();
+
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+    if (enabled) {
+      console.log('Authorization status:', authStatus);
+      const fcmToken = await messaging().getToken();
+      console.log(fcmToken);
+    }
+  }
+
   useEffect(() => {
     SplashScreen.hide();
     StatusBar.setBarStyle('dark-content');
+    requestUserPermission();
   }, []);
 
   // console.log(DeviceInfo.getUniqueId());

@@ -1,10 +1,10 @@
 import React, { Fragment, useState } from 'react';
 import styled from '@emotion/native';
 import { Keyboard, Platform, TouchableWithoutFeedback } from 'react-native';
+import messaging from '@react-native-firebase/messaging';
 import LoginCheckboxForm from './LoginCheckboxForm';
 import UserBasicInfoForm from './UserBasicInfoForm';
 import { useAppNav, useAppRoute } from '../../hooks/useNav';
-import DeviceInfo from 'react-native-device-info';
 import { CommonActions } from '@react-navigation/native';
 import { authApi } from '../../api/auth';
 import { storeTokens } from '../../contexts/auth/storage';
@@ -25,7 +25,7 @@ const SignupForm = () => {
     }
     try {
       is_loading.current = true;
-      const fcm_token = DeviceInfo.getUniqueId();
+      const fcm_token = await messaging().getToken();
       const { data } = await authApi.signUp(
         sns_provider,
         access_token,

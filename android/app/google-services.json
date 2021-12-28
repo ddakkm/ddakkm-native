@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "840505870633",
+    "project_id": "ddakkm-c29a0",
+    "storage_bucket": "ddakkm-c29a0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:840505870633:android:10a2ca2ba5f2c1be0d4f38",
+        "android_client_info": {
+          "package_name": "com.ddakkm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "840505870633-l4rf004fnrk8gh27kf4p20oeg6rfidkd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDehXsAagZSBmpiquVgAEslksZUC0Gx3Cw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "840505870633-l4rf004fnrk8gh27kf4p20oeg6rfidkd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "840505870633-jt74c6bv2t8ih4tr3a91coemgsoiukl0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ddakkm.vaccinereview"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
