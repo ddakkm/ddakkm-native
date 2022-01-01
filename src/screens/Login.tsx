@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from '@emotion/native';
 import { Platform, SafeAreaView } from 'react-native';
 import { NativeModules } from 'react-native';
@@ -7,6 +7,7 @@ import {
   NaverLogin,
   getProfile as getNaverProfile,
 } from '@react-native-seoul/naver-login';
+import messaging from '@react-native-firebase/messaging';
 import Icon from '../components/atoms/Icon';
 import { authApi } from '../api/auth';
 import { useAppNav } from '../hooks/useNav';
@@ -113,7 +114,7 @@ const Login = () => {
     }
     try {
       is_loading.current = true;
-      const fcm_token = DeviceInfo.getUniqueId();
+      const fcm_token = await messaging().getToken();
       const token: any =
         sns_provider === 'NAVER'
           ? await naverLogin(initials)
