@@ -20,18 +20,18 @@ if (__DEV__) {
 }
 
 const App = () => {
-  async function requestUserPermission() {
-    const authStatus = await messaging().requestPermission();
-    await messaging().registerDeviceForRemoteMessages();
+  // async function requestUserPermission() {
+  //   const authStatus = await messaging().requestPermission();
+  //   await messaging().registerDeviceForRemoteMessages();
 
-    const enabled =
-      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+  //   const enabled =
+  //     authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+  //     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
-    if (enabled) {
-      const fcmToken = await messaging().getToken();
-    }
-  }
+  //   if (enabled) {
+  //     const fcmToken = await messaging().getToken();
+  //   }
+  // }
   useEffect(() => {
     firebase.analytics().logScreenView({
       screen_name: '메인 페이지',
@@ -43,7 +43,7 @@ const App = () => {
     StatusBar.setBackgroundColor('transparent');
     StatusBar.setTranslucent(true);
     StatusBar.setBarStyle('dark-content');
-    requestUserPermission();
+    // requestUserPermission();
   }, []);
 
   return (
