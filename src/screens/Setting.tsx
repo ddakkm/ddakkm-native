@@ -12,6 +12,7 @@ import { useIsLoggedIn } from '../contexts/auth';
 import Loading from '../components/atoms/Loading';
 import { useMyLikeList } from '../contexts/like';
 import Popup from '../components/atoms/Popup';
+import { firebase } from '@react-native-firebase/analytics';
 
 const Setting = () => {
   const [is_logout_loading, setLogoutLoading] = React.useState(false);
@@ -117,7 +118,14 @@ const Setting = () => {
               <MenuListItem onPress={handleLogout}>
                 <MenuListItemText>로그아웃</MenuListItemText>
               </MenuListItem>
-              <MenuListItem onPress={() => setIsVisible(true)}>
+              <MenuListItem
+                onPress={() => {
+                  firebase.analytics().logEvent('setting_page', {
+                    category: '탈퇴하기',
+                    action: '탈퇴하기 버튼 클릭',
+                  });
+                  setIsVisible(true);
+                }}>
                 <MenuListItemText style={{ color: '#afafaf' }}>
                   탈퇴하기
                 </MenuListItemText>
@@ -134,9 +142,17 @@ const Setting = () => {
         sub_title={'탈퇴 시, 더 이상 백신후기를\n 공유받으실 수 없어요ㅠㅠ'}
         ok_text="탈퇴"
         onClose={() => {
+          firebase.analytics().logEvent('leave_modal', {
+            category: '탈퇴하기',
+            action: '취소 버튼 클릭',
+          });
           setIsVisible(false);
         }}
         onOk={() => {
+          firebase.analytics().logEvent('leave_modal', {
+            category: '탈퇴하기',
+            action: '탈퇴 버튼 클릭',
+          });
           setIsVisible(false);
           handleLeaveUser();
         }}

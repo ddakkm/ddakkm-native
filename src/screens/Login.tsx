@@ -2,11 +2,7 @@ import React from 'react';
 import styled from '@emotion/native';
 import { Platform, SafeAreaView } from 'react-native';
 import { NativeModules } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
-import {
-  NaverLogin,
-  getProfile as getNaverProfile,
-} from '@react-native-seoul/naver-login';
+import { NaverLogin } from '@react-native-seoul/naver-login';
 import messaging from '@react-native-firebase/messaging';
 import Icon from '../components/atoms/Icon';
 import { authApi } from '../api/auth';
@@ -14,6 +10,12 @@ import { useAppNav } from '../hooks/useNav';
 import { storeTokens } from '../contexts/auth/storage';
 import LoginImage from '../assets/images/login.png';
 import { useIsLoggedIn } from '../contexts/auth';
+import { firebase } from '@react-native-firebase/analytics';
+import {
+  KakaoAccessTokenInfo,
+  KakaoOAuthToken,
+  KakaoProfile,
+} from '@react-native-seoul/kakao-login';
 
 const iosKeys = {
   kConsumerKey: 'nFv0sp8OBRZiQG0AzYCB',
@@ -114,6 +116,12 @@ const Login = () => {
     }
     try {
       is_loading.current = true;
+      firebase.analytics().logEvent('login_page', {
+        category: '회원가입',
+        action: `${
+          sns_provider === 'KAKAO' ? '카카오' : '네이버'
+        }로 후기 작성하기 클릭`,
+      });
       const fcm_token = await messaging().getToken();
       const token: any =
         sns_provider === 'NAVER'

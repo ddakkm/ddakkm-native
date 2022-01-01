@@ -27,6 +27,7 @@ import { useMyLikeList } from '../../contexts/like';
 import { useInfiniteQuery } from 'react-query';
 import { reviewApi } from '../../api/review';
 import { SURVEY_A_LIST } from '../../utils/servayUtil';
+import { firebase } from '@react-native-firebase/analytics';
 
 const FilterbuttunArr: Array<{
   title: string;
@@ -136,7 +137,7 @@ const MainForm = () => {
       {
         getNextPageParam: last_page => last_page.next_page_index,
         onError: e => {
-          console.log(e);
+          /** */
         },
         retry: false,
         staleTime: Infinity,
@@ -155,7 +156,11 @@ const MainForm = () => {
     }
   };
 
-  const navigateSurvey = () => {
+  const navigateSurvey = async () => {
+    await firebase.analytics().logEvent('main_page', {
+      category: '후기 작성',
+      action: '후기 작성하기 버튼 클릭',
+    });
     if (!is_loggedIn) {
       navigate('/login');
     } else {

@@ -67,9 +67,7 @@ const Report = () => {
     }
     try {
       is_loading.current = true;
-      console.log('start');
       if (params.review_id) {
-        console.log('review');
         await reviewApi.reportReview({ review_id: params.review_id, reason });
         setIsComplete(true);
       } else if (params.comment_id) {

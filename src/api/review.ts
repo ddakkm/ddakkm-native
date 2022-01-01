@@ -96,19 +96,16 @@ interface SurveyReviewProps {
 }
 
 const postSurveyReview = async (body: SurveyReviewProps) => {
-  // console.log(body);
   const { data } = await instance.post('/v1/review', body);
   return data;
 };
 
 const postImageUpload = async ({ body }: { body: any }) => {
-  console.log(body);
   const { data } = await instance.post('/v1/review/images', body, {
     headers: {
       'content-type': 'multipart/form-data',
     },
   });
-  console.log(data);
   return data;
 };
 
@@ -122,7 +119,6 @@ const getReviewDetail = async (
 
 const postReviewLikeStatus = async (review_id: number) => {
   const { data } = await instance.post(`/v1/review/${review_id}/like_status`);
-  console.log(data);
   return data;
 };
 

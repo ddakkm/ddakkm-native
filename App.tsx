@@ -8,6 +8,7 @@ import AuthProvider from './src/contexts/auth';
 import LikeProvider from './src/contexts/like';
 import Router from './src/navigation';
 import { setGlobalProps } from './src/utils/globalProps';
+import { firebase } from '@react-native-firebase/analytics';
 setGlobalProps(); // set global props
 
 const queryClient = new QueryClient();
@@ -28,11 +29,14 @@ const App = () => {
       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
     if (enabled) {
-      console.log('Authorization status:', authStatus);
       const fcmToken = await messaging().getToken();
-      console.log(fcmToken);
     }
   }
+  useEffect(() => {
+    firebase.analytics().logScreenView({
+      screen_name: '메인 페이지',
+    });
+  }, []);
 
   useEffect(() => {
     SplashScreen.hide();

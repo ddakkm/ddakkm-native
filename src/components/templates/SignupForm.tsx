@@ -9,6 +9,7 @@ import { CommonActions } from '@react-navigation/native';
 import { authApi } from '../../api/auth';
 import { storeTokens } from '../../contexts/auth/storage';
 import { useIsLoggedIn } from '../../contexts/auth';
+import { firebase } from '@react-native-firebase/analytics';
 
 const SignupForm = () => {
   const is_loading = React.useRef<boolean>(false);
@@ -25,6 +26,11 @@ const SignupForm = () => {
     }
     try {
       is_loading.current = true;
+      await firebase.analytics().logEvent('signup_page', {
+        category: '회원가입',
+        action: '입력완료했어요 버튼 클릭',
+        label: '기본정보(성별&생년월일) 정보 입력 완료',
+      });
       const fcm_token = await messaging().getToken();
       const { data } = await authApi.signUp(
         sns_provider,
@@ -41,7 +47,7 @@ const SignupForm = () => {
         setNickname(data.nickname);
       }
     } catch (e) {
-      console.log(e);
+      /** */
     } finally {
       is_loading.current = false;
     }
@@ -56,10 +62,14 @@ const SignupForm = () => {
     });
   };
 
-  const onNext = () => {
+  const onNext = async () => {
     if (signUpComponents.length - 1 === step) {
       return;
     }
+    await firebase.analytics().logEvent('signup_page', {
+      category: '회원가입',
+      action: '시작하기 버튼 클릭',
+    });
     setStep(1);
   };
 

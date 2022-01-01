@@ -13,6 +13,7 @@ import {
 import { useAppNav } from '../../hooks/useNav';
 import { reviewApi } from '../../api/review';
 import { useQueryClient } from 'react-query';
+import { firebase } from '@react-native-firebase/analytics';
 
 export type VaccineType =
   | 'ETC'
@@ -137,6 +138,10 @@ const SurveyForm = ({ surveyType }: Props) => {
     }
     try {
       is_loading.current = true;
+      firebase.analytics().logEvent('survey_a_page', {
+        category: 'A그룹 설문조사',
+        action: '후기 올리기 버튼 클릭',
+      });
       let surveyBody: { [key: string]: any[] } = {};
       for (const [key, values] of Object.entries(surveyA)) {
         const { value, text } = values;
@@ -287,7 +292,14 @@ const SurveyForm = ({ surveyType }: Props) => {
           },
         }))
       }
-      onNext={() => setStep(prevStep => prevStep + 1)}
+      onNext={() => {
+        firebase.analytics().logEvent('survey_b_page', {
+          category: 'B그룹 설문조사',
+          action: '다 골랐어요 버튼 클릭',
+          label: '접종 여부 설문 완료',
+        });
+        setStep(prevStep => prevStep + 1);
+      }}
       onBack={handleBack}
     />,
     <CheckBoxForm
@@ -305,7 +317,14 @@ const SurveyForm = ({ surveyType }: Props) => {
           },
         }))
       }
-      onNext={handleCompleteJoin}
+      onNext={() => {
+        firebase.analytics().logEvent('survey_b_page', {
+          category: 'B그룹 설문조사',
+          action: '다 골랐어요 버튼 클릭',
+          label: '접종 시 가장 우려되는 점 설문 완료',
+        });
+        handleCompleteJoin();
+      }}
       onBack={handleBack}
     />,
   ];
@@ -335,7 +354,14 @@ const SurveyForm = ({ surveyType }: Props) => {
           },
         }))
       }
-      onNext={() => setStep(prevStep => prevStep + 1)}
+      onNext={() => {
+        firebase.analytics().logEvent('survey_c_page', {
+          category: 'C그룹 설문조사',
+          action: '다 골랐어요 버튼 클릭',
+          label: '접종하지 않은 이유 설문 완료',
+        });
+        setStep(prevStep => prevStep + 1);
+      }}
       onBack={handleBack}
     />,
     <CheckBoxForm
@@ -353,7 +379,14 @@ const SurveyForm = ({ surveyType }: Props) => {
           },
         }))
       }
-      onNext={handleCompleteJoin}
+      onNext={() => {
+        firebase.analytics().logEvent('survey_c_page', {
+          category: 'C그룹 설문조사',
+          action: '다 골랐어요 버튼 클릭',
+          label: '접종 계획 설문 완료',
+        });
+        handleCompleteJoin();
+      }}
       onBack={handleBack}
     />,
   ];
@@ -371,7 +404,7 @@ const SurveyForm = ({ surveyType }: Props) => {
       options={SURVEY_A_LIST.q1}
       values={surveyA.q1.value}
       text={surveyA.q1.text}
-      handleOnPress={(value: number) =>
+      handleOnPress={(value: number) => {
         setSurveyA(prevState => ({
           ...prevState,
           q1: {
@@ -380,8 +413,8 @@ const SurveyForm = ({ surveyType }: Props) => {
               ? prevState.q1.value.filter(_value => _value !== value)
               : [...prevState.q1.value, value],
           },
-        }))
-      }
+        }));
+      }}
       handleOnChange={(value: string) =>
         setSurveyA(prevState => ({
           ...prevState,
@@ -391,7 +424,14 @@ const SurveyForm = ({ surveyType }: Props) => {
           },
         }))
       }
-      onNext={() => setStep(prevStep => prevStep + 1)}
+      onNext={() => {
+        firebase.analytics().logEvent('survey_a_page', {
+          category: 'A그룹 설문조사',
+          action: '다 골랐어요 버튼 클릭',
+          label: '근육통 여부 설문 완료',
+        });
+        setStep(prevStep => prevStep + 1);
+      }}
       onBack={handleBack}
     />,
     <CheckBoxForm
@@ -409,6 +449,11 @@ const SurveyForm = ({ surveyType }: Props) => {
         }))
       }
       onNext={() => {
+        firebase.analytics().logEvent('survey_a_page', {
+          category: 'A그룹 설문조사',
+          action: '다 골랐어요 버튼 클릭',
+          label: '발열 여부 설문 완료',
+        });
         if (surveyA.q2.value.filter(_value => _value !== 1).length > 0) {
           setStep(prevStep => prevStep + 1);
         } else {
@@ -430,7 +475,14 @@ const SurveyForm = ({ surveyType }: Props) => {
           },
         }))
       }
-      onNext={() => setStep(prevStep => prevStep + 1)}
+      onNext={() => {
+        firebase.analytics().logEvent('survey_a_page', {
+          category: 'A그룹 설문조사',
+          action: '다 골랐어요 버튼 클릭',
+          label: '발열 지속 기간 설문 완료',
+        });
+        setStep(prevStep => prevStep + 1);
+      }}
       onBack={handleBack}
     />,
     <CheckBoxForm
@@ -457,7 +509,14 @@ const SurveyForm = ({ surveyType }: Props) => {
           },
         }))
       }
-      onNext={() => setStep(prevStep => prevStep + 1)}
+      onNext={() => {
+        firebase.analytics().logEvent('survey_a_page', {
+          category: 'A그룹 설문조사',
+          action: '다 골랐어요 버튼 클릭',
+          label: '두통, 어지러움 설문 완료',
+        });
+        setStep(prevStep => prevStep + 1);
+      }}
       onBack={handleBackFever}
     />,
     <CheckBoxForm
@@ -486,7 +545,14 @@ const SurveyForm = ({ surveyType }: Props) => {
           },
         }))
       }
-      onNext={() => setStep(prevStep => prevStep + 1)}
+      onNext={() => {
+        firebase.analytics().logEvent('survey_a_page', {
+          category: 'A그룹 설문조사',
+          action: '다 골랐어요 버튼 클릭',
+          label: '속 불편 여부 설문 완료',
+        });
+        setStep(prevStep => prevStep + 1);
+      }}
       onBack={handleBackFever}
     />,
     <CheckBoxForm
@@ -504,6 +570,11 @@ const SurveyForm = ({ surveyType }: Props) => {
         }))
       }
       onNext={() => {
+        firebase.analytics().logEvent('survey_a_page', {
+          category: 'A그룹 설문조사',
+          action: '다 골랐어요 버튼 클릭',
+          label: '피곤 여부 설문 완료',
+        });
         setStep(prevStep => prevStep + 1);
       }}
       onBack={handleBack}
@@ -671,7 +742,18 @@ const SurveyForm = ({ surveyType }: Props) => {
         handleOnPress={(value: number) =>
           setSurveyType(prevState => (prevState.includes(value) ? [] : [value]))
         }
-        onNext={() => setStep(prevStep => prevStep + 1)}
+        onNext={() => {
+          firebase.analytics().logEvent('login_page', {
+            category:
+              survey_type[0] === 1
+                ? 'A그룹 설문조사'
+                : survey_type[0] === 2
+                ? 'B그룹 설문조사'
+                : 'C그룹 설문조사',
+            action: '진입',
+          });
+          setStep(prevStep => prevStep + 1);
+        }}
         onBack={handleBack}
       />,
     ];
