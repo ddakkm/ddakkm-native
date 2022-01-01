@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from '@emotion/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import SignupForm from '../components/templates/SignupForm';
+import { firebase } from '@react-native-firebase/analytics';
 
 const SignUp = () => {
+  useEffect(() => {
+    firebase.analytics().logScreenView({
+      screen_name: '회원가입 페이지',
+    });
+  }, []);
   return (
     <Container>
       <SafeAreaView style={{ flex: 1 }}>
