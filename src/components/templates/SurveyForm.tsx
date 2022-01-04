@@ -138,7 +138,7 @@ const SurveyForm = ({ surveyType }: Props) => {
     }
     try {
       is_loading.current = true;
-      firebase.analytics().logEvent('survey_a_page', {
+      await firebase.analytics().logEvent('survey_a_page', {
         category: 'A그룹 설문조사',
         action: '후기 올리기 버튼 클릭',
       });
@@ -292,8 +292,8 @@ const SurveyForm = ({ surveyType }: Props) => {
           },
         }))
       }
-      onNext={() => {
-        firebase.analytics().logEvent('survey_b_page', {
+      onNext={async () => {
+        await firebase.analytics().logEvent('survey_b_page', {
           category: 'B그룹 설문조사',
           action: '다 골랐어요 버튼 클릭',
           label: '접종 여부 설문 완료',
@@ -317,8 +317,8 @@ const SurveyForm = ({ surveyType }: Props) => {
           },
         }))
       }
-      onNext={() => {
-        firebase.analytics().logEvent('survey_b_page', {
+      onNext={async () => {
+        await firebase.analytics().logEvent('survey_b_page', {
           category: 'B그룹 설문조사',
           action: '다 골랐어요 버튼 클릭',
           label: '접종 시 가장 우려되는 점 설문 완료',
@@ -354,8 +354,8 @@ const SurveyForm = ({ surveyType }: Props) => {
           },
         }))
       }
-      onNext={() => {
-        firebase.analytics().logEvent('survey_c_page', {
+      onNext={async () => {
+        await firebase.analytics().logEvent('survey_c_page', {
           category: 'C그룹 설문조사',
           action: '다 골랐어요 버튼 클릭',
           label: '접종하지 않은 이유 설문 완료',
@@ -379,8 +379,8 @@ const SurveyForm = ({ surveyType }: Props) => {
           },
         }))
       }
-      onNext={() => {
-        firebase.analytics().logEvent('survey_c_page', {
+      onNext={async () => {
+        await firebase.analytics().logEvent('survey_c_page', {
           category: 'C그룹 설문조사',
           action: '다 골랐어요 버튼 클릭',
           label: '접종 계획 설문 완료',
@@ -424,8 +424,8 @@ const SurveyForm = ({ surveyType }: Props) => {
           },
         }))
       }
-      onNext={() => {
-        firebase.analytics().logEvent('survey_a_page', {
+      onNext={async () => {
+        await firebase.analytics().logEvent('survey_a_page', {
           category: 'A그룹 설문조사',
           action: '다 골랐어요 버튼 클릭',
           label: '근육통 여부 설문 완료',
@@ -448,8 +448,8 @@ const SurveyForm = ({ surveyType }: Props) => {
           },
         }))
       }
-      onNext={() => {
-        firebase.analytics().logEvent('survey_a_page', {
+      onNext={async () => {
+        await firebase.analytics().logEvent('survey_a_page', {
           category: 'A그룹 설문조사',
           action: '다 골랐어요 버튼 클릭',
           label: '발열 여부 설문 완료',
@@ -475,8 +475,8 @@ const SurveyForm = ({ surveyType }: Props) => {
           },
         }))
       }
-      onNext={() => {
-        firebase.analytics().logEvent('survey_a_page', {
+      onNext={async () => {
+        await firebase.analytics().logEvent('survey_a_page', {
           category: 'A그룹 설문조사',
           action: '다 골랐어요 버튼 클릭',
           label: '발열 지속 기간 설문 완료',
@@ -509,8 +509,8 @@ const SurveyForm = ({ surveyType }: Props) => {
           },
         }))
       }
-      onNext={() => {
-        firebase.analytics().logEvent('survey_a_page', {
+      onNext={async () => {
+        await firebase.analytics().logEvent('survey_a_page', {
           category: 'A그룹 설문조사',
           action: '다 골랐어요 버튼 클릭',
           label: '두통, 어지러움 설문 완료',
@@ -545,8 +545,8 @@ const SurveyForm = ({ surveyType }: Props) => {
           },
         }))
       }
-      onNext={() => {
-        firebase.analytics().logEvent('survey_a_page', {
+      onNext={async () => {
+        await firebase.analytics().logEvent('survey_a_page', {
           category: 'A그룹 설문조사',
           action: '다 골랐어요 버튼 클릭',
           label: '속 불편 여부 설문 완료',
@@ -569,8 +569,8 @@ const SurveyForm = ({ surveyType }: Props) => {
           },
         }))
       }
-      onNext={() => {
-        firebase.analytics().logEvent('survey_a_page', {
+      onNext={async () => {
+        await firebase.analytics().logEvent('survey_a_page', {
           category: 'A그룹 설문조사',
           action: '다 골랐어요 버튼 클릭',
           label: '피곤 여부 설문 완료',
@@ -742,8 +742,8 @@ const SurveyForm = ({ surveyType }: Props) => {
         handleOnPress={(value: number) =>
           setSurveyType(prevState => (prevState.includes(value) ? [] : [value]))
         }
-        onNext={() => {
-          firebase.analytics().logEvent('login_page', {
+        onNext={async () => {
+          await firebase.analytics().logEvent('login_page', {
             category:
               survey_type[0] === 1
                 ? 'A그룹 설문조사'

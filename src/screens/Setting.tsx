@@ -220,12 +220,14 @@ const ProfileInfoCount = ({
   like_counts,
   navigateToMyReviews,
 }: ProfileInfoCountProps) => (
-  <ProfileInfoCountWrapper onPress={navigateToMyReviews}>
+  <ProfileInfoCountWrapper>
     <ProfileInfoBoxWrapper>
-      <ProfileInfoCountText>
-        {post_counts ? post_counts : '-'}
-      </ProfileInfoCountText>
-      <ProfileInfoText>작성한 후기</ProfileInfoText>
+      <ProfileInfoBtnWrapper onPress={navigateToMyReviews}>
+        <ProfileInfoCountText>
+          {post_counts ? post_counts : '-'}
+        </ProfileInfoCountText>
+        <ProfileInfoText>작성한 후기</ProfileInfoText>
+      </ProfileInfoBtnWrapper>
     </ProfileInfoBoxWrapper>
     <DividerWrapper>
       <Divider />
@@ -317,13 +319,17 @@ const Top05 = styled.Text`
   color: #555;
 `;
 
-const ProfileInfoCountWrapper = styled.TouchableOpacity`
+const ProfileInfoCountWrapper = styled.View`
   width: 100%;
   height: 96px;
   background-color: #f7f7f7;
   border-radius: 8px;
   flex-direction: row;
   justify-content: center;
+`;
+
+const ProfileInfoBtnWrapper = styled.TouchableOpacity`
+  align-items: center;
 `;
 
 const ProfileInfoBoxWrapper = styled.View`

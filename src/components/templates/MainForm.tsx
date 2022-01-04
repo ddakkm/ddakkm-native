@@ -257,13 +257,13 @@ const MainForm = () => {
       <Header is_android={Platform.OS === 'android'}>
         <HeaderTitle>백신후기</HeaderTitle>
         <IconWrapper>
-          <Icon
+          {/* <Icon
             type={'notification'}
             btnStyle={{ marginRight: 12 }}
             onPress={() => {
               navigate('/notification');
             }}
-          />
+          /> */}
           <Icon
             type={'setting'}
             onPress={() => {
