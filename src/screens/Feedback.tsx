@@ -55,7 +55,7 @@ const Feedback = () => {
       <Container behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <>
-            <Header>
+            <Header is_android={Platform.OS === 'android'}>
               <Icon
                 type={'leftArrow'}
                 onPress={() => {
@@ -151,13 +151,13 @@ const Space = styled.View`
   height: 24px;
 `;
 
-const Header = styled.View`
+const Header = styled.View<{ is_android: boolean }>`
   width: 100%;
   height: 60px;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 0 24px;
+  padding: ${({ is_android }) => (is_android ? `24px 24px 0` : `0 24px`)};
   border-bottom-width: 1px;
   border-bottom-color: #f2f2f2;
 `;

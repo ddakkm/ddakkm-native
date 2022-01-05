@@ -6,6 +6,7 @@ import { useQuery } from 'react-query';
 import { Comment, reviewApi } from '../../api/review';
 import { CommentItemProps } from '../../screens/Comments';
 import { generateID } from '../../hooks/useId';
+import { Platform } from 'react-native';
 
 interface Props {
   show: boolean;
@@ -46,7 +47,7 @@ const ReplyCommentModal = ({ show, handleVisible, comment }: Props) => {
   return (
     <Modal isVisible={show} hasBackdrop={false}>
       <StyledContainer>
-        <Header>
+        <Header is_android={Platform.OS === 'android'}>
           <Icon type={'close'} onPress={handleVisible} />
           <HeaderText>답글</HeaderText>
           <Space />
@@ -120,13 +121,13 @@ const StyledContainer = styled.View`
   flex: 1;
 `;
 
-const Header = styled.View`
+const Header = styled.View<{ is_android: boolean }>`
   width: 100%;
   height: 60px;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding-horizontal: 24px;
+  padding: ${({ is_android }) => (is_android ? `24px 24px 0` : `0 24px`)};
   border-bottom-color: #f7f7f7;
   border-bottom-width: 1px;
 `;

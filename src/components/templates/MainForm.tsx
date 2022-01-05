@@ -116,8 +116,6 @@ const MainForm = () => {
     underlying: '',
   });
 
-  // const { isLoading, data, hasNextPage, fetchNextPage, refetch } =
-  //   useReviews(filterValue);
   const { isLoading, isFetching, data, hasNextPage, fetchNextPage, refetch } =
     useInfiniteQuery(
       ['review_list', filterValue],
