@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://3.34.44.39';
+export const BASE_URL = 'http://13.125.229.9:10673';
 
 export interface PageMeta {
   total: number;

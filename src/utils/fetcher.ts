@@ -3,7 +3,7 @@ import { readTokens } from '../contexts/auth/storage';
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 
 export const axiosGlobalConfig: AxiosRequestConfig = {
-  baseURL: 'http://3.34.44.39',
+  baseURL: 'http://13.125.229.9:10673',
 };
 
 const instance = axios.create(axiosGlobalConfig);
