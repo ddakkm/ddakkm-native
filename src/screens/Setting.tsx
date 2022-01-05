@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/native';
 import Icon from '../components/atoms/Icon';
-import { SafeAreaView } from 'react-native';
+import { Platform, SafeAreaView } from 'react-native';
 import { useAppNav } from '../hooks/useNav';
 import { useQuery, useQueryClient } from 'react-query';
 import { userApi } from '../api/user';
@@ -76,7 +76,7 @@ const Setting = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       <Container>
-        <Nav>
+        <Nav is_android={Platform.OS === 'android'}>
           <Icon type={'leftArrow'} onPress={goBack} />
         </Nav>
         <Header>
@@ -250,13 +250,13 @@ const ProfileInfoCount = ({
   </ProfileInfoCountWrapper>
 );
 
-const Nav = styled.View`
+const Nav = styled.View<{ is_android: boolean }>`
   width: 100%;
   height: 60px;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding-horizontal: 24px;
+  padding: ${({ is_android }) => (is_android ? `24px 24px 0` : `0 24px`)};
 `;
 
 const Container = styled.View`

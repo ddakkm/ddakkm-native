@@ -14,6 +14,7 @@ import { useAppNav } from '../../hooks/useNav';
 import { reviewApi } from '../../api/review';
 import { useQueryClient } from 'react-query';
 import { firebase } from '@react-native-firebase/analytics';
+import { useIsLoggedIn } from '../../contexts/auth';
 
 export type VaccineType =
   | 'ETC'
@@ -50,6 +51,7 @@ const SurveyForm = ({ surveyType }: Props) => {
   const queryClient = useQueryClient();
   const is_loading = useRef<boolean>(false);
   const { goBack } = useAppNav();
+  const { setIsSurvey } = useIsLoggedIn();
   const [step, setStep] = useState(0);
   const [survey_type, setSurveyType] = useState<number[]>([]);
   const [basicInfo, setBasicInfo] = useState<BasicInfoProps>({
@@ -258,6 +260,7 @@ const SurveyForm = ({ surveyType }: Props) => {
             };
 
       await reviewApi.postJoinSurvey(body);
+      setIsSurvey(true);
       queryClient.refetchQueries('review_list');
       goBack();
     } catch (e) {

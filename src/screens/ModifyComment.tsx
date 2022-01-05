@@ -54,7 +54,7 @@ const ModifyComment = () => {
       <Container behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <Wrapper>
-            <Header>
+            <Header is_android={Platform.OS === 'android'}>
               <Icon type={'close'} onPress={goBack} />
               <HeaderText>수정</HeaderText>
               <HeaderTextBtn disabled={!content} onPress={modifyComment}>
@@ -98,13 +98,13 @@ const Wrapper = styled.View`
   flex: 1;
 `;
 
-const Header = styled.View`
+const Header = styled.View<{ is_android: boolean }>`
   width: 100%;
   height: 60px;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding-horizontal: 24px;
+  padding: ${({ is_android }) => (is_android ? `24px 24px 0` : `0 24px`)};
   border-bottom-color: #f7f7f7;
   border-bottom-width: 1px;
 `;
