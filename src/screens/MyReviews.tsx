@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/native';
-import { Platform, SafeAreaView, StyleSheet } from 'react-native';
+import { Platform, SafeAreaView, StatusBar, StyleSheet } from 'react-native';
 import Icon from '../components/atoms/Icon';
 import { useAppNav } from '../hooks/useNav';
 import { useQuery } from 'react-query';
@@ -25,7 +25,7 @@ const MyReviews = () => {
   return (
     <Container>
       <SafeAreaView style={styles.safeArea}>
-        <Header is_android={Platform.OS === 'android'}>
+        <Header>
           <Icon type={'leftArrow'} onPress={goBack} />
           <HeaderText>작성글</HeaderText>
           <Space />
@@ -60,6 +60,7 @@ export default MyReviews;
 const Container = styled.View`
   flex: 1;
   background-color: #fff;
+  padding-top: ${(StatusBar.currentHeight || 0) + 'px'};
 `;
 
 const styles = StyleSheet.create({
@@ -67,13 +68,13 @@ const styles = StyleSheet.create({
   scroll: { paddingBottom: 84 },
 });
 
-const Header = styled.View<{ is_android: boolean }>`
+const Header = styled.View`
   width: 100%;
   height: 60px;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: ${({ is_android }) => (is_android ? `24px 24px 0` : `0 24px`)};
+  padding: 0 24px;
   border-bottom-color: #f2f2f2;
   border-bottom-width: 1px;
 `;

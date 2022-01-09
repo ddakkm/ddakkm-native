@@ -4,6 +4,7 @@ import {
   Keyboard,
   Platform,
   SafeAreaView,
+  StatusBar,
   TouchableWithoutFeedback,
 } from 'react-native';
 import Icon from '../components/atoms/Icon';
@@ -196,7 +197,7 @@ const Comments = () => {
       <Container behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <Wrapper>
-            <Header is_android={Platform.OS === 'android'}>
+            <Header>
               <Icon type={'close'} onPress={goBack} />
               <HeaderText>답글 {data?.comment_count}</HeaderText>
               <Space />
@@ -382,17 +383,18 @@ const ReCommentReplyBtn = styled.TouchableOpacity`
 `;
 
 const Container = styled.KeyboardAvoidingView`
+  padding-top: ${StatusBar.currentHeight + 'px'};
   position: relative;
   flex: 1;
 `;
 
-const Header = styled.View<{ is_android: boolean }>`
+const Header = styled.View`
   width: 100%;
   height: 60px;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: ${({ is_android }) => (is_android ? `24px 24px 0` : `0 24px`)};
+  padding: 0 24px;
   border-bottom-color: #f7f7f7;
   border-bottom-width: 1px;
 `;

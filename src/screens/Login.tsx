@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/native';
-import { Platform, SafeAreaView } from 'react-native';
+import { Platform, SafeAreaView, StatusBar } from 'react-native';
 import { NativeModules } from 'react-native';
 import { NaverLogin } from '@react-native-seoul/naver-login';
 import messaging from '@react-native-firebase/messaging';
@@ -275,9 +275,9 @@ const BtnText = styled.Text`
 
 const HeaderWrapper = styled.View`
   display: flex;
-  height: 60px;
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
+  height: ${`${StatusBar.currentHeight ? StatusBar.currentHeight + 80 : 80}px`};
   padding-right: 30px;
 `;

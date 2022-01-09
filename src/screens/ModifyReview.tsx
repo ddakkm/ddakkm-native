@@ -9,6 +9,7 @@ import {
   Keyboard,
   Platform,
   SafeAreaView,
+  StatusBar,
   TouchableWithoutFeedback,
 } from 'react-native';
 import Textarea from '../components/atoms/Textarea';
@@ -128,7 +129,7 @@ const ModifyReview = () => {
       <Container behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <StyledWrapper>
-            <Header is_android={Platform.OS === 'android'}>
+            <Header>
               <Icon type={'leftArrow'} onPress={goBack} />
               <HeaderText>후기쓰기</HeaderText>
               <Space />
@@ -166,15 +167,15 @@ const ModifyReview = () => {
                   ))}
                 </StyledBtnWrapper>
               </BodyWrapper>
-              <BodyWrapper>
+              {/* <BodyWrapper>
                 <BodyTitle>사진 수정</BodyTitle>
                 <StyledImgWrapper>
-                  {/* <StyledImgBtn onPress={imageGalleryLaunch}>
+                  <StyledImgBtn onPress={imageGalleryLaunch}>
                     <Icon type={'search'} />
                     <StyledImgText>
                       {imgUrls.filter(img => img.uri !== null).length}/3
                     </StyledImgText>
-                  </StyledImgBtn> */}
+                  </StyledImgBtn>
                   {imgUrls.map(img =>
                     img.uri ? (
                       <ImageCard
@@ -187,7 +188,7 @@ const ModifyReview = () => {
                     ) : null,
                   )}
                 </StyledImgWrapper>
-              </BodyWrapper>
+              </BodyWrapper> */}
             </Wrapper>
             <Footer>
               <Button
@@ -215,6 +216,7 @@ export default ModifyReview;
 
 const Container = styled.KeyboardAvoidingView`
   flex: 1;
+  padding-top: ${(StatusBar.currentHeight || 0) + 'px'};
 `;
 
 const StyledWrapper = styled.View`
@@ -227,13 +229,13 @@ const Space = styled.View`
   height: 24px;
 `;
 
-const Header = styled.View<{ is_android: boolean }>`
+const Header = styled.View`
   width: 100%;
   height: 60px;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: ${({ is_android }) => (is_android ? `24px 0` : `0`)};
+  padding: 0;
 `;
 
 const HeaderText = styled.Text`

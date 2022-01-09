@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/native';
-import { Platform, SafeAreaView, StyleSheet } from 'react-native';
+import { Platform, SafeAreaView, StatusBar, StyleSheet } from 'react-native';
 import Icon from '../components/atoms/Icon';
 import { convertRoundToText, convertTypeToText } from '../utils/filterUtil';
 import { convertToCharactorSrc } from '../utils/charactor_image_utils';
@@ -40,7 +40,7 @@ const UserProfile = () => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <Container>
-        <Header is_android={Platform.OS === 'android'}>
+        <Header>
           <Icon type={'leftArrow'} onPress={goBack} />
         </Header>
         {isLoading || isPostLoading ? (
@@ -119,6 +119,7 @@ const ProfileCard = ({
 const Container = styled.View`
   flex: 1;
   background-color: #fff;
+  padding-top: ${(StatusBar.currentHeight || 0) + 'px'};
 `;
 
 const Top02 = styled.Text<{ is_number: boolean }>`
@@ -142,12 +143,12 @@ const styles = StyleSheet.create({
   scroll: { paddingBottom: 84 },
 });
 
-const Header = styled.View<{ is_android: boolean }>`
+const Header = styled.View`
   width: 100%;
   height: 60px;
   flex-direction: row;
   align-items: center;
-  padding: ${({ is_android }) => (is_android ? `24px 24px 0` : `0 24px`)};
+  padding: 0 24px;
 `;
 
 const StyledScroll = styled.ScrollView``;
