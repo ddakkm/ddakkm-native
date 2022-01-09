@@ -4,6 +4,7 @@ import {
   Keyboard,
   Platform,
   SafeAreaView,
+  StatusBar,
   TouchableWithoutFeedback,
 } from 'react-native';
 import styled from '@emotion/native';
@@ -55,7 +56,7 @@ const Feedback = () => {
       <Container behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <>
-            <Header is_android={Platform.OS === 'android'}>
+            <Header>
               <Icon
                 type={'leftArrow'}
                 onPress={() => {
@@ -151,13 +152,14 @@ const Space = styled.View`
   height: 24px;
 `;
 
-const Header = styled.View<{ is_android: boolean }>`
+const Header = styled.View`
   width: 100%;
+  margin-top: ${(StatusBar.currentHeight || 0) + 'px'};
   height: 60px;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: ${({ is_android }) => (is_android ? `24px 24px 0` : `0 24px`)};
+  padding: 0 24px;
   border-bottom-width: 1px;
   border-bottom-color: #f2f2f2;
 `;
@@ -165,6 +167,7 @@ const Header = styled.View<{ is_android: boolean }>`
 const HeaderText = styled.Text`
   font-weight: 600;
   font-size: 18px;
+  line-height: 26px;
 `;
 
 const Wrapper = styled.ScrollView`

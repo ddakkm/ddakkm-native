@@ -18,7 +18,7 @@ import {
   convertQuestionToIcon,
   convertQuestionToText,
 } from '../../utils/filterUtil';
-import { FlatList, Platform, StyleSheet } from 'react-native';
+import { FlatList, Platform, StatusBar, StyleSheet } from 'react-native';
 import { useIsLoggedIn } from '../../contexts/auth';
 import { useAppNav } from '../../hooks/useNav';
 import NoReview from '../atoms/NoReview';
@@ -252,7 +252,7 @@ const MainForm = () => {
 
   return (
     <>
-      <Header is_android={Platform.OS === 'android'}>
+      <Header>
         <HeaderTitle>백신후기</HeaderTitle>
         <IconWrapper>
           {/* <Icon
@@ -403,11 +403,12 @@ const MainForm = () => {
 
 export default MainForm;
 
-const Header = styled.View<{ is_android: boolean }>`
+const Header = styled.View`
+  margin-top: ${(StatusBar.currentHeight || 0) + 'px'};
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: ${({ is_android }) => (is_android ? `24px 24px 0` : `0 24px`)};
+  padding: 0 24px;
 `;
 
 const HeaderTitle = styled.Text`
