@@ -158,6 +158,14 @@ const Detail = () => {
                     <StyledBodyTop03>{data.nickname}님</StyledBodyTop03>
                   </NicknameBtn>
                 </BodyTitleWrapper>
+                <CardRowWrapper>
+                  <Icon type={'circleInfo'} />
+                  <CardText>{`${data.user_age_group.slice(0, 2)}대 · ${
+                    data.user_gender === 'MALE' ? '남성' : '여성'
+                  } · 임신${data.is_pregnant ? 'O' : 'X'} · 기저질환${
+                    data.is_underlying_disease ? 'O' : 'X'
+                  }`}</CardText>
+                </CardRowWrapper>
                 {Object.entries(data.survey.data).map(([key, value]: any[]) => {
                   if (value.length === 0) {
                     return null;

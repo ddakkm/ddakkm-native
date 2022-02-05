@@ -200,7 +200,9 @@ const MainForm = () => {
         nickname={item.nickname}
         vaccine_text={`${convertRoundToText(
           item.vaccine_round,
-        )} · ${convertTypeToText(item.vaccine_type)}`}
+        )} · ${convertTypeToText(item.vaccine_type)}${
+          item.is_crossed ? ' · 교차접종' : ''
+        }`}
         is_content={!!item.content}
         like_count={
           !item.user_is_like && is_liked_review

@@ -65,7 +65,7 @@ const LoginCheckboxForm = ({ onNext }: Props) => {
             onPress={() => isActive({ ...active, three: !active.three })}
           />
           <CheckboxButton
-            title={'14세이상 가입자 동의 순서'}
+            title={'만 14세 이상 동의'}
             active={active.four}
             onPress={() => isActive({ ...active, four: !active.four })}
           />
